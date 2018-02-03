@@ -1,0 +1,155 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="6" author="slawomirbankowski">
+
+        <insert tableName="sourceType">
+            <column name="sourceTypeName" value="JDBC"/>
+            <column name="sourceTypeClass" value="com.mlasaf.sources.JdbcSource"/>
+        </insert>
+        <insert tableName="sourceType">
+            <column name="sourceTypeName" value="FTP"/>
+            <column name="sourceTypeClass" value="com.mlasaf.sources.FtpSource"/>
+        </insert>
+        <insert tableName="sourceType">
+            <column name="sourceTypeName" value="LOCAL"/>
+            <column name="sourceTypeClass" value="com.mlasaf.sources.LocalDiskSource"/>
+        </insert>
+
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="Unknown"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.UnknownFormat"/>
+        </insert>
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="ResultSet"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.ResultSetFormat"/>
+        </insert>
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="CSV"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.CsvFormat"/>
+        </insert>
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="TSV"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.TsvFormat"/>
+        </insert>
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="Excel"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.ExcelFormat"/>
+        </insert>
+        <insert tableName="sourceViewFormat">
+            <column name="sourceViewFormatName" value="Custom"/>
+            <column name="sourceViewFormatClass" value="com.mlasaf.formats.CustomFormat"/>
+        </insert>
+
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="Connection String"/>
+            <column name="sourceParamType" value="String"/>
+            <column name="possibleValues" value="jdbc:sqlserver://host:port/dbname|jdbc:mysql://host:port/dbname"/>
+        </insert>
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="User"/>
+            <column name="sourceParamType" value="String"/>
+            <column name="possibleValues" value=""/>
+        </insert>
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="Password"/>
+            <column name="sourceParamType" value="String"/>
+            <column name="possibleValues" value=""/>
+        </insert>
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="Driver Class"/>
+            <column name="sourceParamType" value="String"/>
+            <column name="possibleValues" value=""/>
+        </insert>
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="FTP Host"/>
+            <column name="sourceParamType" value="String"/>
+            <column name="possibleValues" value=""/>
+        </insert>
+        <insert tableName="sourceParam">
+            <column name="sourceParamName" value="FTP Port"/>
+            <column name="sourceParamType" value="Int"/>
+            <column name="possibleValues" value=""/>
+        </insert>
+
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="1"/>
+            <column name="sourceParamId" value="1"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="1"/>
+            <column name="sourceParamId" value="2"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="1"/>
+            <column name="sourceParamId" value="3"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="1"/>
+            <column name="sourceParamId" value="4"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="0"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="2"/>
+            <column name="sourceParamId" value="5"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="2"/>
+            <column name="sourceParamId" value="6"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="2"/>
+            <column name="sourceParamId" value="2"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+        <insert tableName="sourceTypeParam">
+            <column name="sourceTypeId" value="2"/>
+            <column name="sourceParamId" value="3"/>
+            <column name="sourceTypeName" value=""/>
+            <column name="sourceParamName" value=""/>
+            <column name="isRequired" value="1"/>
+        </insert>
+
+        <insert tableName="sourceViewType">
+            <column name="sourceViewTypeName" value="table"/>
+            <column name="sourceViewTypeClass" value="com.mlasaf.sourceviews.SourceViewTable"/>
+        </insert>
+        <insert tableName="sourceViewType">
+            <column name="sourceViewTypeName" value="query"/>
+            <column name="sourceViewTypeClass" value="com.mlasaf.sourceviews.SourceViewQuery"/>
+        </insert>
+        <insert tableName="sourceViewType">
+            <column name="sourceViewTypeName" value="file"/>
+            <column name="sourceViewTypeClass" value="com.mlasaf.sourceviews.SourceViewFile"/>
+        </insert>
+        <insert tableName="sourceViewType">
+            <column name="sourceViewTypeName" value="folder"/>
+            <column name="sourceViewTypeClass" value="com.mlasaf.sourceviews.SourceViewFolder"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,126 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="3" author="slawomirbankowski">
+
+        <createTable tableName="resourceManagerType" remarks="type of resource manager" >
+            <column name="resourceManagerTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceManagerTypeName" type="nvarchar(200)"/>
+            <column name="resourceManagerTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_rmt_rmTypeName" tableName="resourceManagerType" unique="false">
+            <column name="resourceManagerTypeName" />
+        </createIndex>
+
+
+
+        <createTable tableName="resourceManager" remarks="manager for resources">
+            <column name="resourceManagerId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceManagerTypeId" type="bigint"/>
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="resourceManagerStatus" type="nvarchar(400)"/>
+        </createTable>
+        <createIndex indexName="idx_rm_resourceManagerTypeId" tableName="resourceManager" unique="false">
+            <column name="resourceManagerTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_rm_executorHostId" tableName="resourceManager" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="resourceManager" baseColumnNames="resourceManagerTypeId" referencedTableName="resourceManagerType" referencedColumnNames="resourceManagerTypeId"  constraintName="fk_rm_rmTypeId"  />
+        <addForeignKeyConstraint baseTableName="resourceManager" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_rm_ehId"  />
+
+
+        <createTable tableName="resourceMeasure" remarks="DICTIONARY - measures">
+            <column name="resourceMeasureId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceMeasureName" type="nvarchar(200)"/>
+            <column name="resourceMeasureClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_rmeas_rmeasName" tableName="resourceMeasure" unique="false">
+            <column name="resourceMeasureName" />
+        </createIndex>
+
+
+        <createTable tableName="resourceManagerMeasure" remarks="">
+            <column name="resourceManagerMeasureId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceManagerId" type="bigint"/>
+            <column name="resourceMeasureId" type="bigint"/>
+            <column name="measureString" type="nvarchar(2000)"/>
+            <column name="measureValue" type="float"/>
+        </createTable>
+        <createIndex indexName="idx_rmm_rmId" tableName="resourceManagerMeasure" unique="false">
+            <column name="resourceManagerId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="resourceManagerMeasure" baseColumnNames="resourceManagerId" referencedTableName="resourceManager" referencedColumnNames="resourceManagerId"  constraintName="fk_rmm_rma"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerMeasure" baseColumnNames="resourceMeasureId" referencedTableName="resourceMeasure" referencedColumnNames="resourceMeasureId"  constraintName="fk_rmm_rme"  />
+
+
+        <createTable tableName="resourceManagerCheck" remarks="">
+            <column name="resourceManagerCheckId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceManagerId" type="bigint"/>
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="resourceManagerStatus" type="nvarchar(400)"/>
+        </createTable>
+        <createIndex indexName="idx_rmc_rmId" tableName="resourceManagerCheck" unique="false">
+            <column name="resourceManagerId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="resourceManagerCheck" baseColumnNames="resourceManagerId" referencedTableName="resourceManager" referencedColumnNames="resourceManagerId"  constraintName="fk_rmc_rma"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerCheck" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_rmc_ehId"  />
+
+
+        <createTable tableName="resourceManagerAllocation" remarks="">
+            <column name="resourceManagerAllocationId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="resourceManagerTypeId" type="bigint"/>
+            <column name="resourceManagerId" type="bigint"/>
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorInstanceId" type="bigint"/>
+            <column name="resourceMeasureId" type="bigint"/>
+            <column name="allocationValue" type="float"/>
+            <column name="allocationValueMin" type="float"/>
+            <column name="allocationValueMax" type="float"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="resourceManagerAllocation" baseColumnNames="resourceManagerTypeId" referencedTableName="resourceManagerType" referencedColumnNames="resourceManagerTypeId"  constraintName="fk_rma_rmtId"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerAllocation" baseColumnNames="resourceManagerId" referencedTableName="resourceManager" referencedColumnNames="resourceManagerId"  constraintName="fk_rma_rma"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerAllocation" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_rma_ehId"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerAllocation" baseColumnNames="executorInstanceId" referencedTableName="executorInstance" referencedColumnNames="executorInstanceId"  constraintName="fk_rma_ei"  />
+        <addForeignKeyConstraint baseTableName="resourceManagerAllocation" baseColumnNames="resourceMeasureId" referencedTableName="resourceMeasure" referencedColumnNames="resourceMeasureId"  constraintName="fk_rma_rme"  />
+
+
+    </changeSet>
+
+
+</databaseChangeLog>

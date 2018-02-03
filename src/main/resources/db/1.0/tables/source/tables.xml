@@ -1,0 +1,283 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="5" author="slawomirbankowski">
+
+        <createTable tableName="sourceType" remarks="DICTIONARY - Type of source: JDBC, FTP, SHARED FOLDER" >
+            <column name="sourceTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceTypeName" type="nvarchar(200)"/>
+            <column name="sourceTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_st_sourceTypeName" tableName="sourceType" unique="false">
+            <column name="sourceTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="sourceViewFormat" remarks="DICTIONARY - Format of source view: table, flat file, excel file, binary file " >
+            <column name="sourceViewFormatId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceViewFormatName" type="nvarchar(200)"/>
+            <column name="sourceViewFormatClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_svf_sourceViewFormatName" tableName="sourceViewFormat" unique="false">
+            <column name="sourceViewFormatName" />
+        </createIndex>
+
+
+        <createTable tableName="sourceInstance" remarks="Instance of a source to get data from" >
+            <column name="sourceInstanceId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceTypeId" type="bigint"/>
+            <column name="sourceInstanceName" type="nvarchar(200)"/>
+            <column name="errorCount" type="bigint"/>
+            <column name="correctCount" type="bigint"/>
+            <column name="lastStatus" type="nvarchar(2000)"/>
+            <column name="lastConnectionDate" type="timestamp"/>
+        </createTable>
+        <createIndex indexName="idx_si_sourceTypeId" tableName="sourceInstance" unique="false">
+            <column name="sourceTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_si_sourceInstanceName" tableName="sourceInstance" unique="false">
+            <column name="sourceInstanceName" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceInstance" baseColumnNames="sourceTypeId" referencedTableName="sourceType" referencedColumnNames="sourceTypeId"  constraintName="fk_si_st"  />
+
+
+        <createTable tableName="sourceParam" remarks="DICTIONARY - all parameters needed to define source instance" >
+            <column name="sourceParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceParamName" type="nvarchar(200)"/>
+            <column name="sourceParamType" type="nvarchar(2000)"/>
+            <column name="possibleValues" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_sp_sourceParamName" tableName="sourceParam" unique="false">
+            <column name="sourceParamName" />
+        </createIndex>
+
+
+        <createTable tableName="sourceTypeParam" remarks="DICTIONARY - mapping between source type like FTP or JDBC and parameters" >
+            <column name="sourceTypeParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceTypeId" type="bigint" />
+            <column name="sourceParamId" type="bigint"/>
+            <column name="sourceTypeName" type="nvarchar(400)" />
+            <column name="sourceParamName" type="nvarchar(400)" />
+            <column name="isRequired" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_stp_sourceTypeId" tableName="sourceTypeParam" unique="false">
+            <column name="sourceTypeId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceTypeParam" baseColumnNames="sourceTypeId" referencedTableName="sourceType" referencedColumnNames="sourceTypeId"  constraintName="fk_stp_st"  />
+        <addForeignKeyConstraint baseTableName="sourceTypeParam" baseColumnNames="sourceParamId" referencedTableName="sourceParam" referencedColumnNames="sourceParamId"  constraintName="fk_stp_sp"  />
+
+
+        <createTable tableName="sourceParamValue" remarks="value of param for given source instance" >
+            <column name="sourceParamValueId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceInstanceId" type="bigint" />
+            <column name="sourceParamId" type="bigint"/>
+            <column name="sourceParamValueVersion" type="nvarchar(2000)"/>
+            <column name="paramValue" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_spv_sourceInstanceId" tableName="sourceParamValue" unique="false">
+            <column name="sourceInstanceId" />
+        </createIndex>
+        <createIndex indexName="idx_spv_sourceParamId" tableName="sourceParamValue" unique="false">
+            <column name="sourceParamId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceParamValue" baseColumnNames="sourceInstanceId" referencedTableName="sourceInstance" referencedColumnNames="sourceInstanceId"  constraintName="fk_spv_si"  />
+        <addForeignKeyConstraint baseTableName="sourceParamValue" baseColumnNames="sourceParamId" referencedTableName="sourceParam" referencedColumnNames="sourceParamId"  constraintName="fk_spv_sp"  />
+
+
+        <createTable tableName="sourceViewType" remarks="DICTIONARY - type of view: FTP, file in FTP, table or view in database, method in WebService" >
+            <column name="sourceViewTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceViewTypeName" type="nvarchar(200)"/>
+            <column name="sourceViewTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_svtype_sourceViewTypeName" tableName="sourceViewType" unique="false">
+            <column name="sourceViewTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="sourceView" remarks="view in the source - could be folder in FTP, file in FTP, table or view in database, method in WebService" >
+            <column name="sourceViewId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceInstanceId" type="bigint"/>
+            <column name="sourceViewTypeId" type="bigint"/>
+            <column name="sourceViewFormatId" type="bigint"/>
+            <column name="sourceViewName" type="nvarchar(2000)"/>
+            <column name="sourceViewDefinition" type="nvarchar(2000)"/>
+            <column name="isExisting" type="int"/>
+            <column name="isCustom" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_sv_sourceInstanceId" tableName="sourceView" unique="false">
+            <column name="sourceInstanceId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceView" baseColumnNames="sourceInstanceId" referencedTableName="sourceInstance" referencedColumnNames="sourceInstanceId"  constraintName="fk_sv_si"  />
+        <addForeignKeyConstraint baseTableName="sourceView" baseColumnNames="sourceViewTypeId" referencedTableName="sourceViewType" referencedColumnNames="sourceViewTypeId"  constraintName="fk_sv_svt"  />
+        <addForeignKeyConstraint baseTableName="sourceView" baseColumnNames="sourceViewFormatId" referencedTableName="sourceViewFormat" referencedColumnNames="sourceViewFormatId"  constraintName="fk_sv_svf"  />
+
+
+        <createTable tableName="sourceViewColumn" remarks="column in the view - update/refresh while downloading source to storage" >
+            <column name="sourceViewColumnId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceViewId" type="bigint" />
+            <column name="columnName" type="nvarchar(2000)"/>
+            <column name="columnType" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_svc_sourceViewId" tableName="sourceViewColumn" unique="false">
+            <column name="sourceViewId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceViewColumn" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_svc_sv"  />
+
+
+        <createTable tableName="sourceSchedule" remarks="schedule to download source view to local storage" >
+            <column name="sourceScheduleId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceViewId" type="bigint"/>
+            <column name="executorStorageId" type="bigint"/>
+            <column name="downloadTransformGroupId" type="bigint" defaultValueNumeric="1"/>
+            <column name="onDemand" type="int" defaultValueNumeric="0"/>
+            <column name="startTime" type="timestamp"/>
+            <column name="intervalValue" type="bigint"/>
+            <column name="isScheduled" type="int"/>
+            <column name="deleteOldCopies" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_ss_sourceViewId" tableName="sourceSchedule" unique="false">
+            <column name="sourceViewId" />
+        </createIndex>
+        <createIndex indexName="idx_ss_executorStorageId" tableName="sourceSchedule" unique="false">
+            <column name="executorStorageId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceSchedule" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_ss_sv"  />
+        <addForeignKeyConstraint baseTableName="sourceSchedule" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_ss_es"  />
+
+
+        <createTable tableName="sourceDownload" remarks="run of source and download data to local/global storage - this is process only" >
+            <column name="sourceDownloadId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceScheduleId" type="bigint" />
+            <column name="downloadTransformGroupId" type="bigint" defaultValueNumeric="1"/>
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorContextId" type="bigint" remarks="FK to executorContext table" />
+            <column name="sourceViewId" type="bigint" />
+            <column name="retryNumber" type="int"/>
+            <column name="isRunning" type="int" defaultValueNumeric="0" />
+            <column name="isFinished" type="int" defaultValueNumeric="0" />
+            <column name="isExcecption" type="int" defaultValueNumeric="0" />
+            <column name="excecptionDescription" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_sd_sourceScheduleId" tableName="sourceDownload" unique="false">
+            <column name="sourceScheduleId" />
+        </createIndex>
+        <createIndex indexName="idx_sd_executorHostId" tableName="sourceDownload" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <createIndex indexName="idx_sd_executorContextId" tableName="sourceDownload" unique="false">
+            <column name="executorContextId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceDownload" baseColumnNames="sourceScheduleId" referencedTableName="sourceSchedule" referencedColumnNames="sourceScheduleId"  constraintName="fk_sd_ss"  />
+        <addForeignKeyConstraint baseTableName="sourceDownload" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_sd_ehId"  />
+        <addForeignKeyConstraint baseTableName="sourceDownload" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_sd_ec"  />
+        <addForeignKeyConstraint baseTableName="sourceDownload" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_sd_sv"  />
+
+
+        <createTable tableName="sourceDownloadStat" remarks="statistics for downloaded view" >
+            <column name="sourceDownloadStatId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="sourceDownloadId" type="bigint" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="rowsCount" type="bigint"/>
+            <column name="errorRowsCount" type="bigint"/>
+            <column name="totalBytesCount" type="bigint"/>
+            <column name="empryRowsCount" type="bigint"/>
+        </createTable>
+        <createIndex indexName="idx_sds_sourceDownloadId" tableName="sourceDownloadStat" unique="false">
+            <column name="sourceDownloadId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceDownloadStat" baseColumnNames="sourceDownloadId" referencedTableName="sourceDownload" referencedColumnNames="sourceDownloadId"  constraintName="fk_sds_sd"  />
+
+
+        <createTable tableName="sourceDownloadStatColumn" remarks="statistics for downloaded view" >
+            <column name="sourceDownloadStatColumnId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="sourceDownloadId" type="bigint" />
+            <column name="sourceViewColumnId" type="bigint" />
+            <column name="columnMinNumber" type="float"/>
+            <column name="columnMaxNumber" type="float"/>
+            <column name="columnMinStr" type="nvarchar(2000)"/>
+            <column name="columnMaxStr" type="nvarchar(2000)"/>
+            <column name="columnNonemptyCount" type="bigint"/>
+        </createTable>
+        <createIndex indexName="idx_sds_sdId_svcId" tableName="sourceDownloadStatColumn" unique="false">
+            <column name="sourceDownloadId" />
+            <column name="sourceViewColumnId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="sourceDownloadStatColumn" baseColumnNames="sourceDownloadId" referencedTableName="sourceDownload" referencedColumnNames="sourceDownloadId"  constraintName="fk_sdsc_sd"  />
+        <addForeignKeyConstraint baseTableName="sourceDownloadStatColumn" baseColumnNames="sourceViewColumnId" referencedTableName="sourceViewColumn" referencedColumnNames="sourceViewColumnId"  constraintName="fk_sdsc_svcId"  />
+
+
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="sourceDownloadId" referencedTableName="sourceDownload" referencedColumnNames="sourceDownloadId"  constraintName="fk_esv_sd"  />
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_esv_sv"  />
+    </changeSet>
+
+
+</databaseChangeLog>

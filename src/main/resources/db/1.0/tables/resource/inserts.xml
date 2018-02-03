@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="4" author="slawomirbankowski">
+
+        <insert tableName="resourceManagerType">
+            <column name="resourceManagerTypeName" value="BASIC"/>
+            <column name="resourceManagerTypeClass" value="com.mlasaf.resource.managertypes.BasicResourceManager"/>
+        </insert>
+
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="CPU"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureCpu"/>
+        </insert>
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="GPU"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureGpu"/>
+        </insert>
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="RAM"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureRam"/>
+        </insert>
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="DISK"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureDisk"/>
+        </insert>
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="SDD"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureSdd"/>
+        </insert>
+        <insert tableName="resourceMeasure">
+            <column name="resourceMeasureName" value="TPU"/>
+            <column name="resourceMeasureClass" value="com.mlasaf.resource.measures.MeasureTpu"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

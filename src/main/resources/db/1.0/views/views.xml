@@ -1,0 +1,918 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="11" author="slawomirbankowski">
+
+
+        <createView  viewName="vAlgorithmImplementation">
+            select algorithmImplementation1.algorithmImplementationId, algorithmImplementation1.guid, algorithmImplementation1.insertedRowDate, algorithmImplementation1.lastUpdatedDate, algorithmImplementation1.algorithmTypeId, algorithmImplementation1.algorithmVersionId, algorithmImplementation1.executorTypeId, algorithmImplementation1.algorithmImplementationName, algorithmImplementation1.algorithmImplementationClass, algorithmImplementation1.algorithmImplementationDescription
+            ,  algorithmType1.algorithmTypeId as algorithmType_algorithmTypeId ,  algorithmType1.guid as algorithmType_guid ,  algorithmType1.insertedRowDate as algorithmType_insertedRowDate ,  algorithmType1.lastUpdatedDate as algorithmType_lastUpdatedDate ,  algorithmType1.algorithmTypeName as algorithmType_algorithmTypeName ,  algorithmType1.algorithmTypeDescription as algorithmType_algorithmTypeDescription
+            ,  algorithmVersion1.algorithmVersionId as algorithmVersion_algorithmVersionId ,  algorithmVersion1.insertedRowDate as algorithmVersion_insertedRowDate ,  algorithmVersion1.lastUpdatedDate as algorithmVersion_lastUpdatedDate ,  algorithmVersion1.guid as algorithmVersion_guid ,  algorithmVersion1.algorithmTypeId as algorithmVersion_algorithmTypeId ,  algorithmVersion1.algorithmVersionName as algorithmVersion_algorithmVersionName
+            ,  executorType1.executorTypeId as executorType_executorTypeId ,  executorType1.guid as executorType_guid ,  executorType1.insertedRowDate as executorType_insertedRowDate ,  executorType1.lastUpdatedDate as executorType_lastUpdatedDate ,  executorType1.executorTypeName as executorType_executorTypeName ,  executorType1.executorTypeClass as executorType_executorTypeClass
+            from algorithmImplementation algorithmImplementation1
+            join algorithmType algorithmType1 on algorithmImplementation1.algorithmTypeId = algorithmType1.algorithmTypeId
+            join algorithmVersion algorithmVersion1 on algorithmImplementation1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+            join executorType executorType1 on algorithmImplementation1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmOutput">
+            select algorithmOutput1.algorithmOutputId, algorithmOutput1.guid, algorithmOutput1.insertedRowDate, algorithmOutput1.lastUpdatedDate, algorithmOutput1.algorithmRunId, algorithmOutput1.algorithmOutputTypeId, algorithmOutput1.executorStorageId, algorithmOutput1.executorStorageResourceId
+            ,  algorithmOutputType1.algorithmOutputTypeId as algorithmOutputType_algorithmOutputTypeId ,  algorithmOutputType1.guid as algorithmOutputType_guid ,  algorithmOutputType1.insertedRowDate as algorithmOutputType_insertedRowDate ,  algorithmOutputType1.lastUpdatedDate as algorithmOutputType_lastUpdatedDate ,  algorithmOutputType1.algorithmOutputTypeName as algorithmOutputType_algorithmOutputTypeName
+            ,  algorithmRun1.algorithmRunId as algorithmRun_algorithmRunId ,  algorithmRun1.guid as algorithmRun_guid ,  algorithmRun1.insertedRowDate as algorithmRun_insertedRowDate ,  algorithmRun1.lastUpdatedDate as algorithmRun_lastUpdatedDate ,  algorithmRun1.algorithmScheduleId as algorithmRun_algorithmScheduleId ,  algorithmRun1.executorInstanceId as algorithmRun_executorInstanceId ,  algorithmRun1.executorStorageId as algorithmRun_executorStorageId ,  algorithmRun1.algorithmRunTypeId as algorithmRun_algorithmRunTypeId ,  algorithmRun1.algorithmRunName as algorithmRun_algorithmRunName ,  algorithmRun1.runDate as algorithmRun_runDate ,  algorithmRun1.runStatus as algorithmRun_runStatus ,  algorithmRun1.isError as algorithmRun_isError ,  algorithmRun1.errorDescription as algorithmRun_errorDescription ,  algorithmRun1.isRunning as algorithmRun_isRunning ,  algorithmRun1.isFinished as algorithmRun_isFinished
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            ,  executorStorageResource1.executorStorageResourceId as executorStorageResource_executorStorageResourceId ,  executorStorageResource1.guid as executorStorageResource_guid ,  executorStorageResource1.insertedRowDate as executorStorageResource_insertedRowDate ,  executorStorageResource1.lastUpdatedDate as executorStorageResource_lastUpdatedDate ,  executorStorageResource1.executorStorageId as executorStorageResource_executorStorageId ,  executorStorageResource1.resourcePath as executorStorageResource_resourcePath ,  executorStorageResource1.resourceSize as executorStorageResource_resourceSize ,  executorStorageResource1.resourceRowsCount as executorStorageResource_resourceRowsCount ,  executorStorageResource1.isValid as executorStorageResource_isValid
+            from algorithmOutput algorithmOutput1
+            join algorithmOutputType algorithmOutputType1 on algorithmOutput1.algorithmOutputTypeId = algorithmOutputType1.algorithmOutputTypeId
+            join algorithmRun algorithmRun1 on algorithmOutput1.algorithmRunId = algorithmRun1.algorithmRunId
+            join executorStorage executorStorage1 on algorithmOutput1.executorStorageId = executorStorage1.executorStorageId
+            join executorStorageResource executorStorageResource1 on algorithmOutput1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmRun">
+            select algorithmRun1.algorithmRunId, algorithmRun1.guid, algorithmRun1.insertedRowDate, algorithmRun1.lastUpdatedDate, algorithmRun1.algorithmScheduleId, algorithmRun1.executorInstanceId, algorithmRun1.executorStorageId, algorithmRun1.algorithmRunTypeId, algorithmRun1.algorithmRunName, algorithmRun1.runDate, algorithmRun1.runStatus, algorithmRun1.isError, algorithmRun1.errorDescription, algorithmRun1.isRunning, algorithmRun1.isFinished
+            ,  algorithmRunType1.algorithmRunTypeId as algorithmRunType_algorithmRunTypeId ,  algorithmRunType1.guid as algorithmRunType_guid ,  algorithmRunType1.insertedRowDate as algorithmRunType_insertedRowDate ,  algorithmRunType1.lastUpdatedDate as algorithmRunType_lastUpdatedDate ,  algorithmRunType1.algorithmRunTypeName as algorithmRunType_algorithmRunTypeName
+            ,  algorithmSchedule1.algorithmScheduleId as algorithmSchedule_algorithmScheduleId ,  algorithmSchedule1.guid as algorithmSchedule_guid ,  algorithmSchedule1.insertedRowDate as algorithmSchedule_insertedRowDate ,  algorithmSchedule1.lastUpdatedDate as algorithmSchedule_lastUpdatedDate ,  algorithmSchedule1.algorithmImplementationId as algorithmSchedule_algorithmImplementationId ,  algorithmSchedule1.algorithmScheduleTypeId as algorithmSchedule_algorithmScheduleTypeId ,  algorithmSchedule1.algorithmScheduleName as algorithmSchedule_algorithmScheduleName ,  algorithmSchedule1.isScheduled as algorithmSchedule_isScheduled ,  algorithmSchedule1.intervalValue as algorithmSchedule_intervalValue ,  algorithmSchedule1.isRunning as algorithmSchedule_isRunning
+            ,  executorInstance1.executorInstanceId as executorInstance_executorInstanceId ,  executorInstance1.guid as executorInstance_guid ,  executorInstance1.insertedRowDate as executorInstance_insertedRowDate ,  executorInstance1.lastUpdatedDate as executorInstance_lastUpdatedDate ,  executorInstance1.executorTypeId as executorInstance_executorTypeId ,  executorInstance1.executorHostId as executorInstance_executorHostId ,  executorInstance1.executorContextId as executorInstance_executorContextId ,  executorInstance1.executorInstanceName as executorInstance_executorInstanceName ,  executorInstance1.executorDefinition as executorInstance_executorDefinition ,  executorInstance1.executorParameters as executorInstance_executorParameters ,  executorInstance1.isRunning as executorInstance_isRunning ,  executorInstance1.isFinished as executorInstance_isFinished ,  executorInstance1.portNumber as executorInstance_portNumber ,  executorInstance1.endDate as executorInstance_endDate
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            from algorithmRun algorithmRun1
+            join algorithmRunType algorithmRunType1 on algorithmRun1.algorithmRunTypeId = algorithmRunType1.algorithmRunTypeId
+            join algorithmSchedule algorithmSchedule1 on algorithmRun1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            join executorInstance executorInstance1 on algorithmRun1.executorInstanceId = executorInstance1.executorInstanceId
+            join executorStorage executorStorage1 on algorithmRun1.executorStorageId = executorStorage1.executorStorageId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmRunInfo">
+            select algorithmRunInfo1.algorithmRunInfoId, algorithmRunInfo1.guid, algorithmRunInfo1.insertedRowDate, algorithmRunInfo1.lastUpdatedDate, algorithmRunInfo1.algorithmScheduleId, algorithmRunInfo1.algorithmRunId, algorithmRunInfo1.executorStorageId, algorithmRunInfo1.algorithmInfoTypeId, algorithmRunInfo1.executorStorageResourceId, algorithmRunInfo1.isValid
+            ,  algorithmInfoType1.algorithmInfoTypeId as algorithmInfoType_algorithmInfoTypeId ,  algorithmInfoType1.guid as algorithmInfoType_guid ,  algorithmInfoType1.insertedRowDate as algorithmInfoType_insertedRowDate ,  algorithmInfoType1.lastUpdatedDate as algorithmInfoType_lastUpdatedDate ,  algorithmInfoType1.algorithmInfoTypeName as algorithmInfoType_algorithmInfoTypeName ,  algorithmInfoType1.algorithmInfoTypeDescription as algorithmInfoType_algorithmInfoTypeDescription ,  algorithmInfoType1.algorithmInfoTypeFormat as algorithmInfoType_algorithmInfoTypeFormat
+            ,  algorithmRun1.algorithmRunId as algorithmRun_algorithmRunId ,  algorithmRun1.guid as algorithmRun_guid ,  algorithmRun1.insertedRowDate as algorithmRun_insertedRowDate ,  algorithmRun1.lastUpdatedDate as algorithmRun_lastUpdatedDate ,  algorithmRun1.algorithmScheduleId as algorithmRun_algorithmScheduleId ,  algorithmRun1.executorInstanceId as algorithmRun_executorInstanceId ,  algorithmRun1.executorStorageId as algorithmRun_executorStorageId ,  algorithmRun1.algorithmRunTypeId as algorithmRun_algorithmRunTypeId ,  algorithmRun1.algorithmRunName as algorithmRun_algorithmRunName ,  algorithmRun1.runDate as algorithmRun_runDate ,  algorithmRun1.runStatus as algorithmRun_runStatus ,  algorithmRun1.isError as algorithmRun_isError ,  algorithmRun1.errorDescription as algorithmRun_errorDescription ,  algorithmRun1.isRunning as algorithmRun_isRunning ,  algorithmRun1.isFinished as algorithmRun_isFinished
+            ,  algorithmSchedule1.algorithmScheduleId as algorithmSchedule_algorithmScheduleId ,  algorithmSchedule1.guid as algorithmSchedule_guid ,  algorithmSchedule1.insertedRowDate as algorithmSchedule_insertedRowDate ,  algorithmSchedule1.lastUpdatedDate as algorithmSchedule_lastUpdatedDate ,  algorithmSchedule1.algorithmImplementationId as algorithmSchedule_algorithmImplementationId ,  algorithmSchedule1.algorithmScheduleTypeId as algorithmSchedule_algorithmScheduleTypeId ,  algorithmSchedule1.algorithmScheduleName as algorithmSchedule_algorithmScheduleName ,  algorithmSchedule1.isScheduled as algorithmSchedule_isScheduled ,  algorithmSchedule1.intervalValue as algorithmSchedule_intervalValue ,  algorithmSchedule1.isRunning as algorithmSchedule_isRunning
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            ,  executorStorageResource1.executorStorageResourceId as executorStorageResource_executorStorageResourceId ,  executorStorageResource1.guid as executorStorageResource_guid ,  executorStorageResource1.insertedRowDate as executorStorageResource_insertedRowDate ,  executorStorageResource1.lastUpdatedDate as executorStorageResource_lastUpdatedDate ,  executorStorageResource1.executorStorageId as executorStorageResource_executorStorageId ,  executorStorageResource1.resourcePath as executorStorageResource_resourcePath ,  executorStorageResource1.resourceSize as executorStorageResource_resourceSize ,  executorStorageResource1.resourceRowsCount as executorStorageResource_resourceRowsCount ,  executorStorageResource1.isValid as executorStorageResource_isValid
+            from algorithmRunInfo algorithmRunInfo1
+            join algorithmInfoType algorithmInfoType1 on algorithmRunInfo1.algorithmInfoTypeId = algorithmInfoType1.algorithmInfoTypeId
+            join algorithmRun algorithmRun1 on algorithmRunInfo1.algorithmRunId = algorithmRun1.algorithmRunId
+            join algorithmSchedule algorithmSchedule1 on algorithmRunInfo1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            join executorStorage executorStorage1 on algorithmRunInfo1.executorStorageId = executorStorage1.executorStorageId
+            join executorStorageResource executorStorageResource1 on algorithmRunInfo1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmRunView">
+            select algorithmRunView1.algorithmRunViewId, algorithmRunView1.guid, algorithmRunView1.insertedRowDate, algorithmRunView1.lastUpdatedDate, algorithmRunView1.algorithmRunId, algorithmRunView1.executorStorageViewId, algorithmRunView1.algorithmScheduleViewId, algorithmRunView1.isDownloaded
+            ,  algorithmRun1.algorithmRunId as algorithmRun_algorithmRunId ,  algorithmRun1.guid as algorithmRun_guid ,  algorithmRun1.insertedRowDate as algorithmRun_insertedRowDate ,  algorithmRun1.lastUpdatedDate as algorithmRun_lastUpdatedDate ,  algorithmRun1.algorithmScheduleId as algorithmRun_algorithmScheduleId ,  algorithmRun1.executorInstanceId as algorithmRun_executorInstanceId ,  algorithmRun1.executorStorageId as algorithmRun_executorStorageId ,  algorithmRun1.algorithmRunTypeId as algorithmRun_algorithmRunTypeId ,  algorithmRun1.algorithmRunName as algorithmRun_algorithmRunName ,  algorithmRun1.runDate as algorithmRun_runDate ,  algorithmRun1.runStatus as algorithmRun_runStatus ,  algorithmRun1.isError as algorithmRun_isError ,  algorithmRun1.errorDescription as algorithmRun_errorDescription ,  algorithmRun1.isRunning as algorithmRun_isRunning ,  algorithmRun1.isFinished as algorithmRun_isFinished
+            ,  algorithmScheduleView1.algorithmScheduleViewId as algorithmScheduleView_algorithmScheduleViewId ,  algorithmScheduleView1.guid as algorithmScheduleView_guid ,  algorithmScheduleView1.insertedRowDate as algorithmScheduleView_insertedRowDate ,  algorithmScheduleView1.lastUpdatedDate as algorithmScheduleView_lastUpdatedDate ,  algorithmScheduleView1.algorithmScheduleViewTypeId as algorithmScheduleView_algorithmScheduleViewTypeId ,  algorithmScheduleView1.algorithmScheduleId as algorithmScheduleView_algorithmScheduleId ,  algorithmScheduleView1.sourceViewId as algorithmScheduleView_sourceViewId ,  algorithmScheduleView1.joinOnDefinition as algorithmScheduleView_joinOnDefinition
+            ,  executorStorageView1.executorStorageViewId as executorStorageView_executorStorageViewId ,  executorStorageView1.guid as executorStorageView_guid ,  executorStorageView1.insertedRowDate as executorStorageView_insertedRowDate ,  executorStorageView1.lastUpdatedDate as executorStorageView_lastUpdatedDate ,  executorStorageView1.executorStorageSnapshotId as executorStorageView_executorStorageSnapshotId ,  executorStorageView1.executorStorageId as executorStorageView_executorStorageId ,  executorStorageView1.sourceDownloadId as executorStorageView_sourceDownloadId ,  executorStorageView1.downloadTransformGroupId as executorStorageView_downloadTransformGroupId ,  executorStorageView1.sourceViewId as executorStorageView_sourceViewId ,  executorStorageView1.executorStorageResourceId as executorStorageView_executorStorageResourceId
+            from algorithmRunView algorithmRunView1
+            join algorithmRun algorithmRun1 on algorithmRunView1.algorithmRunId = algorithmRun1.algorithmRunId
+            join algorithmScheduleView algorithmScheduleView1 on algorithmRunView1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+            join executorStorageView executorStorageView1 on algorithmRunView1.executorStorageViewId = executorStorageView1.executorStorageViewId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmSchedule">
+            select algorithmSchedule1.algorithmScheduleId, algorithmSchedule1.guid, algorithmSchedule1.insertedRowDate, algorithmSchedule1.lastUpdatedDate, algorithmSchedule1.algorithmImplementationId, algorithmSchedule1.algorithmScheduleTypeId, algorithmSchedule1.algorithmScheduleName, algorithmSchedule1.isScheduled, algorithmSchedule1.intervalValue, algorithmSchedule1.isRunning
+            ,  algorithmImplementation1.algorithmImplementationId as algorithmImplementation_algorithmImplementationId ,  algorithmImplementation1.guid as algorithmImplementation_guid ,  algorithmImplementation1.insertedRowDate as algorithmImplementation_insertedRowDate ,  algorithmImplementation1.lastUpdatedDate as algorithmImplementation_lastUpdatedDate ,  algorithmImplementation1.algorithmTypeId as algorithmImplementation_algorithmTypeId ,  algorithmImplementation1.algorithmVersionId as algorithmImplementation_algorithmVersionId ,  algorithmImplementation1.executorTypeId as algorithmImplementation_executorTypeId ,  algorithmImplementation1.algorithmImplementationName as algorithmImplementation_algorithmImplementationName ,  algorithmImplementation1.algorithmImplementationClass as algorithmImplementation_algorithmImplementationClass ,  algorithmImplementation1.algorithmImplementationDescription as algorithmImplementation_algorithmImplementationDescription
+            ,  algorithmScheduleType1.algorithmScheduleTypeId as algorithmScheduleType_algorithmScheduleTypeId ,  algorithmScheduleType1.guid as algorithmScheduleType_guid ,  algorithmScheduleType1.insertedRowDate as algorithmScheduleType_insertedRowDate ,  algorithmScheduleType1.lastUpdatedDate as algorithmScheduleType_lastUpdatedDate ,  algorithmScheduleType1.algorithmScheduleTypeName as algorithmScheduleType_algorithmScheduleTypeName
+            from algorithmSchedule algorithmSchedule1
+            join algorithmImplementation algorithmImplementation1 on algorithmSchedule1.algorithmImplementationId = algorithmImplementation1.algorithmImplementationId
+            join algorithmScheduleType algorithmScheduleType1 on algorithmSchedule1.algorithmScheduleTypeId = algorithmScheduleType1.algorithmScheduleTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleColumn">
+            select algorithmScheduleColumn1.algorithmScheduleColumnId, algorithmScheduleColumn1.guid, algorithmScheduleColumn1.insertedRowDate, algorithmScheduleColumn1.lastUpdatedDate, algorithmScheduleColumn1.algorithmScheduleId, algorithmScheduleColumn1.algorithmColumnTypeId, algorithmScheduleColumn1.algorithmScheduleViewId, algorithmScheduleColumn1.sourceViewId, algorithmScheduleColumn1.sourceViewColumnId, algorithmScheduleColumn1.extendedProperties
+            ,  algorithmColumnType1.algorithmColumnTypeId as algorithmColumnType_algorithmColumnTypeId ,  algorithmColumnType1.guid as algorithmColumnType_guid ,  algorithmColumnType1.insertedRowDate as algorithmColumnType_insertedRowDate ,  algorithmColumnType1.lastUpdatedDate as algorithmColumnType_lastUpdatedDate ,  algorithmColumnType1.algorithmColumnTypeName as algorithmColumnType_algorithmColumnTypeName ,  algorithmColumnType1.algorithmColumnTypeDescription as algorithmColumnType_algorithmColumnTypeDescription ,  algorithmColumnType1.verificationClassName as algorithmColumnType_verificationClassName ,  algorithmColumnType1.verificationDefinition as algorithmColumnType_verificationDefinition
+            ,  algorithmSchedule1.algorithmScheduleId as algorithmSchedule_algorithmScheduleId ,  algorithmSchedule1.guid as algorithmSchedule_guid ,  algorithmSchedule1.insertedRowDate as algorithmSchedule_insertedRowDate ,  algorithmSchedule1.lastUpdatedDate as algorithmSchedule_lastUpdatedDate ,  algorithmSchedule1.algorithmImplementationId as algorithmSchedule_algorithmImplementationId ,  algorithmSchedule1.algorithmScheduleTypeId as algorithmSchedule_algorithmScheduleTypeId ,  algorithmSchedule1.algorithmScheduleName as algorithmSchedule_algorithmScheduleName ,  algorithmSchedule1.isScheduled as algorithmSchedule_isScheduled ,  algorithmSchedule1.intervalValue as algorithmSchedule_intervalValue ,  algorithmSchedule1.isRunning as algorithmSchedule_isRunning
+            ,  algorithmScheduleView1.algorithmScheduleViewId as algorithmScheduleView_algorithmScheduleViewId ,  algorithmScheduleView1.guid as algorithmScheduleView_guid ,  algorithmScheduleView1.insertedRowDate as algorithmScheduleView_insertedRowDate ,  algorithmScheduleView1.lastUpdatedDate as algorithmScheduleView_lastUpdatedDate ,  algorithmScheduleView1.algorithmScheduleViewTypeId as algorithmScheduleView_algorithmScheduleViewTypeId ,  algorithmScheduleView1.algorithmScheduleId as algorithmScheduleView_algorithmScheduleId ,  algorithmScheduleView1.sourceViewId as algorithmScheduleView_sourceViewId ,  algorithmScheduleView1.joinOnDefinition as algorithmScheduleView_joinOnDefinition
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            ,  sourceViewColumn1.sourceViewColumnId as sourceViewColumn_sourceViewColumnId ,  sourceViewColumn1.guid as sourceViewColumn_guid ,  sourceViewColumn1.insertedRowDate as sourceViewColumn_insertedRowDate ,  sourceViewColumn1.lastUpdatedDate as sourceViewColumn_lastUpdatedDate ,  sourceViewColumn1.sourceViewId as sourceViewColumn_sourceViewId ,  sourceViewColumn1.columnName as sourceViewColumn_columnName ,  sourceViewColumn1.columnType as sourceViewColumn_columnType
+            from algorithmScheduleColumn algorithmScheduleColumn1
+            join algorithmColumnType algorithmColumnType1 on algorithmScheduleColumn1.algorithmColumnTypeId = algorithmColumnType1.algorithmColumnTypeId
+            join algorithmSchedule algorithmSchedule1 on algorithmScheduleColumn1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            join algorithmScheduleView algorithmScheduleView1 on algorithmScheduleColumn1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+            join sourceView sourceView1 on algorithmScheduleColumn1.sourceViewId = sourceView1.sourceViewId
+            join sourceViewColumn sourceViewColumn1 on algorithmScheduleColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleParam">
+            select algorithmScheduleParam1.algorithmScheduleParamId, algorithmScheduleParam1.guid, algorithmScheduleParam1.insertedRowDate, algorithmScheduleParam1.lastUpdatedDate, algorithmScheduleParam1.algorithmScheduleId, algorithmScheduleParam1.algorithmParamId, algorithmScheduleParam1.algorithmParamValue
+            ,  algorithmParam1.algorithmParamId as algorithmParam_algorithmParamId ,  algorithmParam1.guid as algorithmParam_guid ,  algorithmParam1.insertedRowDate as algorithmParam_insertedRowDate ,  algorithmParam1.lastUpdatedDate as algorithmParam_lastUpdatedDate ,  algorithmParam1.algorithmParamName as algorithmParam_algorithmParamName ,  algorithmParam1.algorithmParamDescription as algorithmParam_algorithmParamDescription ,  algorithmParam1.algorithmParamType as algorithmParam_algorithmParamType
+            ,  algorithmSchedule1.algorithmScheduleId as algorithmSchedule_algorithmScheduleId ,  algorithmSchedule1.guid as algorithmSchedule_guid ,  algorithmSchedule1.insertedRowDate as algorithmSchedule_insertedRowDate ,  algorithmSchedule1.lastUpdatedDate as algorithmSchedule_lastUpdatedDate ,  algorithmSchedule1.algorithmImplementationId as algorithmSchedule_algorithmImplementationId ,  algorithmSchedule1.algorithmScheduleTypeId as algorithmSchedule_algorithmScheduleTypeId ,  algorithmSchedule1.algorithmScheduleName as algorithmSchedule_algorithmScheduleName ,  algorithmSchedule1.isScheduled as algorithmSchedule_isScheduled ,  algorithmSchedule1.intervalValue as algorithmSchedule_intervalValue ,  algorithmSchedule1.isRunning as algorithmSchedule_isRunning
+            from algorithmScheduleParam algorithmScheduleParam1
+            join algorithmParam algorithmParam1 on algorithmScheduleParam1.algorithmParamId = algorithmParam1.algorithmParamId
+            join algorithmSchedule algorithmSchedule1 on algorithmScheduleParam1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleView">
+            select algorithmScheduleView1.algorithmScheduleViewId, algorithmScheduleView1.guid, algorithmScheduleView1.insertedRowDate, algorithmScheduleView1.lastUpdatedDate, algorithmScheduleView1.algorithmScheduleViewTypeId, algorithmScheduleView1.algorithmScheduleId, algorithmScheduleView1.sourceViewId, algorithmScheduleView1.joinOnDefinition
+            ,  algorithmSchedule1.algorithmScheduleId as algorithmSchedule_algorithmScheduleId ,  algorithmSchedule1.guid as algorithmSchedule_guid ,  algorithmSchedule1.insertedRowDate as algorithmSchedule_insertedRowDate ,  algorithmSchedule1.lastUpdatedDate as algorithmSchedule_lastUpdatedDate ,  algorithmSchedule1.algorithmImplementationId as algorithmSchedule_algorithmImplementationId ,  algorithmSchedule1.algorithmScheduleTypeId as algorithmSchedule_algorithmScheduleTypeId ,  algorithmSchedule1.algorithmScheduleName as algorithmSchedule_algorithmScheduleName ,  algorithmSchedule1.isScheduled as algorithmSchedule_isScheduled ,  algorithmSchedule1.intervalValue as algorithmSchedule_intervalValue ,  algorithmSchedule1.isRunning as algorithmSchedule_isRunning
+            ,  algorithmScheduleViewType1.algorithmScheduleViewTypeId as algorithmScheduleViewType_algorithmScheduleViewTypeId ,  algorithmScheduleViewType1.guid as algorithmScheduleViewType_guid ,  algorithmScheduleViewType1.insertedRowDate as algorithmScheduleViewType_insertedRowDate ,  algorithmScheduleViewType1.lastUpdatedDate as algorithmScheduleViewType_lastUpdatedDate ,  algorithmScheduleViewType1.algorithmScheduleViewTypeName as algorithmScheduleViewType_algorithmScheduleViewTypeName
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            from algorithmScheduleView algorithmScheduleView1
+            join algorithmSchedule algorithmSchedule1 on algorithmScheduleView1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            join algorithmScheduleViewType algorithmScheduleViewType1 on algorithmScheduleView1.algorithmScheduleViewTypeId = algorithmScheduleViewType1.algorithmScheduleViewTypeId
+            join sourceView sourceView1 on algorithmScheduleView1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmStorageSupport">
+            select algorithmStorageSupport1.algorithmStorageSupportId, algorithmStorageSupport1.guid, algorithmStorageSupport1.insertedRowDate, algorithmStorageSupport1.lastUpdatedDate, algorithmStorageSupport1.algorithmImplementationId, algorithmStorageSupport1.executorStorageTypeId, algorithmStorageSupport1.supportPriority
+            ,  algorithmImplementation1.algorithmImplementationId as algorithmImplementation_algorithmImplementationId ,  algorithmImplementation1.guid as algorithmImplementation_guid ,  algorithmImplementation1.insertedRowDate as algorithmImplementation_insertedRowDate ,  algorithmImplementation1.lastUpdatedDate as algorithmImplementation_lastUpdatedDate ,  algorithmImplementation1.algorithmTypeId as algorithmImplementation_algorithmTypeId ,  algorithmImplementation1.algorithmVersionId as algorithmImplementation_algorithmVersionId ,  algorithmImplementation1.executorTypeId as algorithmImplementation_executorTypeId ,  algorithmImplementation1.algorithmImplementationName as algorithmImplementation_algorithmImplementationName ,  algorithmImplementation1.algorithmImplementationClass as algorithmImplementation_algorithmImplementationClass ,  algorithmImplementation1.algorithmImplementationDescription as algorithmImplementation_algorithmImplementationDescription
+            ,  executorStorageType1.executorStorageTypeId as executorStorageType_executorStorageTypeId ,  executorStorageType1.guid as executorStorageType_guid ,  executorStorageType1.insertedRowDate as executorStorageType_insertedRowDate ,  executorStorageType1.lastUpdatedDate as executorStorageType_lastUpdatedDate ,  executorStorageType1.executorStorageTypeName as executorStorageType_executorStorageTypeName ,  executorStorageType1.executorStorageTypeClass as executorStorageType_executorStorageTypeClass
+            from algorithmStorageSupport algorithmStorageSupport1
+            join algorithmImplementation algorithmImplementation1 on algorithmStorageSupport1.algorithmImplementationId = algorithmImplementation1.algorithmImplementationId
+            join executorStorageType executorStorageType1 on algorithmStorageSupport1.executorStorageTypeId = executorStorageType1.executorStorageTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmVersion">
+            select algorithmVersion1.algorithmVersionId, algorithmVersion1.insertedRowDate, algorithmVersion1.lastUpdatedDate, algorithmVersion1.guid, algorithmVersion1.algorithmTypeId, algorithmVersion1.algorithmVersionName
+            ,  algorithmType1.algorithmTypeId as algorithmType_algorithmTypeId ,  algorithmType1.guid as algorithmType_guid ,  algorithmType1.insertedRowDate as algorithmType_insertedRowDate ,  algorithmType1.lastUpdatedDate as algorithmType_lastUpdatedDate ,  algorithmType1.algorithmTypeName as algorithmType_algorithmTypeName ,  algorithmType1.algorithmTypeDescription as algorithmType_algorithmTypeDescription
+            from algorithmVersion algorithmVersion1
+            join algorithmType algorithmType1 on algorithmVersion1.algorithmTypeId = algorithmType1.algorithmTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmVersionColumnType">
+            select algorithmVersionColumnType1.algorithmVersionColumnTypeId, algorithmVersionColumnType1.guid, algorithmVersionColumnType1.insertedRowDate, algorithmVersionColumnType1.lastUpdatedDate, algorithmVersionColumnType1.algorithmVersionId, algorithmVersionColumnType1.algorithmColumnTypeId, algorithmVersionColumnType1.allowMultiple, algorithmVersionColumnType1.allowEmpty
+            ,  algorithmColumnType1.algorithmColumnTypeId as algorithmColumnType_algorithmColumnTypeId ,  algorithmColumnType1.guid as algorithmColumnType_guid ,  algorithmColumnType1.insertedRowDate as algorithmColumnType_insertedRowDate ,  algorithmColumnType1.lastUpdatedDate as algorithmColumnType_lastUpdatedDate ,  algorithmColumnType1.algorithmColumnTypeName as algorithmColumnType_algorithmColumnTypeName ,  algorithmColumnType1.algorithmColumnTypeDescription as algorithmColumnType_algorithmColumnTypeDescription ,  algorithmColumnType1.verificationClassName as algorithmColumnType_verificationClassName ,  algorithmColumnType1.verificationDefinition as algorithmColumnType_verificationDefinition
+            ,  algorithmVersion1.algorithmVersionId as algorithmVersion_algorithmVersionId ,  algorithmVersion1.insertedRowDate as algorithmVersion_insertedRowDate ,  algorithmVersion1.lastUpdatedDate as algorithmVersion_lastUpdatedDate ,  algorithmVersion1.guid as algorithmVersion_guid ,  algorithmVersion1.algorithmTypeId as algorithmVersion_algorithmTypeId ,  algorithmVersion1.algorithmVersionName as algorithmVersion_algorithmVersionName
+            from algorithmVersionColumnType algorithmVersionColumnType1
+            join algorithmColumnType algorithmColumnType1 on algorithmVersionColumnType1.algorithmColumnTypeId = algorithmColumnType1.algorithmColumnTypeId
+            join algorithmVersion algorithmVersion1 on algorithmVersionColumnType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmVersionOutputType">
+            select algorithmVersionOutputType1.algorithmVersionOutputTypeId, algorithmVersionOutputType1.guid, algorithmVersionOutputType1.insertedRowDate, algorithmVersionOutputType1.lastUpdatedDate, algorithmVersionOutputType1.algorithmVersionId, algorithmVersionOutputType1.algorithmOutputTypeId, algorithmVersionOutputType1.isMandatory, algorithmVersionOutputType1.isMultiple
+            ,  algorithmOutputType1.algorithmOutputTypeId as algorithmOutputType_algorithmOutputTypeId ,  algorithmOutputType1.guid as algorithmOutputType_guid ,  algorithmOutputType1.insertedRowDate as algorithmOutputType_insertedRowDate ,  algorithmOutputType1.lastUpdatedDate as algorithmOutputType_lastUpdatedDate ,  algorithmOutputType1.algorithmOutputTypeName as algorithmOutputType_algorithmOutputTypeName
+            ,  algorithmVersion1.algorithmVersionId as algorithmVersion_algorithmVersionId ,  algorithmVersion1.insertedRowDate as algorithmVersion_insertedRowDate ,  algorithmVersion1.lastUpdatedDate as algorithmVersion_lastUpdatedDate ,  algorithmVersion1.guid as algorithmVersion_guid ,  algorithmVersion1.algorithmTypeId as algorithmVersion_algorithmTypeId ,  algorithmVersion1.algorithmVersionName as algorithmVersion_algorithmVersionName
+            from algorithmVersionOutputType algorithmVersionOutputType1
+            join algorithmOutputType algorithmOutputType1 on algorithmVersionOutputType1.algorithmOutputTypeId = algorithmOutputType1.algorithmOutputTypeId
+            join algorithmVersion algorithmVersion1 on algorithmVersionOutputType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmVersionParamType">
+            select algorithmVersionParamType1.algorithmVersionParamTypeId, algorithmVersionParamType1.guid, algorithmVersionParamType1.insertedRowDate, algorithmVersionParamType1.lastUpdatedDate, algorithmVersionParamType1.algorithmParamId, algorithmVersionParamType1.algorithmTypeId, algorithmVersionParamType1.algorithmVersionId
+            ,  algorithmParam1.algorithmParamId as algorithmParam_algorithmParamId ,  algorithmParam1.guid as algorithmParam_guid ,  algorithmParam1.insertedRowDate as algorithmParam_insertedRowDate ,  algorithmParam1.lastUpdatedDate as algorithmParam_lastUpdatedDate ,  algorithmParam1.algorithmParamName as algorithmParam_algorithmParamName ,  algorithmParam1.algorithmParamDescription as algorithmParam_algorithmParamDescription ,  algorithmParam1.algorithmParamType as algorithmParam_algorithmParamType
+            ,  algorithmType1.algorithmTypeId as algorithmType_algorithmTypeId ,  algorithmType1.guid as algorithmType_guid ,  algorithmType1.insertedRowDate as algorithmType_insertedRowDate ,  algorithmType1.lastUpdatedDate as algorithmType_lastUpdatedDate ,  algorithmType1.algorithmTypeName as algorithmType_algorithmTypeName ,  algorithmType1.algorithmTypeDescription as algorithmType_algorithmTypeDescription
+            ,  algorithmVersion1.algorithmVersionId as algorithmVersion_algorithmVersionId ,  algorithmVersion1.insertedRowDate as algorithmVersion_insertedRowDate ,  algorithmVersion1.lastUpdatedDate as algorithmVersion_lastUpdatedDate ,  algorithmVersion1.guid as algorithmVersion_guid ,  algorithmVersion1.algorithmTypeId as algorithmVersion_algorithmTypeId ,  algorithmVersion1.algorithmVersionName as algorithmVersion_algorithmVersionName
+            from algorithmVersionParamType algorithmVersionParamType1
+            join algorithmParam algorithmParam1 on algorithmVersionParamType1.algorithmParamId = algorithmParam1.algorithmParamId
+            join algorithmType algorithmType1 on algorithmVersionParamType1.algorithmTypeId = algorithmType1.algorithmTypeId
+            join algorithmVersion algorithmVersion1 on algorithmVersionParamType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransform">
+            select downloadTransform1.downloadTransformId, downloadTransform1.guid, downloadTransform1.insertedRowDate, downloadTransform1.lastUpdatedDate, downloadTransform1.downloadTransformTypeId, downloadTransform1.downloadTransformGroupId, downloadTransform1.downloadTransformDefinition
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            ,  downloadTransformType1.downloadTransformTypeId as downloadTransformType_downloadTransformTypeId ,  downloadTransformType1.guid as downloadTransformType_guid ,  downloadTransformType1.insertedRowDate as downloadTransformType_insertedRowDate ,  downloadTransformType1.lastUpdatedDate as downloadTransformType_lastUpdatedDate ,  downloadTransformType1.downloadTransformTypeName as downloadTransformType_downloadTransformTypeName ,  downloadTransformType1.downloadTransformTypeClass as downloadTransformType_downloadTransformTypeClass
+            from downloadTransform downloadTransform1
+            join downloadTransformGroup downloadTransformGroup1 on downloadTransform1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            join downloadTransformType downloadTransformType1 on downloadTransform1.downloadTransformTypeId = downloadTransformType1.downloadTransformTypeId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformAlgorithmSchedule">
+            select downloadTransformAlgorithmSchedule1.downloadTransformAlgorithmScheduleId, downloadTransformAlgorithmSchedule1.guid, downloadTransformAlgorithmSchedule1.insertedRowDate, downloadTransformAlgorithmSchedule1.lastUpdatedDate, downloadTransformAlgorithmSchedule1.downloadTransformGroupId, downloadTransformAlgorithmSchedule1.algorithmScheduleViewId
+            ,  algorithmScheduleView1.algorithmScheduleViewId as algorithmScheduleView_algorithmScheduleViewId ,  algorithmScheduleView1.guid as algorithmScheduleView_guid ,  algorithmScheduleView1.insertedRowDate as algorithmScheduleView_insertedRowDate ,  algorithmScheduleView1.lastUpdatedDate as algorithmScheduleView_lastUpdatedDate ,  algorithmScheduleView1.algorithmScheduleViewTypeId as algorithmScheduleView_algorithmScheduleViewTypeId ,  algorithmScheduleView1.algorithmScheduleId as algorithmScheduleView_algorithmScheduleId ,  algorithmScheduleView1.sourceViewId as algorithmScheduleView_sourceViewId ,  algorithmScheduleView1.joinOnDefinition as algorithmScheduleView_joinOnDefinition
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            from downloadTransformAlgorithmSchedule downloadTransformAlgorithmSchedule1
+            join algorithmScheduleView algorithmScheduleView1 on downloadTransformAlgorithmSchedule1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+            join downloadTransformGroup downloadTransformGroup1 on downloadTransformAlgorithmSchedule1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformColumn">
+            select downloadTransformColumn1.downloadTransformColumnId, downloadTransformColumn1.guid, downloadTransformColumn1.insertedRowDate, downloadTransformColumn1.lastUpdatedDate, downloadTransformColumn1.downloadTransformTypeId, downloadTransformColumn1.downloadTransformId, downloadTransformColumn1.algorithmScheduleColumnId, downloadTransformColumn1.sourceViewColumnId, downloadTransformColumn1.downloadTransformDefinition
+            ,  algorithmScheduleColumn1.algorithmScheduleColumnId as algorithmScheduleColumn_algorithmScheduleColumnId ,  algorithmScheduleColumn1.guid as algorithmScheduleColumn_guid ,  algorithmScheduleColumn1.insertedRowDate as algorithmScheduleColumn_insertedRowDate ,  algorithmScheduleColumn1.lastUpdatedDate as algorithmScheduleColumn_lastUpdatedDate ,  algorithmScheduleColumn1.algorithmScheduleId as algorithmScheduleColumn_algorithmScheduleId ,  algorithmScheduleColumn1.algorithmColumnTypeId as algorithmScheduleColumn_algorithmColumnTypeId ,  algorithmScheduleColumn1.algorithmScheduleViewId as algorithmScheduleColumn_algorithmScheduleViewId ,  algorithmScheduleColumn1.sourceViewId as algorithmScheduleColumn_sourceViewId ,  algorithmScheduleColumn1.sourceViewColumnId as algorithmScheduleColumn_sourceViewColumnId ,  algorithmScheduleColumn1.extendedProperties as algorithmScheduleColumn_extendedProperties
+            ,  downloadTransform1.downloadTransformId as downloadTransform_downloadTransformId ,  downloadTransform1.guid as downloadTransform_guid ,  downloadTransform1.insertedRowDate as downloadTransform_insertedRowDate ,  downloadTransform1.lastUpdatedDate as downloadTransform_lastUpdatedDate ,  downloadTransform1.downloadTransformTypeId as downloadTransform_downloadTransformTypeId ,  downloadTransform1.downloadTransformGroupId as downloadTransform_downloadTransformGroupId ,  downloadTransform1.downloadTransformDefinition as downloadTransform_downloadTransformDefinition
+            ,  downloadTransformType1.downloadTransformTypeId as downloadTransformType_downloadTransformTypeId ,  downloadTransformType1.guid as downloadTransformType_guid ,  downloadTransformType1.insertedRowDate as downloadTransformType_insertedRowDate ,  downloadTransformType1.lastUpdatedDate as downloadTransformType_lastUpdatedDate ,  downloadTransformType1.downloadTransformTypeName as downloadTransformType_downloadTransformTypeName ,  downloadTransformType1.downloadTransformTypeClass as downloadTransformType_downloadTransformTypeClass
+            ,  sourceViewColumn1.sourceViewColumnId as sourceViewColumn_sourceViewColumnId ,  sourceViewColumn1.guid as sourceViewColumn_guid ,  sourceViewColumn1.insertedRowDate as sourceViewColumn_insertedRowDate ,  sourceViewColumn1.lastUpdatedDate as sourceViewColumn_lastUpdatedDate ,  sourceViewColumn1.sourceViewId as sourceViewColumn_sourceViewId ,  sourceViewColumn1.columnName as sourceViewColumn_columnName ,  sourceViewColumn1.columnType as sourceViewColumn_columnType
+            from downloadTransformColumn downloadTransformColumn1
+            join algorithmScheduleColumn algorithmScheduleColumn1 on downloadTransformColumn1.algorithmScheduleColumnId = algorithmScheduleColumn1.algorithmScheduleColumnId
+            join downloadTransform downloadTransform1 on downloadTransformColumn1.downloadTransformId = downloadTransform1.downloadTransformId
+            join downloadTransformType downloadTransformType1 on downloadTransformColumn1.downloadTransformTypeId = downloadTransformType1.downloadTransformTypeId
+            join sourceViewColumn sourceViewColumn1 on downloadTransformColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformExecutorStorage">
+            select downloadTransformExecutorStorage1.downloadTransformExecutorStorageId, downloadTransformExecutorStorage1.guid, downloadTransformExecutorStorage1.insertedRowDate, downloadTransformExecutorStorage1.lastUpdatedDate, downloadTransformExecutorStorage1.downloadTransformGroupId, downloadTransformExecutorStorage1.executorStorageViewId
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            ,  executorStorageView1.executorStorageViewId as executorStorageView_executorStorageViewId ,  executorStorageView1.guid as executorStorageView_guid ,  executorStorageView1.insertedRowDate as executorStorageView_insertedRowDate ,  executorStorageView1.lastUpdatedDate as executorStorageView_lastUpdatedDate ,  executorStorageView1.executorStorageSnapshotId as executorStorageView_executorStorageSnapshotId ,  executorStorageView1.executorStorageId as executorStorageView_executorStorageId ,  executorStorageView1.sourceDownloadId as executorStorageView_sourceDownloadId ,  executorStorageView1.downloadTransformGroupId as executorStorageView_downloadTransformGroupId ,  executorStorageView1.sourceViewId as executorStorageView_sourceViewId ,  executorStorageView1.executorStorageResourceId as executorStorageView_executorStorageResourceId
+            from downloadTransformExecutorStorage downloadTransformExecutorStorage1
+            join downloadTransformGroup downloadTransformGroup1 on downloadTransformExecutorStorage1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            join executorStorageView executorStorageView1 on downloadTransformExecutorStorage1.executorStorageViewId = executorStorageView1.executorStorageViewId
+        </createView>
+
+
+        <createView  viewName="vExecutorContext">
+            select executorContext1.executorContextId, executorContext1.guid, executorContext1.insertedRowDate, executorContext1.lastUpdatedDate, executorContext1.executorHostId, executorContext1.isWorking, executorContext1.properties, executorContext1.properties2, executorContext1.properties3, executorContext1.entryParams
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            from executorContext executorContext1
+            join executorHost executorHost1 on executorContext1.executorHostId = executorHost1.executorHostId
+        </createView>
+
+
+        <createView  viewName="vExecutorContextCommand">
+            select executorContextCommand1.executorContextCommandId, executorContextCommand1.guid, executorContextCommand1.insertedRowDate, executorContextCommand1.lastUpdatedDate, executorContextCommand1.executorContextId, executorContextCommand1.executorCommandId, executorContextCommand1.isRunning, executorContextCommand1.isExecuted, executorContextCommand1.commandParam1, executorContextCommand1.commandParam2, executorContextCommand1.commandParam3, executorContextCommand1.commandParam4, executorContextCommand1.commandParam5, executorContextCommand1.resultStatus
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            ,  executorCommand1.executorCommandId as executorCommand_executorCommandId ,  executorCommand1.guid as executorCommand_guid ,  executorCommand1.insertedRowDate as executorCommand_insertedRowDate ,  executorCommand1.lastUpdatedDate as executorCommand_lastUpdatedDate ,  executorCommand1.executorCommandName as executorCommand_executorCommandName ,  executorCommand1.executorCommandClass as executorCommand_executorCommandClass
+            from executorContextCommand executorContextCommand1
+            join executorContext executorContext1 on executorContextCommand1.executorContextId = executorContext1.executorContextId
+            join executorCommand executorCommand1 on executorContextCommand1.executorCommandId = executorCommand1.executorCommandId
+        </createView>
+
+
+        <createView  viewName="vExecutorContextRuntime">
+            select executorContextRuntime1.executorContextRuntimeId, executorContextRuntime1.guid, executorContextRuntime1.insertedRowDate, executorContextRuntime1.lastUpdatedDate, executorContextRuntime1.executorHostId, executorContextRuntime1.executorContextId, executorContextRuntime1.availableProcessors, executorContextRuntime1.freeMemory, executorContextRuntime1.maxMemory, executorContextRuntime1.totalMemory, executorContextRuntime1.diskInfo, executorContextRuntime1.currentDiskFreeSpace, executorContextRuntime1.allThreadsCount, executorContextRuntime1.contextThreadsCount, executorContextRuntime1.threadIds
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            from executorContextRuntime executorContextRuntime1
+            join executorContext executorContext1 on executorContextRuntime1.executorContextId = executorContext1.executorContextId
+            join executorHost executorHost1 on executorContextRuntime1.executorHostId = executorHost1.executorHostId
+        </createView>
+
+
+        <createView  viewName="vExecutorContextState">
+            select executorContextState1.executorContextStateId, executorContextState1.guid, executorContextState1.insertedRowDate, executorContextState1.lastUpdatedDate, executorContextState1.executorContextId, executorContextState1.stateName, executorContextState1.infoContent, executorContextState1.exceptionDescription
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            from executorContextState executorContextState1
+            join executorContext executorContext1 on executorContextState1.executorContextId = executorContext1.executorContextId
+        </createView>
+
+
+        <createView  viewName="vExecutorContextThread">
+            select executorContextThread1.executorContextThreadId, executorContextThread1.guid, executorContextThread1.insertedRowDate, executorContextThread1.lastUpdatedDate, executorContextThread1.executorContextId, executorContextThread1.threadId, executorContextThread1.threadName, executorContextThread1.threadPriority, executorContextThread1.threadStatus, executorContextThread1.isRunning, executorContextThread1.isInitialized, executorContextThread1.isWorking, executorContextThread1.isStopped, executorContextThread1.isDaemon, executorContextThread1.runInterval, executorContextThread1.startTime, executorContextThread1.stopTime, executorContextThread1.endTime
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            from executorContextThread executorContextThread1
+            join executorContext executorContext1 on executorContextThread1.executorContextId = executorContext1.executorContextId
+        </createView>
+
+
+        <createView  viewName="vExecutorInstance">
+            select executorInstance1.executorInstanceId, executorInstance1.guid, executorInstance1.insertedRowDate, executorInstance1.lastUpdatedDate, executorInstance1.executorTypeId, executorInstance1.executorHostId, executorInstance1.executorContextId, executorInstance1.executorInstanceName, executorInstance1.executorDefinition, executorInstance1.executorParameters, executorInstance1.isRunning, executorInstance1.isFinished, executorInstance1.portNumber, executorInstance1.endDate
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  executorType1.executorTypeId as executorType_executorTypeId ,  executorType1.guid as executorType_guid ,  executorType1.insertedRowDate as executorType_insertedRowDate ,  executorType1.lastUpdatedDate as executorType_lastUpdatedDate ,  executorType1.executorTypeName as executorType_executorTypeName ,  executorType1.executorTypeClass as executorType_executorTypeClass
+            from executorInstance executorInstance1
+            join executorContext executorContext1 on executorInstance1.executorContextId = executorContext1.executorContextId
+            join executorHost executorHost1 on executorInstance1.executorHostId = executorHost1.executorHostId
+            join executorType executorType1 on executorInstance1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+        <createView  viewName="vExecutorInstanceState">
+            select executorInstanceState1.executorInstanceStateId, executorInstanceState1.guid, executorInstanceState1.insertedRowDate, executorInstanceState1.lastUpdatedDate, executorInstanceState1.executorInstanceId, executorInstanceState1.stateName, executorInstanceState1.infoContent, executorInstanceState1.exceptionDescription
+            ,  executorInstance1.executorInstanceId as executorInstance_executorInstanceId ,  executorInstance1.guid as executorInstance_guid ,  executorInstance1.insertedRowDate as executorInstance_insertedRowDate ,  executorInstance1.lastUpdatedDate as executorInstance_lastUpdatedDate ,  executorInstance1.executorTypeId as executorInstance_executorTypeId ,  executorInstance1.executorHostId as executorInstance_executorHostId ,  executorInstance1.executorContextId as executorInstance_executorContextId ,  executorInstance1.executorInstanceName as executorInstance_executorInstanceName ,  executorInstance1.executorDefinition as executorInstance_executorDefinition ,  executorInstance1.executorParameters as executorInstance_executorParameters ,  executorInstance1.isRunning as executorInstance_isRunning ,  executorInstance1.isFinished as executorInstance_isFinished ,  executorInstance1.portNumber as executorInstance_portNumber ,  executorInstance1.endDate as executorInstance_endDate
+            from executorInstanceState executorInstanceState1
+            join executorInstance executorInstance1 on executorInstanceState1.executorInstanceId = executorInstance1.executorInstanceId
+        </createView>
+
+
+        <createView  viewName="vExecutorRest">
+            select executorRest1.executorRestId, executorRest1.guid, executorRest1.insertedRowDate, executorRest1.lastUpdatedDate, executorRest1.executorHostId, executorRest1.restPort, executorRest1.restVersion, executorRest1.restStatus
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            from executorRest executorRest1
+            join executorHost executorHost1 on executorRest1.executorHostId = executorHost1.executorHostId
+        </createView>
+
+
+        <createView  viewName="vExecutorRestCall">
+            select executorRestCall1.executorRestCallId, executorRestCall1.guid, executorRestCall1.insertedRowDate, executorRestCall1.lastUpdatedDate, executorRestCall1.executorHostId, executorRestCall1.executorRestId, executorRestCall1.requestMethod, executorRestCall1.requestHeader, executorRestCall1.requestBody, executorRestCall1.responseBody, executorRestCall1.runTime, executorRestCall1.headers, executorRestCall1.cookies, executorRestCall1.clientHost, executorRestCall1.protocol, executorRestCall1.session
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  executorRest1.executorRestId as executorRest_executorRestId ,  executorRest1.guid as executorRest_guid ,  executorRest1.insertedRowDate as executorRest_insertedRowDate ,  executorRest1.lastUpdatedDate as executorRest_lastUpdatedDate ,  executorRest1.executorHostId as executorRest_executorHostId ,  executorRest1.restPort as executorRest_restPort ,  executorRest1.restVersion as executorRest_restVersion ,  executorRest1.restStatus as executorRest_restStatus
+            from executorRestCall executorRestCall1
+            join executorHost executorHost1 on executorRestCall1.executorHostId = executorHost1.executorHostId
+            join executorRest executorRest1 on executorRestCall1.executorRestId = executorRest1.executorRestId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorage">
+            select executorStorage1.executorStorageId, executorStorage1.guid, executorStorage1.insertedRowDate, executorStorage1.lastUpdatedDate, executorStorage1.executorHostId, executorStorage1.executorStorageTypeId, executorStorage1.storageDefinition, executorStorage1.storageBasePath, executorStorage1.storageFulllPath, executorStorage1.isRunning, executorStorage1.portNumber
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  executorStorageType1.executorStorageTypeId as executorStorageType_executorStorageTypeId ,  executorStorageType1.guid as executorStorageType_guid ,  executorStorageType1.insertedRowDate as executorStorageType_insertedRowDate ,  executorStorageType1.lastUpdatedDate as executorStorageType_lastUpdatedDate ,  executorStorageType1.executorStorageTypeName as executorStorageType_executorStorageTypeName ,  executorStorageType1.executorStorageTypeClass as executorStorageType_executorStorageTypeClass
+            from executorStorage executorStorage1
+            join executorHost executorHost1 on executorStorage1.executorHostId = executorHost1.executorHostId
+            join executorStorageType executorStorageType1 on executorStorage1.executorStorageTypeId = executorStorageType1.executorStorageTypeId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageResource">
+            select executorStorageResource1.executorStorageResourceId, executorStorageResource1.guid, executorStorageResource1.insertedRowDate, executorStorageResource1.lastUpdatedDate, executorStorageResource1.executorStorageId, executorStorageResource1.resourcePath, executorStorageResource1.resourceSize, executorStorageResource1.resourceRowsCount, executorStorageResource1.isValid
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            from executorStorageResource executorStorageResource1
+            join executorStorage executorStorage1 on executorStorageResource1.executorStorageId = executorStorage1.executorStorageId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageSnapshot">
+            select executorStorageSnapshot1.executorStorageSnapshotId, executorStorageSnapshot1.guid, executorStorageSnapshot1.insertedRowDate, executorStorageSnapshot1.lastUpdatedDate, executorStorageSnapshot1.executorInstanceId
+            ,  executorInstance1.executorInstanceId as executorInstance_executorInstanceId ,  executorInstance1.guid as executorInstance_guid ,  executorInstance1.insertedRowDate as executorInstance_insertedRowDate ,  executorInstance1.lastUpdatedDate as executorInstance_lastUpdatedDate ,  executorInstance1.executorTypeId as executorInstance_executorTypeId ,  executorInstance1.executorHostId as executorInstance_executorHostId ,  executorInstance1.executorContextId as executorInstance_executorContextId ,  executorInstance1.executorInstanceName as executorInstance_executorInstanceName ,  executorInstance1.executorDefinition as executorInstance_executorDefinition ,  executorInstance1.executorParameters as executorInstance_executorParameters ,  executorInstance1.isRunning as executorInstance_isRunning ,  executorInstance1.isFinished as executorInstance_isFinished ,  executorInstance1.portNumber as executorInstance_portNumber ,  executorInstance1.endDate as executorInstance_endDate
+            from executorStorageSnapshot executorStorageSnapshot1
+            join executorInstance executorInstance1 on executorStorageSnapshot1.executorInstanceId = executorInstance1.executorInstanceId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageView">
+            select executorStorageView1.executorStorageViewId, executorStorageView1.guid, executorStorageView1.insertedRowDate, executorStorageView1.lastUpdatedDate, executorStorageView1.executorStorageSnapshotId, executorStorageView1.executorStorageId, executorStorageView1.sourceDownloadId, executorStorageView1.downloadTransformGroupId, executorStorageView1.sourceViewId, executorStorageView1.executorStorageResourceId
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            ,  executorStorageResource1.executorStorageResourceId as executorStorageResource_executorStorageResourceId ,  executorStorageResource1.guid as executorStorageResource_guid ,  executorStorageResource1.insertedRowDate as executorStorageResource_insertedRowDate ,  executorStorageResource1.lastUpdatedDate as executorStorageResource_lastUpdatedDate ,  executorStorageResource1.executorStorageId as executorStorageResource_executorStorageId ,  executorStorageResource1.resourcePath as executorStorageResource_resourcePath ,  executorStorageResource1.resourceSize as executorStorageResource_resourceSize ,  executorStorageResource1.resourceRowsCount as executorStorageResource_resourceRowsCount ,  executorStorageResource1.isValid as executorStorageResource_isValid
+            ,  executorStorageSnapshot1.executorStorageSnapshotId as executorStorageSnapshot_executorStorageSnapshotId ,  executorStorageSnapshot1.guid as executorStorageSnapshot_guid ,  executorStorageSnapshot1.insertedRowDate as executorStorageSnapshot_insertedRowDate ,  executorStorageSnapshot1.lastUpdatedDate as executorStorageSnapshot_lastUpdatedDate ,  executorStorageSnapshot1.executorInstanceId as executorStorageSnapshot_executorInstanceId
+            ,  sourceDownload1.sourceDownloadId as sourceDownload_sourceDownloadId ,  sourceDownload1.guid as sourceDownload_guid ,  sourceDownload1.insertedRowDate as sourceDownload_insertedRowDate ,  sourceDownload1.lastUpdatedDate as sourceDownload_lastUpdatedDate ,  sourceDownload1.sourceScheduleId as sourceDownload_sourceScheduleId ,  sourceDownload1.downloadTransformGroupId as sourceDownload_downloadTransformGroupId ,  sourceDownload1.executorHostId as sourceDownload_executorHostId ,  sourceDownload1.executorContextId as sourceDownload_executorContextId ,  sourceDownload1.sourceViewId as sourceDownload_sourceViewId ,  sourceDownload1.retryNumber as sourceDownload_retryNumber ,  sourceDownload1.isRunning as sourceDownload_isRunning ,  sourceDownload1.isFinished as sourceDownload_isFinished ,  sourceDownload1.isExcecption as sourceDownload_isExcecption ,  sourceDownload1.excecptionDescription as sourceDownload_excecptionDescription
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            from executorStorageView executorStorageView1
+            join downloadTransformGroup downloadTransformGroup1 on executorStorageView1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            join executorStorage executorStorage1 on executorStorageView1.executorStorageId = executorStorage1.executorStorageId
+            join executorStorageResource executorStorageResource1 on executorStorageView1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+            join executorStorageSnapshot executorStorageSnapshot1 on executorStorageView1.executorStorageSnapshotId = executorStorageSnapshot1.executorStorageSnapshotId
+            join sourceDownload sourceDownload1 on executorStorageView1.sourceDownloadId = sourceDownload1.sourceDownloadId
+            join sourceView sourceView1 on executorStorageView1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+        <createView  viewName="vExecutorTypeHostParam">
+            select executorTypeHostParam1.executorTypeHostParamId, executorTypeHostParam1.guid, executorTypeHostParam1.insertedRowDate, executorTypeHostParam1.lastUpdatedDate, executorTypeHostParam1.executorHostId, executorTypeHostParam1.executorTypeId, executorTypeHostParam1.executorParamId, executorTypeHostParam1.paramValue
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  executorParam1.executorParamId as executorParam_executorParamId ,  executorParam1.guid as executorParam_guid ,  executorParam1.insertedRowDate as executorParam_insertedRowDate ,  executorParam1.lastUpdatedDate as executorParam_lastUpdatedDate ,  executorParam1.executorParamName as executorParam_executorParamName ,  executorParam1.executorParamDescription as executorParam_executorParamDescription
+            ,  executorType1.executorTypeId as executorType_executorTypeId ,  executorType1.guid as executorType_guid ,  executorType1.insertedRowDate as executorType_insertedRowDate ,  executorType1.lastUpdatedDate as executorType_lastUpdatedDate ,  executorType1.executorTypeName as executorType_executorTypeName ,  executorType1.executorTypeClass as executorType_executorTypeClass
+            from executorTypeHostParam executorTypeHostParam1
+            join executorHost executorHost1 on executorTypeHostParam1.executorHostId = executorHost1.executorHostId
+            join executorParam executorParam1 on executorTypeHostParam1.executorParamId = executorParam1.executorParamId
+            join executorType executorType1 on executorTypeHostParam1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+        <createView  viewName="vExecutorTypeParam">
+            select executorTypeParam1.executorTypeParamId, executorTypeParam1.guid, executorTypeParam1.insertedRowDate, executorTypeParam1.lastUpdatedDate, executorTypeParam1.executorTypeId, executorTypeParam1.executorParamId, executorTypeParam1.IsMandatory
+            ,  executorParam1.executorParamId as executorParam_executorParamId ,  executorParam1.guid as executorParam_guid ,  executorParam1.insertedRowDate as executorParam_insertedRowDate ,  executorParam1.lastUpdatedDate as executorParam_lastUpdatedDate ,  executorParam1.executorParamName as executorParam_executorParamName ,  executorParam1.executorParamDescription as executorParam_executorParamDescription
+            ,  executorType1.executorTypeId as executorType_executorTypeId ,  executorType1.guid as executorType_guid ,  executorType1.insertedRowDate as executorType_insertedRowDate ,  executorType1.lastUpdatedDate as executorType_lastUpdatedDate ,  executorType1.executorTypeName as executorType_executorTypeName ,  executorType1.executorTypeClass as executorType_executorTypeClass
+            from executorTypeParam executorTypeParam1
+            join executorParam executorParam1 on executorTypeParam1.executorParamId = executorParam1.executorParamId
+            join executorType executorType1 on executorTypeParam1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+        <createView  viewName="vResourceManager">
+            select resourceManager1.resourceManagerId, resourceManager1.guid, resourceManager1.insertedRowDate, resourceManager1.lastUpdatedDate, resourceManager1.resourceManagerTypeId, resourceManager1.executorHostId, resourceManager1.resourceManagerStatus
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  resourceManagerType1.resourceManagerTypeId as resourceManagerType_resourceManagerTypeId ,  resourceManagerType1.guid as resourceManagerType_guid ,  resourceManagerType1.insertedRowDate as resourceManagerType_insertedRowDate ,  resourceManagerType1.lastUpdatedDate as resourceManagerType_lastUpdatedDate ,  resourceManagerType1.resourceManagerTypeName as resourceManagerType_resourceManagerTypeName ,  resourceManagerType1.resourceManagerTypeClass as resourceManagerType_resourceManagerTypeClass
+            from resourceManager resourceManager1
+            join executorHost executorHost1 on resourceManager1.executorHostId = executorHost1.executorHostId
+            join resourceManagerType resourceManagerType1 on resourceManager1.resourceManagerTypeId = resourceManagerType1.resourceManagerTypeId
+        </createView>
+
+
+        <createView  viewName="vResourceManagerAllocation">
+            select resourceManagerAllocation1.resourceManagerAllocationId, resourceManagerAllocation1.guid, resourceManagerAllocation1.insertedRowDate, resourceManagerAllocation1.lastUpdatedDate, resourceManagerAllocation1.resourceManagerTypeId, resourceManagerAllocation1.resourceManagerId, resourceManagerAllocation1.executorHostId, resourceManagerAllocation1.executorInstanceId, resourceManagerAllocation1.resourceMeasureId, resourceManagerAllocation1.allocationValue, resourceManagerAllocation1.allocationValueMin, resourceManagerAllocation1.allocationValueMax
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  executorInstance1.executorInstanceId as executorInstance_executorInstanceId ,  executorInstance1.guid as executorInstance_guid ,  executorInstance1.insertedRowDate as executorInstance_insertedRowDate ,  executorInstance1.lastUpdatedDate as executorInstance_lastUpdatedDate ,  executorInstance1.executorTypeId as executorInstance_executorTypeId ,  executorInstance1.executorHostId as executorInstance_executorHostId ,  executorInstance1.executorContextId as executorInstance_executorContextId ,  executorInstance1.executorInstanceName as executorInstance_executorInstanceName ,  executorInstance1.executorDefinition as executorInstance_executorDefinition ,  executorInstance1.executorParameters as executorInstance_executorParameters ,  executorInstance1.isRunning as executorInstance_isRunning ,  executorInstance1.isFinished as executorInstance_isFinished ,  executorInstance1.portNumber as executorInstance_portNumber ,  executorInstance1.endDate as executorInstance_endDate
+            ,  resourceManager1.resourceManagerId as resourceManager_resourceManagerId ,  resourceManager1.guid as resourceManager_guid ,  resourceManager1.insertedRowDate as resourceManager_insertedRowDate ,  resourceManager1.lastUpdatedDate as resourceManager_lastUpdatedDate ,  resourceManager1.resourceManagerTypeId as resourceManager_resourceManagerTypeId ,  resourceManager1.executorHostId as resourceManager_executorHostId ,  resourceManager1.resourceManagerStatus as resourceManager_resourceManagerStatus
+            ,  resourceMeasure1.resourceMeasureId as resourceMeasure_resourceMeasureId ,  resourceMeasure1.guid as resourceMeasure_guid ,  resourceMeasure1.insertedRowDate as resourceMeasure_insertedRowDate ,  resourceMeasure1.lastUpdatedDate as resourceMeasure_lastUpdatedDate ,  resourceMeasure1.resourceMeasureName as resourceMeasure_resourceMeasureName ,  resourceMeasure1.resourceMeasureClass as resourceMeasure_resourceMeasureClass
+            ,  resourceManagerType1.resourceManagerTypeId as resourceManagerType_resourceManagerTypeId ,  resourceManagerType1.guid as resourceManagerType_guid ,  resourceManagerType1.insertedRowDate as resourceManagerType_insertedRowDate ,  resourceManagerType1.lastUpdatedDate as resourceManagerType_lastUpdatedDate ,  resourceManagerType1.resourceManagerTypeName as resourceManagerType_resourceManagerTypeName ,  resourceManagerType1.resourceManagerTypeClass as resourceManagerType_resourceManagerTypeClass
+            from resourceManagerAllocation resourceManagerAllocation1
+            join executorHost executorHost1 on resourceManagerAllocation1.executorHostId = executorHost1.executorHostId
+            join executorInstance executorInstance1 on resourceManagerAllocation1.executorInstanceId = executorInstance1.executorInstanceId
+            join resourceManager resourceManager1 on resourceManagerAllocation1.resourceManagerId = resourceManager1.resourceManagerId
+            join resourceMeasure resourceMeasure1 on resourceManagerAllocation1.resourceMeasureId = resourceMeasure1.resourceMeasureId
+            join resourceManagerType resourceManagerType1 on resourceManagerAllocation1.resourceManagerTypeId = resourceManagerType1.resourceManagerTypeId
+        </createView>
+
+
+        <createView  viewName="vResourceManagerCheck">
+            select resourceManagerCheck1.resourceManagerCheckId, resourceManagerCheck1.guid, resourceManagerCheck1.insertedRowDate, resourceManagerCheck1.lastUpdatedDate, resourceManagerCheck1.resourceManagerId, resourceManagerCheck1.executorHostId, resourceManagerCheck1.resourceManagerStatus
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  resourceManager1.resourceManagerId as resourceManager_resourceManagerId ,  resourceManager1.guid as resourceManager_guid ,  resourceManager1.insertedRowDate as resourceManager_insertedRowDate ,  resourceManager1.lastUpdatedDate as resourceManager_lastUpdatedDate ,  resourceManager1.resourceManagerTypeId as resourceManager_resourceManagerTypeId ,  resourceManager1.executorHostId as resourceManager_executorHostId ,  resourceManager1.resourceManagerStatus as resourceManager_resourceManagerStatus
+            from resourceManagerCheck resourceManagerCheck1
+            join executorHost executorHost1 on resourceManagerCheck1.executorHostId = executorHost1.executorHostId
+            join resourceManager resourceManager1 on resourceManagerCheck1.resourceManagerId = resourceManager1.resourceManagerId
+        </createView>
+
+
+        <createView  viewName="vResourceManagerMeasure">
+            select resourceManagerMeasure1.resourceManagerMeasureId, resourceManagerMeasure1.guid, resourceManagerMeasure1.insertedRowDate, resourceManagerMeasure1.lastUpdatedDate, resourceManagerMeasure1.resourceManagerId, resourceManagerMeasure1.resourceMeasureId, resourceManagerMeasure1.measureString, resourceManagerMeasure1.measureValue
+            ,  resourceManager1.resourceManagerId as resourceManager_resourceManagerId ,  resourceManager1.guid as resourceManager_guid ,  resourceManager1.insertedRowDate as resourceManager_insertedRowDate ,  resourceManager1.lastUpdatedDate as resourceManager_lastUpdatedDate ,  resourceManager1.resourceManagerTypeId as resourceManager_resourceManagerTypeId ,  resourceManager1.executorHostId as resourceManager_executorHostId ,  resourceManager1.resourceManagerStatus as resourceManager_resourceManagerStatus
+            ,  resourceMeasure1.resourceMeasureId as resourceMeasure_resourceMeasureId ,  resourceMeasure1.guid as resourceMeasure_guid ,  resourceMeasure1.insertedRowDate as resourceMeasure_insertedRowDate ,  resourceMeasure1.lastUpdatedDate as resourceMeasure_lastUpdatedDate ,  resourceMeasure1.resourceMeasureName as resourceMeasure_resourceMeasureName ,  resourceMeasure1.resourceMeasureClass as resourceMeasure_resourceMeasureClass
+            from resourceManagerMeasure resourceManagerMeasure1
+            join resourceManager resourceManager1 on resourceManagerMeasure1.resourceManagerId = resourceManager1.resourceManagerId
+            join resourceMeasure resourceMeasure1 on resourceManagerMeasure1.resourceMeasureId = resourceMeasure1.resourceMeasureId
+        </createView>
+
+
+        <createView  viewName="vSourceDownload">
+            select sourceDownload1.sourceDownloadId, sourceDownload1.guid, sourceDownload1.insertedRowDate, sourceDownload1.lastUpdatedDate, sourceDownload1.sourceScheduleId, sourceDownload1.downloadTransformGroupId, sourceDownload1.executorHostId, sourceDownload1.executorContextId, sourceDownload1.sourceViewId, sourceDownload1.retryNumber, sourceDownload1.isRunning, sourceDownload1.isFinished, sourceDownload1.isExcecption, sourceDownload1.excecptionDescription
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            ,  executorContext1.executorContextId as executorContext_executorContextId ,  executorContext1.guid as executorContext_guid ,  executorContext1.insertedRowDate as executorContext_insertedRowDate ,  executorContext1.lastUpdatedDate as executorContext_lastUpdatedDate ,  executorContext1.executorHostId as executorContext_executorHostId ,  executorContext1.isWorking as executorContext_isWorking ,  executorContext1.properties as executorContext_properties ,  executorContext1.properties2 as executorContext_properties2 ,  executorContext1.properties3 as executorContext_properties3 ,  executorContext1.entryParams as executorContext_entryParams
+            ,  executorHost1.executorHostId as executorHost_executorHostId ,  executorHost1.guid as executorHost_guid ,  executorHost1.insertedRowDate as executorHost_insertedRowDate ,  executorHost1.lastUpdatedDate as executorHost_lastUpdatedDate ,  executorHost1.hostName as executorHost_hostName ,  executorHost1.hostIp as executorHost_hostIp ,  executorHost1.hostDomain as executorHost_hostDomain ,  executorHost1.hostOsType as executorHost_hostOsType ,  executorHost1.hostOsVersion as executorHost_hostOsVersion ,  executorHost1.isWorking as executorHost_isWorking
+            ,  sourceSchedule1.sourceScheduleId as sourceSchedule_sourceScheduleId ,  sourceSchedule1.guid as sourceSchedule_guid ,  sourceSchedule1.insertedRowDate as sourceSchedule_insertedRowDate ,  sourceSchedule1.lastUpdatedDate as sourceSchedule_lastUpdatedDate ,  sourceSchedule1.sourceViewId as sourceSchedule_sourceViewId ,  sourceSchedule1.executorStorageId as sourceSchedule_executorStorageId ,  sourceSchedule1.downloadTransformGroupId as sourceSchedule_downloadTransformGroupId ,  sourceSchedule1.onDemand as sourceSchedule_onDemand ,  sourceSchedule1.startTime as sourceSchedule_startTime ,  sourceSchedule1.intervalValue as sourceSchedule_intervalValue ,  sourceSchedule1.isScheduled as sourceSchedule_isScheduled ,  sourceSchedule1.deleteOldCopies as sourceSchedule_deleteOldCopies
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            from sourceDownload sourceDownload1
+            join downloadTransformGroup downloadTransformGroup1 on sourceDownload1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            join executorContext executorContext1 on sourceDownload1.executorContextId = executorContext1.executorContextId
+            join executorHost executorHost1 on sourceDownload1.executorHostId = executorHost1.executorHostId
+            join sourceSchedule sourceSchedule1 on sourceDownload1.sourceScheduleId = sourceSchedule1.sourceScheduleId
+            join sourceView sourceView1 on sourceDownload1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+        <createView  viewName="vSourceDownloadStat">
+            select sourceDownloadStat1.sourceDownloadStatId, sourceDownloadStat1.guid, sourceDownloadStat1.sourceDownloadId, sourceDownloadStat1.insertedRowDate, sourceDownloadStat1.lastUpdatedDate, sourceDownloadStat1.rowsCount, sourceDownloadStat1.errorRowsCount, sourceDownloadStat1.totalBytesCount, sourceDownloadStat1.empryRowsCount
+            ,  sourceDownload1.sourceDownloadId as sourceDownload_sourceDownloadId ,  sourceDownload1.guid as sourceDownload_guid ,  sourceDownload1.insertedRowDate as sourceDownload_insertedRowDate ,  sourceDownload1.lastUpdatedDate as sourceDownload_lastUpdatedDate ,  sourceDownload1.sourceScheduleId as sourceDownload_sourceScheduleId ,  sourceDownload1.downloadTransformGroupId as sourceDownload_downloadTransformGroupId ,  sourceDownload1.executorHostId as sourceDownload_executorHostId ,  sourceDownload1.executorContextId as sourceDownload_executorContextId ,  sourceDownload1.sourceViewId as sourceDownload_sourceViewId ,  sourceDownload1.retryNumber as sourceDownload_retryNumber ,  sourceDownload1.isRunning as sourceDownload_isRunning ,  sourceDownload1.isFinished as sourceDownload_isFinished ,  sourceDownload1.isExcecption as sourceDownload_isExcecption ,  sourceDownload1.excecptionDescription as sourceDownload_excecptionDescription
+            from sourceDownloadStat sourceDownloadStat1
+            join sourceDownload sourceDownload1 on sourceDownloadStat1.sourceDownloadId = sourceDownload1.sourceDownloadId
+        </createView>
+
+
+        <createView  viewName="vSourceDownloadStatColumn">
+            select sourceDownloadStatColumn1.sourceDownloadStatColumnId, sourceDownloadStatColumn1.guid, sourceDownloadStatColumn1.insertedRowDate, sourceDownloadStatColumn1.lastUpdatedDate, sourceDownloadStatColumn1.sourceDownloadId, sourceDownloadStatColumn1.sourceViewColumnId, sourceDownloadStatColumn1.columnMinNumber, sourceDownloadStatColumn1.columnMaxNumber, sourceDownloadStatColumn1.columnMinStr, sourceDownloadStatColumn1.columnMaxStr, sourceDownloadStatColumn1.columnNonemptyCount
+            ,  sourceDownload1.sourceDownloadId as sourceDownload_sourceDownloadId ,  sourceDownload1.guid as sourceDownload_guid ,  sourceDownload1.insertedRowDate as sourceDownload_insertedRowDate ,  sourceDownload1.lastUpdatedDate as sourceDownload_lastUpdatedDate ,  sourceDownload1.sourceScheduleId as sourceDownload_sourceScheduleId ,  sourceDownload1.downloadTransformGroupId as sourceDownload_downloadTransformGroupId ,  sourceDownload1.executorHostId as sourceDownload_executorHostId ,  sourceDownload1.executorContextId as sourceDownload_executorContextId ,  sourceDownload1.sourceViewId as sourceDownload_sourceViewId ,  sourceDownload1.retryNumber as sourceDownload_retryNumber ,  sourceDownload1.isRunning as sourceDownload_isRunning ,  sourceDownload1.isFinished as sourceDownload_isFinished ,  sourceDownload1.isExcecption as sourceDownload_isExcecption ,  sourceDownload1.excecptionDescription as sourceDownload_excecptionDescription
+            ,  sourceViewColumn1.sourceViewColumnId as sourceViewColumn_sourceViewColumnId ,  sourceViewColumn1.guid as sourceViewColumn_guid ,  sourceViewColumn1.insertedRowDate as sourceViewColumn_insertedRowDate ,  sourceViewColumn1.lastUpdatedDate as sourceViewColumn_lastUpdatedDate ,  sourceViewColumn1.sourceViewId as sourceViewColumn_sourceViewId ,  sourceViewColumn1.columnName as sourceViewColumn_columnName ,  sourceViewColumn1.columnType as sourceViewColumn_columnType
+            from sourceDownloadStatColumn sourceDownloadStatColumn1
+            join sourceDownload sourceDownload1 on sourceDownloadStatColumn1.sourceDownloadId = sourceDownload1.sourceDownloadId
+            join sourceViewColumn sourceViewColumn1 on sourceDownloadStatColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+        </createView>
+
+
+        <createView  viewName="vSourceInstance">
+            select sourceInstance1.sourceInstanceId, sourceInstance1.guid, sourceInstance1.insertedRowDate, sourceInstance1.lastUpdatedDate, sourceInstance1.sourceTypeId, sourceInstance1.sourceInstanceName, sourceInstance1.errorCount, sourceInstance1.correctCount, sourceInstance1.lastStatus, sourceInstance1.lastConnectionDate
+            ,  sourceType1.sourceTypeId as sourceType_sourceTypeId ,  sourceType1.guid as sourceType_guid ,  sourceType1.insertedRowDate as sourceType_insertedRowDate ,  sourceType1.lastUpdatedDate as sourceType_lastUpdatedDate ,  sourceType1.sourceTypeName as sourceType_sourceTypeName ,  sourceType1.sourceTypeClass as sourceType_sourceTypeClass
+            from sourceInstance sourceInstance1
+            join sourceType sourceType1 on sourceInstance1.sourceTypeId = sourceType1.sourceTypeId
+        </createView>
+
+
+        <createView  viewName="vSourceParamValue">
+            select sourceParamValue1.sourceParamValueId, sourceParamValue1.guid, sourceParamValue1.insertedRowDate, sourceParamValue1.lastUpdatedDate, sourceParamValue1.sourceInstanceId, sourceParamValue1.sourceParamId, sourceParamValue1.sourceParamValueVersion, sourceParamValue1.paramValue
+            ,  sourceInstance1.sourceInstanceId as sourceInstance_sourceInstanceId ,  sourceInstance1.guid as sourceInstance_guid ,  sourceInstance1.insertedRowDate as sourceInstance_insertedRowDate ,  sourceInstance1.lastUpdatedDate as sourceInstance_lastUpdatedDate ,  sourceInstance1.sourceTypeId as sourceInstance_sourceTypeId ,  sourceInstance1.sourceInstanceName as sourceInstance_sourceInstanceName ,  sourceInstance1.errorCount as sourceInstance_errorCount ,  sourceInstance1.correctCount as sourceInstance_correctCount ,  sourceInstance1.lastStatus as sourceInstance_lastStatus ,  sourceInstance1.lastConnectionDate as sourceInstance_lastConnectionDate
+            ,  sourceParam1.sourceParamId as sourceParam_sourceParamId ,  sourceParam1.guid as sourceParam_guid ,  sourceParam1.insertedRowDate as sourceParam_insertedRowDate ,  sourceParam1.lastUpdatedDate as sourceParam_lastUpdatedDate ,  sourceParam1.sourceParamName as sourceParam_sourceParamName ,  sourceParam1.sourceParamType as sourceParam_sourceParamType ,  sourceParam1.possibleValues as sourceParam_possibleValues
+            from sourceParamValue sourceParamValue1
+            join sourceInstance sourceInstance1 on sourceParamValue1.sourceInstanceId = sourceInstance1.sourceInstanceId
+            join sourceParam sourceParam1 on sourceParamValue1.sourceParamId = sourceParam1.sourceParamId
+        </createView>
+
+
+        <createView  viewName="vSourceSchedule">
+            select sourceSchedule1.sourceScheduleId, sourceSchedule1.guid, sourceSchedule1.insertedRowDate, sourceSchedule1.lastUpdatedDate, sourceSchedule1.sourceViewId, sourceSchedule1.executorStorageId, sourceSchedule1.downloadTransformGroupId, sourceSchedule1.onDemand, sourceSchedule1.startTime, sourceSchedule1.intervalValue, sourceSchedule1.isScheduled, sourceSchedule1.deleteOldCopies
+            ,  downloadTransformGroup1.downloadTransformGroupId as downloadTransformGroup_downloadTransformGroupId ,  downloadTransformGroup1.guid as downloadTransformGroup_guid ,  downloadTransformGroup1.insertedRowDate as downloadTransformGroup_insertedRowDate ,  downloadTransformGroup1.lastUpdatedDate as downloadTransformGroup_lastUpdatedDate ,  downloadTransformGroup1.downloadTransformGroupName as downloadTransformGroup_downloadTransformGroupName ,  downloadTransformGroup1.downloadTransformGroupDescription as downloadTransformGroup_downloadTransformGroupDescription
+            ,  executorStorage1.executorStorageId as executorStorage_executorStorageId ,  executorStorage1.guid as executorStorage_guid ,  executorStorage1.insertedRowDate as executorStorage_insertedRowDate ,  executorStorage1.lastUpdatedDate as executorStorage_lastUpdatedDate ,  executorStorage1.executorHostId as executorStorage_executorHostId ,  executorStorage1.executorStorageTypeId as executorStorage_executorStorageTypeId ,  executorStorage1.storageDefinition as executorStorage_storageDefinition ,  executorStorage1.storageBasePath as executorStorage_storageBasePath ,  executorStorage1.storageFulllPath as executorStorage_storageFulllPath ,  executorStorage1.isRunning as executorStorage_isRunning ,  executorStorage1.portNumber as executorStorage_portNumber
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            from sourceSchedule sourceSchedule1
+            join downloadTransformGroup downloadTransformGroup1 on sourceSchedule1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            join executorStorage executorStorage1 on sourceSchedule1.executorStorageId = executorStorage1.executorStorageId
+            join sourceView sourceView1 on sourceSchedule1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+        <createView  viewName="vSourceTypeParam">
+            select sourceTypeParam1.sourceTypeParamId, sourceTypeParam1.guid, sourceTypeParam1.insertedRowDate, sourceTypeParam1.lastUpdatedDate, sourceTypeParam1.sourceTypeId, sourceTypeParam1.sourceParamId, sourceTypeParam1.sourceTypeName, sourceTypeParam1.sourceParamName, sourceTypeParam1.isRequired
+            ,  sourceParam1.sourceParamId as sourceParam_sourceParamId ,  sourceParam1.guid as sourceParam_guid ,  sourceParam1.insertedRowDate as sourceParam_insertedRowDate ,  sourceParam1.lastUpdatedDate as sourceParam_lastUpdatedDate ,  sourceParam1.sourceParamName as sourceParam_sourceParamName ,  sourceParam1.sourceParamType as sourceParam_sourceParamType ,  sourceParam1.possibleValues as sourceParam_possibleValues
+            ,  sourceType1.sourceTypeId as sourceType_sourceTypeId ,  sourceType1.guid as sourceType_guid ,  sourceType1.insertedRowDate as sourceType_insertedRowDate ,  sourceType1.lastUpdatedDate as sourceType_lastUpdatedDate ,  sourceType1.sourceTypeName as sourceType_sourceTypeName ,  sourceType1.sourceTypeClass as sourceType_sourceTypeClass
+            from sourceTypeParam sourceTypeParam1
+            join sourceParam sourceParam1 on sourceTypeParam1.sourceParamId = sourceParam1.sourceParamId
+            join sourceType sourceType1 on sourceTypeParam1.sourceTypeId = sourceType1.sourceTypeId
+        </createView>
+
+
+        <createView  viewName="vSourceView">
+            select sourceView1.sourceViewId, sourceView1.guid, sourceView1.insertedRowDate, sourceView1.lastUpdatedDate, sourceView1.sourceInstanceId, sourceView1.sourceViewTypeId, sourceView1.sourceViewFormatId, sourceView1.sourceViewName, sourceView1.sourceViewDefinition, sourceView1.isExisting, sourceView1.isCustom
+            ,  sourceInstance1.sourceInstanceId as sourceInstance_sourceInstanceId ,  sourceInstance1.guid as sourceInstance_guid ,  sourceInstance1.insertedRowDate as sourceInstance_insertedRowDate ,  sourceInstance1.lastUpdatedDate as sourceInstance_lastUpdatedDate ,  sourceInstance1.sourceTypeId as sourceInstance_sourceTypeId ,  sourceInstance1.sourceInstanceName as sourceInstance_sourceInstanceName ,  sourceInstance1.errorCount as sourceInstance_errorCount ,  sourceInstance1.correctCount as sourceInstance_correctCount ,  sourceInstance1.lastStatus as sourceInstance_lastStatus ,  sourceInstance1.lastConnectionDate as sourceInstance_lastConnectionDate
+            ,  sourceViewFormat1.sourceViewFormatId as sourceViewFormat_sourceViewFormatId ,  sourceViewFormat1.guid as sourceViewFormat_guid ,  sourceViewFormat1.insertedRowDate as sourceViewFormat_insertedRowDate ,  sourceViewFormat1.lastUpdatedDate as sourceViewFormat_lastUpdatedDate ,  sourceViewFormat1.sourceViewFormatName as sourceViewFormat_sourceViewFormatName ,  sourceViewFormat1.sourceViewFormatClass as sourceViewFormat_sourceViewFormatClass
+            ,  sourceViewType1.sourceViewTypeId as sourceViewType_sourceViewTypeId ,  sourceViewType1.guid as sourceViewType_guid ,  sourceViewType1.insertedRowDate as sourceViewType_insertedRowDate ,  sourceViewType1.lastUpdatedDate as sourceViewType_lastUpdatedDate ,  sourceViewType1.sourceViewTypeName as sourceViewType_sourceViewTypeName ,  sourceViewType1.sourceViewTypeClass as sourceViewType_sourceViewTypeClass
+            from sourceView sourceView1
+            join sourceInstance sourceInstance1 on sourceView1.sourceInstanceId = sourceInstance1.sourceInstanceId
+            join sourceViewFormat sourceViewFormat1 on sourceView1.sourceViewFormatId = sourceViewFormat1.sourceViewFormatId
+            join sourceViewType sourceViewType1 on sourceView1.sourceViewTypeId = sourceViewType1.sourceViewTypeId
+        </createView>
+
+
+        <createView  viewName="vSourceViewColumn">
+            select sourceViewColumn1.sourceViewColumnId, sourceViewColumn1.guid, sourceViewColumn1.insertedRowDate, sourceViewColumn1.lastUpdatedDate, sourceViewColumn1.sourceViewId, sourceViewColumn1.columnName, sourceViewColumn1.columnType
+            ,  sourceView1.sourceViewId as sourceView_sourceViewId ,  sourceView1.guid as sourceView_guid ,  sourceView1.insertedRowDate as sourceView_insertedRowDate ,  sourceView1.lastUpdatedDate as sourceView_lastUpdatedDate ,  sourceView1.sourceInstanceId as sourceView_sourceInstanceId ,  sourceView1.sourceViewTypeId as sourceView_sourceViewTypeId ,  sourceView1.sourceViewFormatId as sourceView_sourceViewFormatId ,  sourceView1.sourceViewName as sourceView_sourceViewName ,  sourceView1.sourceViewDefinition as sourceView_sourceViewDefinition ,  sourceView1.isExisting as sourceView_isExisting ,  sourceView1.isCustom as sourceView_isCustom
+            from sourceViewColumn sourceViewColumn1
+            join sourceView sourceView1 on sourceViewColumn1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+
+
+
+
+
+
+
+        <createView  viewName="vAlgorithmColumnTypeSummary">
+            select algorithmColumnType1.algorithmColumnTypeId, algorithmColumnType1.guid, algorithmColumnType1.insertedRowDate, algorithmColumnType1.lastUpdatedDate, algorithmColumnType1.algorithmColumnTypeName, algorithmColumnType1.algorithmColumnTypeDescription, algorithmColumnType1.verificationClassName, algorithmColumnType1.verificationDefinition
+            ,  coalesce(algorithmVersionColumnType1.algorithmVersionColumnType_count, 0) as algorithmVersionColumnType_count,  coalesce(algorithmScheduleColumn1.algorithmScheduleColumn_count, 0) as algorithmScheduleColumn_count
+            from algorithmColumnType algorithmColumnType1
+            left join (select algorithmColumnTypeId, count(*) as algorithmVersionColumnType_count from algorithmVersionColumnType group by algorithmColumnTypeId) algorithmVersionColumnType1 on algorithmVersionColumnType1.algorithmColumnTypeId = algorithmColumnType1.algorithmColumnTypeId
+            left join (select algorithmColumnTypeId, count(*) as algorithmScheduleColumn_count from algorithmScheduleColumn group by algorithmColumnTypeId) algorithmScheduleColumn1 on algorithmScheduleColumn1.algorithmColumnTypeId = algorithmColumnType1.algorithmColumnTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmImplementationSummary">
+            select algorithmImplementation1.algorithmImplementationId, algorithmImplementation1.guid, algorithmImplementation1.insertedRowDate, algorithmImplementation1.lastUpdatedDate, algorithmImplementation1.algorithmTypeId, algorithmImplementation1.algorithmVersionId, algorithmImplementation1.executorTypeId, algorithmImplementation1.algorithmImplementationName, algorithmImplementation1.algorithmImplementationClass, algorithmImplementation1.algorithmImplementationDescription
+            ,  coalesce(algorithmStorageSupport1.algorithmStorageSupport_count, 0) as algorithmStorageSupport_count,  coalesce(algorithmSchedule1.algorithmSchedule_count, 0) as algorithmSchedule_count
+            from algorithmImplementation algorithmImplementation1
+            left join (select algorithmImplementationId, count(*) as algorithmStorageSupport_count from algorithmStorageSupport group by algorithmImplementationId) algorithmStorageSupport1 on algorithmStorageSupport1.algorithmImplementationId = algorithmImplementation1.algorithmImplementationId
+            left join (select algorithmImplementationId, count(*) as algorithmSchedule_count from algorithmSchedule group by algorithmImplementationId) algorithmSchedule1 on algorithmSchedule1.algorithmImplementationId = algorithmImplementation1.algorithmImplementationId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmInfoTypeSummary">
+            select algorithmInfoType1.algorithmInfoTypeId, algorithmInfoType1.guid, algorithmInfoType1.insertedRowDate, algorithmInfoType1.lastUpdatedDate, algorithmInfoType1.algorithmInfoTypeName, algorithmInfoType1.algorithmInfoTypeDescription, algorithmInfoType1.algorithmInfoTypeFormat
+            ,  coalesce(algorithmRunInfo1.algorithmRunInfo_count, 0) as algorithmRunInfo_count
+            from algorithmInfoType algorithmInfoType1
+            left join (select algorithmInfoTypeId, count(*) as algorithmRunInfo_count from algorithmRunInfo group by algorithmInfoTypeId) algorithmRunInfo1 on algorithmRunInfo1.algorithmInfoTypeId = algorithmInfoType1.algorithmInfoTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmOutputTypeSummary">
+            select algorithmOutputType1.algorithmOutputTypeId, algorithmOutputType1.guid, algorithmOutputType1.insertedRowDate, algorithmOutputType1.lastUpdatedDate, algorithmOutputType1.algorithmOutputTypeName
+            ,  coalesce(algorithmVersionOutputType1.algorithmVersionOutputType_count, 0) as algorithmVersionOutputType_count,  coalesce(algorithmOutput1.algorithmOutput_count, 0) as algorithmOutput_count
+            from algorithmOutputType algorithmOutputType1
+            left join (select algorithmOutputTypeId, count(*) as algorithmVersionOutputType_count from algorithmVersionOutputType group by algorithmOutputTypeId) algorithmVersionOutputType1 on algorithmVersionOutputType1.algorithmOutputTypeId = algorithmOutputType1.algorithmOutputTypeId
+            left join (select algorithmOutputTypeId, count(*) as algorithmOutput_count from algorithmOutput group by algorithmOutputTypeId) algorithmOutput1 on algorithmOutput1.algorithmOutputTypeId = algorithmOutputType1.algorithmOutputTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmParamSummary">
+            select algorithmParam1.algorithmParamId, algorithmParam1.guid, algorithmParam1.insertedRowDate, algorithmParam1.lastUpdatedDate, algorithmParam1.algorithmParamName, algorithmParam1.algorithmParamDescription, algorithmParam1.algorithmParamType
+            ,  coalesce(algorithmVersionParamType1.algorithmVersionParamType_count, 0) as algorithmVersionParamType_count,  coalesce(algorithmScheduleParam1.algorithmScheduleParam_count, 0) as algorithmScheduleParam_count
+            from algorithmParam algorithmParam1
+            left join (select algorithmParamId, count(*) as algorithmVersionParamType_count from algorithmVersionParamType group by algorithmParamId) algorithmVersionParamType1 on algorithmVersionParamType1.algorithmParamId = algorithmParam1.algorithmParamId
+            left join (select algorithmParamId, count(*) as algorithmScheduleParam_count from algorithmScheduleParam group by algorithmParamId) algorithmScheduleParam1 on algorithmScheduleParam1.algorithmParamId = algorithmParam1.algorithmParamId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmRunSummary">
+            select algorithmRun1.algorithmRunId, algorithmRun1.guid, algorithmRun1.insertedRowDate, algorithmRun1.lastUpdatedDate, algorithmRun1.algorithmScheduleId, algorithmRun1.executorInstanceId, algorithmRun1.executorStorageId, algorithmRun1.algorithmRunTypeId, algorithmRun1.algorithmRunName, algorithmRun1.runDate, algorithmRun1.runStatus, algorithmRun1.isError, algorithmRun1.errorDescription, algorithmRun1.isRunning, algorithmRun1.isFinished
+            ,  coalesce(algorithmRunInfo1.algorithmRunInfo_count, 0) as algorithmRunInfo_count,  coalesce(algorithmRunView1.algorithmRunView_count, 0) as algorithmRunView_count,  coalesce(algorithmOutput1.algorithmOutput_count, 0) as algorithmOutput_count
+            from algorithmRun algorithmRun1
+            left join (select algorithmRunId, count(*) as algorithmRunInfo_count from algorithmRunInfo group by algorithmRunId) algorithmRunInfo1 on algorithmRunInfo1.algorithmRunId = algorithmRun1.algorithmRunId
+            left join (select algorithmRunId, count(*) as algorithmRunView_count from algorithmRunView group by algorithmRunId) algorithmRunView1 on algorithmRunView1.algorithmRunId = algorithmRun1.algorithmRunId
+            left join (select algorithmRunId, count(*) as algorithmOutput_count from algorithmOutput group by algorithmRunId) algorithmOutput1 on algorithmOutput1.algorithmRunId = algorithmRun1.algorithmRunId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmRunTypeSummary">
+            select algorithmRunType1.algorithmRunTypeId, algorithmRunType1.guid, algorithmRunType1.insertedRowDate, algorithmRunType1.lastUpdatedDate, algorithmRunType1.algorithmRunTypeName
+            ,  coalesce(algorithmRun1.algorithmRun_count, 0) as algorithmRun_count
+            from algorithmRunType algorithmRunType1
+            left join (select algorithmRunTypeId, count(*) as algorithmRun_count from algorithmRun group by algorithmRunTypeId) algorithmRun1 on algorithmRun1.algorithmRunTypeId = algorithmRunType1.algorithmRunTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleSummary">
+            select algorithmSchedule1.algorithmScheduleId, algorithmSchedule1.guid, algorithmSchedule1.insertedRowDate, algorithmSchedule1.lastUpdatedDate, algorithmSchedule1.algorithmImplementationId, algorithmSchedule1.algorithmScheduleTypeId, algorithmSchedule1.algorithmScheduleName, algorithmSchedule1.isScheduled, algorithmSchedule1.intervalValue, algorithmSchedule1.isRunning
+            ,  coalesce(algorithmRunInfo1.algorithmRunInfo_count, 0) as algorithmRunInfo_count,  coalesce(algorithmScheduleView1.algorithmScheduleView_count, 0) as algorithmScheduleView_count,  coalesce(algorithmScheduleParam1.algorithmScheduleParam_count, 0) as algorithmScheduleParam_count,  coalesce(algorithmScheduleColumn1.algorithmScheduleColumn_count, 0) as algorithmScheduleColumn_count,  coalesce(algorithmRun1.algorithmRun_count, 0) as algorithmRun_count
+            from algorithmSchedule algorithmSchedule1
+            left join (select algorithmScheduleId, count(*) as algorithmRunInfo_count from algorithmRunInfo group by algorithmScheduleId) algorithmRunInfo1 on algorithmRunInfo1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            left join (select algorithmScheduleId, count(*) as algorithmScheduleView_count from algorithmScheduleView group by algorithmScheduleId) algorithmScheduleView1 on algorithmScheduleView1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            left join (select algorithmScheduleId, count(*) as algorithmScheduleParam_count from algorithmScheduleParam group by algorithmScheduleId) algorithmScheduleParam1 on algorithmScheduleParam1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            left join (select algorithmScheduleId, count(*) as algorithmScheduleColumn_count from algorithmScheduleColumn group by algorithmScheduleId) algorithmScheduleColumn1 on algorithmScheduleColumn1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+            left join (select algorithmScheduleId, count(*) as algorithmRun_count from algorithmRun group by algorithmScheduleId) algorithmRun1 on algorithmRun1.algorithmScheduleId = algorithmSchedule1.algorithmScheduleId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleColumnSummary">
+            select algorithmScheduleColumn1.algorithmScheduleColumnId, algorithmScheduleColumn1.guid, algorithmScheduleColumn1.insertedRowDate, algorithmScheduleColumn1.lastUpdatedDate, algorithmScheduleColumn1.algorithmScheduleId, algorithmScheduleColumn1.algorithmColumnTypeId, algorithmScheduleColumn1.algorithmScheduleViewId, algorithmScheduleColumn1.sourceViewId, algorithmScheduleColumn1.sourceViewColumnId, algorithmScheduleColumn1.extendedProperties
+            ,  coalesce(downloadTransformColumn1.downloadTransformColumn_count, 0) as downloadTransformColumn_count
+            from algorithmScheduleColumn algorithmScheduleColumn1
+            left join (select algorithmScheduleColumnId, count(*) as downloadTransformColumn_count from downloadTransformColumn group by algorithmScheduleColumnId) downloadTransformColumn1 on downloadTransformColumn1.algorithmScheduleColumnId = algorithmScheduleColumn1.algorithmScheduleColumnId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleTypeSummary">
+            select algorithmScheduleType1.algorithmScheduleTypeId, algorithmScheduleType1.guid, algorithmScheduleType1.insertedRowDate, algorithmScheduleType1.lastUpdatedDate, algorithmScheduleType1.algorithmScheduleTypeName
+            ,  coalesce(algorithmSchedule1.algorithmSchedule_count, 0) as algorithmSchedule_count
+            from algorithmScheduleType algorithmScheduleType1
+            left join (select algorithmScheduleTypeId, count(*) as algorithmSchedule_count from algorithmSchedule group by algorithmScheduleTypeId) algorithmSchedule1 on algorithmSchedule1.algorithmScheduleTypeId = algorithmScheduleType1.algorithmScheduleTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleViewSummary">
+            select algorithmScheduleView1.algorithmScheduleViewId, algorithmScheduleView1.guid, algorithmScheduleView1.insertedRowDate, algorithmScheduleView1.lastUpdatedDate, algorithmScheduleView1.algorithmScheduleViewTypeId, algorithmScheduleView1.algorithmScheduleId, algorithmScheduleView1.sourceViewId, algorithmScheduleView1.joinOnDefinition
+            ,  coalesce(algorithmRunView1.algorithmRunView_count, 0) as algorithmRunView_count,  coalesce(downloadTransformAlgorithmSchedule1.downloadTransformAlgorithmSchedule_count, 0) as downloadTransformAlgorithmSchedule_count,  coalesce(algorithmScheduleColumn1.algorithmScheduleColumn_count, 0) as algorithmScheduleColumn_count
+            from algorithmScheduleView algorithmScheduleView1
+            left join (select algorithmScheduleViewId, count(*) as algorithmRunView_count from algorithmRunView group by algorithmScheduleViewId) algorithmRunView1 on algorithmRunView1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+            left join (select algorithmScheduleViewId, count(*) as downloadTransformAlgorithmSchedule_count from downloadTransformAlgorithmSchedule group by algorithmScheduleViewId) downloadTransformAlgorithmSchedule1 on downloadTransformAlgorithmSchedule1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+            left join (select algorithmScheduleViewId, count(*) as algorithmScheduleColumn_count from algorithmScheduleColumn group by algorithmScheduleViewId) algorithmScheduleColumn1 on algorithmScheduleColumn1.algorithmScheduleViewId = algorithmScheduleView1.algorithmScheduleViewId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmScheduleViewTypeSummary">
+            select algorithmScheduleViewType1.algorithmScheduleViewTypeId, algorithmScheduleViewType1.guid, algorithmScheduleViewType1.insertedRowDate, algorithmScheduleViewType1.lastUpdatedDate, algorithmScheduleViewType1.algorithmScheduleViewTypeName
+            ,  coalesce(algorithmScheduleView1.algorithmScheduleView_count, 0) as algorithmScheduleView_count
+            from algorithmScheduleViewType algorithmScheduleViewType1
+            left join (select algorithmScheduleViewTypeId, count(*) as algorithmScheduleView_count from algorithmScheduleView group by algorithmScheduleViewTypeId) algorithmScheduleView1 on algorithmScheduleView1.algorithmScheduleViewTypeId = algorithmScheduleViewType1.algorithmScheduleViewTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmTypeSummary">
+            select algorithmType1.algorithmTypeId, algorithmType1.guid, algorithmType1.insertedRowDate, algorithmType1.lastUpdatedDate, algorithmType1.algorithmTypeName, algorithmType1.algorithmTypeDescription
+            ,  coalesce(algorithmVersion1.algorithmVersion_count, 0) as algorithmVersion_count,  coalesce(algorithmImplementation1.algorithmImplementation_count, 0) as algorithmImplementation_count,  coalesce(algorithmVersionParamType1.algorithmVersionParamType_count, 0) as algorithmVersionParamType_count
+            from algorithmType algorithmType1
+            left join (select algorithmTypeId, count(*) as algorithmVersion_count from algorithmVersion group by algorithmTypeId) algorithmVersion1 on algorithmVersion1.algorithmTypeId = algorithmType1.algorithmTypeId
+            left join (select algorithmTypeId, count(*) as algorithmImplementation_count from algorithmImplementation group by algorithmTypeId) algorithmImplementation1 on algorithmImplementation1.algorithmTypeId = algorithmType1.algorithmTypeId
+            left join (select algorithmTypeId, count(*) as algorithmVersionParamType_count from algorithmVersionParamType group by algorithmTypeId) algorithmVersionParamType1 on algorithmVersionParamType1.algorithmTypeId = algorithmType1.algorithmTypeId
+        </createView>
+
+
+        <createView  viewName="vAlgorithmVersionSummary">
+            select algorithmVersion1.algorithmVersionId, algorithmVersion1.insertedRowDate, algorithmVersion1.lastUpdatedDate, algorithmVersion1.guid, algorithmVersion1.algorithmTypeId, algorithmVersion1.algorithmVersionName
+            ,  coalesce(algorithmVersionOutputType1.algorithmVersionOutputType_count, 0) as algorithmVersionOutputType_count,  coalesce(algorithmImplementation1.algorithmImplementation_count, 0) as algorithmImplementation_count,  coalesce(algorithmVersionParamType1.algorithmVersionParamType_count, 0) as algorithmVersionParamType_count,  coalesce(algorithmVersionColumnType1.algorithmVersionColumnType_count, 0) as algorithmVersionColumnType_count
+            from algorithmVersion algorithmVersion1
+            left join (select algorithmVersionId, count(*) as algorithmVersionOutputType_count from algorithmVersionOutputType group by algorithmVersionId) algorithmVersionOutputType1 on algorithmVersionOutputType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+            left join (select algorithmVersionId, count(*) as algorithmImplementation_count from algorithmImplementation group by algorithmVersionId) algorithmImplementation1 on algorithmImplementation1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+            left join (select algorithmVersionId, count(*) as algorithmVersionParamType_count from algorithmVersionParamType group by algorithmVersionId) algorithmVersionParamType1 on algorithmVersionParamType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+            left join (select algorithmVersionId, count(*) as algorithmVersionColumnType_count from algorithmVersionColumnType group by algorithmVersionId) algorithmVersionColumnType1 on algorithmVersionColumnType1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformSummary">
+            select downloadTransform1.downloadTransformId, downloadTransform1.guid, downloadTransform1.insertedRowDate, downloadTransform1.lastUpdatedDate, downloadTransform1.downloadTransformTypeId, downloadTransform1.downloadTransformGroupId, downloadTransform1.downloadTransformDefinition
+            ,  coalesce(downloadTransformColumn1.downloadTransformColumn_count, 0) as downloadTransformColumn_count
+            from downloadTransform downloadTransform1
+            left join (select downloadTransformId, count(*) as downloadTransformColumn_count from downloadTransformColumn group by downloadTransformId) downloadTransformColumn1 on downloadTransformColumn1.downloadTransformId = downloadTransform1.downloadTransformId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformGroupSummary">
+            select downloadTransformGroup1.downloadTransformGroupId, downloadTransformGroup1.guid, downloadTransformGroup1.insertedRowDate, downloadTransformGroup1.lastUpdatedDate, downloadTransformGroup1.downloadTransformGroupName, downloadTransformGroup1.downloadTransformGroupDescription
+            ,  coalesce(sourceDownload1.sourceDownload_count, 0) as sourceDownload_count,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count,  coalesce(downloadTransformAlgorithmSchedule1.downloadTransformAlgorithmSchedule_count, 0) as downloadTransformAlgorithmSchedule_count,  coalesce(downloadTransformExecutorStorage1.downloadTransformExecutorStorage_count, 0) as downloadTransformExecutorStorage_count,  coalesce(downloadTransform1.downloadTransform_count, 0) as downloadTransform_count,  coalesce(sourceSchedule1.sourceSchedule_count, 0) as sourceSchedule_count
+            from downloadTransformGroup downloadTransformGroup1
+            left join (select downloadTransformGroupId, count(*) as sourceDownload_count from sourceDownload group by downloadTransformGroupId) sourceDownload1 on sourceDownload1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            left join (select downloadTransformGroupId, count(*) as executorStorageView_count from executorStorageView group by downloadTransformGroupId) executorStorageView1 on executorStorageView1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            left join (select downloadTransformGroupId, count(*) as downloadTransformAlgorithmSchedule_count from downloadTransformAlgorithmSchedule group by downloadTransformGroupId) downloadTransformAlgorithmSchedule1 on downloadTransformAlgorithmSchedule1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            left join (select downloadTransformGroupId, count(*) as downloadTransformExecutorStorage_count from downloadTransformExecutorStorage group by downloadTransformGroupId) downloadTransformExecutorStorage1 on downloadTransformExecutorStorage1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            left join (select downloadTransformGroupId, count(*) as downloadTransform_count from downloadTransform group by downloadTransformGroupId) downloadTransform1 on downloadTransform1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+            left join (select downloadTransformGroupId, count(*) as sourceSchedule_count from sourceSchedule group by downloadTransformGroupId) sourceSchedule1 on sourceSchedule1.downloadTransformGroupId = downloadTransformGroup1.downloadTransformGroupId
+        </createView>
+
+
+        <createView  viewName="vDownloadTransformTypeSummary">
+            select downloadTransformType1.downloadTransformTypeId, downloadTransformType1.guid, downloadTransformType1.insertedRowDate, downloadTransformType1.lastUpdatedDate, downloadTransformType1.downloadTransformTypeName, downloadTransformType1.downloadTransformTypeClass
+            ,  coalesce(downloadTransform1.downloadTransform_count, 0) as downloadTransform_count,  coalesce(downloadTransformColumn1.downloadTransformColumn_count, 0) as downloadTransformColumn_count
+            from downloadTransformType downloadTransformType1
+            left join (select downloadTransformTypeId, count(*) as downloadTransform_count from downloadTransform group by downloadTransformTypeId) downloadTransform1 on downloadTransform1.downloadTransformTypeId = downloadTransformType1.downloadTransformTypeId
+            left join (select downloadTransformTypeId, count(*) as downloadTransformColumn_count from downloadTransformColumn group by downloadTransformTypeId) downloadTransformColumn1 on downloadTransformColumn1.downloadTransformTypeId = downloadTransformType1.downloadTransformTypeId
+        </createView>
+
+
+        <createView  viewName="vExecutorCommandSummary">
+            select executorCommand1.executorCommandId, executorCommand1.guid, executorCommand1.insertedRowDate, executorCommand1.lastUpdatedDate, executorCommand1.executorCommandName, executorCommand1.executorCommandClass
+            ,  coalesce(executorContextCommand1.executorContextCommand_count, 0) as executorContextCommand_count
+            from executorCommand executorCommand1
+            left join (select executorCommandId, count(*) as executorContextCommand_count from executorContextCommand group by executorCommandId) executorContextCommand1 on executorContextCommand1.executorCommandId = executorCommand1.executorCommandId
+        </createView>
+
+
+        <createView  viewName="vExecutorContextSummary">
+            select executorContext1.executorContextId, executorContext1.guid, executorContext1.insertedRowDate, executorContext1.lastUpdatedDate, executorContext1.executorHostId, executorContext1.isWorking, executorContext1.properties, executorContext1.properties2, executorContext1.properties3, executorContext1.entryParams
+            ,  coalesce(sourceDownload1.sourceDownload_count, 0) as sourceDownload_count,  coalesce(executorContextState1.executorContextState_count, 0) as executorContextState_count,  coalesce(executorContextThread1.executorContextThread_count, 0) as executorContextThread_count,  coalesce(executorContextCommand1.executorContextCommand_count, 0) as executorContextCommand_count,  coalesce(executorContextRuntime1.executorContextRuntime_count, 0) as executorContextRuntime_count,  coalesce(executorInstance1.executorInstance_count, 0) as executorInstance_count
+            from executorContext executorContext1
+            left join (select executorContextId, count(*) as sourceDownload_count from sourceDownload group by executorContextId) sourceDownload1 on sourceDownload1.executorContextId = executorContext1.executorContextId
+            left join (select executorContextId, count(*) as executorContextState_count from executorContextState group by executorContextId) executorContextState1 on executorContextState1.executorContextId = executorContext1.executorContextId
+            left join (select executorContextId, count(*) as executorContextThread_count from executorContextThread group by executorContextId) executorContextThread1 on executorContextThread1.executorContextId = executorContext1.executorContextId
+            left join (select executorContextId, count(*) as executorContextCommand_count from executorContextCommand group by executorContextId) executorContextCommand1 on executorContextCommand1.executorContextId = executorContext1.executorContextId
+            left join (select executorContextId, count(*) as executorContextRuntime_count from executorContextRuntime group by executorContextId) executorContextRuntime1 on executorContextRuntime1.executorContextId = executorContext1.executorContextId
+            left join (select executorContextId, count(*) as executorInstance_count from executorInstance group by executorContextId) executorInstance1 on executorInstance1.executorContextId = executorContext1.executorContextId
+        </createView>
+
+
+        <createView  viewName="vExecutorHostSummary">
+            select executorHost1.executorHostId, executorHost1.guid, executorHost1.insertedRowDate, executorHost1.lastUpdatedDate, executorHost1.hostName, executorHost1.hostIp, executorHost1.hostDomain, executorHost1.hostOsType, executorHost1.hostOsVersion, executorHost1.isWorking
+            ,  coalesce(sourceDownload1.sourceDownload_count, 0) as sourceDownload_count,  coalesce(executorStorage1.executorStorage_count, 0) as executorStorage_count,  coalesce(executorContext1.executorContext_count, 0) as executorContext_count,  coalesce(resourceManager1.resourceManager_count, 0) as resourceManager_count,  coalesce(resourceManagerCheck1.resourceManagerCheck_count, 0) as resourceManagerCheck_count,  coalesce(resourceManagerAllocation1.resourceManagerAllocation_count, 0) as resourceManagerAllocation_count,  coalesce(executorContextRuntime1.executorContextRuntime_count, 0) as executorContextRuntime_count,  coalesce(executorTypeHostParam1.executorTypeHostParam_count, 0) as executorTypeHostParam_count,  coalesce(executorRest1.executorRest_count, 0) as executorRest_count,  coalesce(executorRestCall1.executorRestCall_count, 0) as executorRestCall_count,  coalesce(executorInstance1.executorInstance_count, 0) as executorInstance_count
+            from executorHost executorHost1
+            left join (select executorHostId, count(*) as sourceDownload_count from sourceDownload group by executorHostId) sourceDownload1 on sourceDownload1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorStorage_count from executorStorage group by executorHostId) executorStorage1 on executorStorage1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorContext_count from executorContext group by executorHostId) executorContext1 on executorContext1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as resourceManager_count from resourceManager group by executorHostId) resourceManager1 on resourceManager1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as resourceManagerCheck_count from resourceManagerCheck group by executorHostId) resourceManagerCheck1 on resourceManagerCheck1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as resourceManagerAllocation_count from resourceManagerAllocation group by executorHostId) resourceManagerAllocation1 on resourceManagerAllocation1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorContextRuntime_count from executorContextRuntime group by executorHostId) executorContextRuntime1 on executorContextRuntime1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorTypeHostParam_count from executorTypeHostParam group by executorHostId) executorTypeHostParam1 on executorTypeHostParam1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorRest_count from executorRest group by executorHostId) executorRest1 on executorRest1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorRestCall_count from executorRestCall group by executorHostId) executorRestCall1 on executorRestCall1.executorHostId = executorHost1.executorHostId
+            left join (select executorHostId, count(*) as executorInstance_count from executorInstance group by executorHostId) executorInstance1 on executorInstance1.executorHostId = executorHost1.executorHostId
+        </createView>
+
+
+        <createView  viewName="vExecutorInstanceSummary">
+            select executorInstance1.executorInstanceId, executorInstance1.guid, executorInstance1.insertedRowDate, executorInstance1.lastUpdatedDate, executorInstance1.executorTypeId, executorInstance1.executorHostId, executorInstance1.executorContextId, executorInstance1.executorInstanceName, executorInstance1.executorDefinition, executorInstance1.executorParameters, executorInstance1.isRunning, executorInstance1.isFinished, executorInstance1.portNumber, executorInstance1.endDate
+            ,  coalesce(executorStorageSnapshot1.executorStorageSnapshot_count, 0) as executorStorageSnapshot_count,  coalesce(resourceManagerAllocation1.resourceManagerAllocation_count, 0) as resourceManagerAllocation_count,  coalesce(executorInstanceState1.executorInstanceState_count, 0) as executorInstanceState_count,  coalesce(algorithmRun1.algorithmRun_count, 0) as algorithmRun_count
+            from executorInstance executorInstance1
+            left join (select executorInstanceId, count(*) as executorStorageSnapshot_count from executorStorageSnapshot group by executorInstanceId) executorStorageSnapshot1 on executorStorageSnapshot1.executorInstanceId = executorInstance1.executorInstanceId
+            left join (select executorInstanceId, count(*) as resourceManagerAllocation_count from resourceManagerAllocation group by executorInstanceId) resourceManagerAllocation1 on resourceManagerAllocation1.executorInstanceId = executorInstance1.executorInstanceId
+            left join (select executorInstanceId, count(*) as executorInstanceState_count from executorInstanceState group by executorInstanceId) executorInstanceState1 on executorInstanceState1.executorInstanceId = executorInstance1.executorInstanceId
+            left join (select executorInstanceId, count(*) as algorithmRun_count from algorithmRun group by executorInstanceId) algorithmRun1 on algorithmRun1.executorInstanceId = executorInstance1.executorInstanceId
+        </createView>
+
+
+        <createView  viewName="vExecutorParamSummary">
+            select executorParam1.executorParamId, executorParam1.guid, executorParam1.insertedRowDate, executorParam1.lastUpdatedDate, executorParam1.executorParamName, executorParam1.executorParamDescription
+            ,  coalesce(executorTypeParam1.executorTypeParam_count, 0) as executorTypeParam_count,  coalesce(executorTypeHostParam1.executorTypeHostParam_count, 0) as executorTypeHostParam_count
+            from executorParam executorParam1
+            left join (select executorParamId, count(*) as executorTypeParam_count from executorTypeParam group by executorParamId) executorTypeParam1 on executorTypeParam1.executorParamId = executorParam1.executorParamId
+            left join (select executorParamId, count(*) as executorTypeHostParam_count from executorTypeHostParam group by executorParamId) executorTypeHostParam1 on executorTypeHostParam1.executorParamId = executorParam1.executorParamId
+        </createView>
+
+
+        <createView  viewName="vExecutorRestSummary">
+            select executorRest1.executorRestId, executorRest1.guid, executorRest1.insertedRowDate, executorRest1.lastUpdatedDate, executorRest1.executorHostId, executorRest1.restPort, executorRest1.restVersion, executorRest1.restStatus
+            ,  coalesce(executorRestCall1.executorRestCall_count, 0) as executorRestCall_count
+            from executorRest executorRest1
+            left join (select executorRestId, count(*) as executorRestCall_count from executorRestCall group by executorRestId) executorRestCall1 on executorRestCall1.executorRestId = executorRest1.executorRestId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageSummary">
+            select executorStorage1.executorStorageId, executorStorage1.guid, executorStorage1.insertedRowDate, executorStorage1.lastUpdatedDate, executorStorage1.executorHostId, executorStorage1.executorStorageTypeId, executorStorage1.storageDefinition, executorStorage1.storageBasePath, executorStorage1.storageFulllPath, executorStorage1.isRunning, executorStorage1.portNumber
+            ,  coalesce(algorithmRunInfo1.algorithmRunInfo_count, 0) as algorithmRunInfo_count,  coalesce(executorStorageResource1.executorStorageResource_count, 0) as executorStorageResource_count,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count,  coalesce(algorithmOutput1.algorithmOutput_count, 0) as algorithmOutput_count,  coalesce(sourceSchedule1.sourceSchedule_count, 0) as sourceSchedule_count,  coalesce(algorithmRun1.algorithmRun_count, 0) as algorithmRun_count
+            from executorStorage executorStorage1
+            left join (select executorStorageId, count(*) as algorithmRunInfo_count from algorithmRunInfo group by executorStorageId) algorithmRunInfo1 on algorithmRunInfo1.executorStorageId = executorStorage1.executorStorageId
+            left join (select executorStorageId, count(*) as executorStorageResource_count from executorStorageResource group by executorStorageId) executorStorageResource1 on executorStorageResource1.executorStorageId = executorStorage1.executorStorageId
+            left join (select executorStorageId, count(*) as executorStorageView_count from executorStorageView group by executorStorageId) executorStorageView1 on executorStorageView1.executorStorageId = executorStorage1.executorStorageId
+            left join (select executorStorageId, count(*) as algorithmOutput_count from algorithmOutput group by executorStorageId) algorithmOutput1 on algorithmOutput1.executorStorageId = executorStorage1.executorStorageId
+            left join (select executorStorageId, count(*) as sourceSchedule_count from sourceSchedule group by executorStorageId) sourceSchedule1 on sourceSchedule1.executorStorageId = executorStorage1.executorStorageId
+            left join (select executorStorageId, count(*) as algorithmRun_count from algorithmRun group by executorStorageId) algorithmRun1 on algorithmRun1.executorStorageId = executorStorage1.executorStorageId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageResourceSummary">
+            select executorStorageResource1.executorStorageResourceId, executorStorageResource1.guid, executorStorageResource1.insertedRowDate, executorStorageResource1.lastUpdatedDate, executorStorageResource1.executorStorageId, executorStorageResource1.resourcePath, executorStorageResource1.resourceSize, executorStorageResource1.resourceRowsCount, executorStorageResource1.isValid
+            ,  coalesce(algorithmRunInfo1.algorithmRunInfo_count, 0) as algorithmRunInfo_count,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count,  coalesce(algorithmOutput1.algorithmOutput_count, 0) as algorithmOutput_count
+            from executorStorageResource executorStorageResource1
+            left join (select executorStorageResourceId, count(*) as algorithmRunInfo_count from algorithmRunInfo group by executorStorageResourceId) algorithmRunInfo1 on algorithmRunInfo1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+            left join (select executorStorageResourceId, count(*) as executorStorageView_count from executorStorageView group by executorStorageResourceId) executorStorageView1 on executorStorageView1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+            left join (select executorStorageResourceId, count(*) as algorithmOutput_count from algorithmOutput group by executorStorageResourceId) algorithmOutput1 on algorithmOutput1.executorStorageResourceId = executorStorageResource1.executorStorageResourceId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageSnapshotSummary">
+            select executorStorageSnapshot1.executorStorageSnapshotId, executorStorageSnapshot1.guid, executorStorageSnapshot1.insertedRowDate, executorStorageSnapshot1.lastUpdatedDate, executorStorageSnapshot1.executorInstanceId
+            ,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count
+            from executorStorageSnapshot executorStorageSnapshot1
+            left join (select executorStorageSnapshotId, count(*) as executorStorageView_count from executorStorageView group by executorStorageSnapshotId) executorStorageView1 on executorStorageView1.executorStorageSnapshotId = executorStorageSnapshot1.executorStorageSnapshotId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageTypeSummary">
+            select executorStorageType1.executorStorageTypeId, executorStorageType1.guid, executorStorageType1.insertedRowDate, executorStorageType1.lastUpdatedDate, executorStorageType1.executorStorageTypeName, executorStorageType1.executorStorageTypeClass
+            ,  coalesce(executorStorage1.executorStorage_count, 0) as executorStorage_count,  coalesce(algorithmStorageSupport1.algorithmStorageSupport_count, 0) as algorithmStorageSupport_count
+            from executorStorageType executorStorageType1
+            left join (select executorStorageTypeId, count(*) as executorStorage_count from executorStorage group by executorStorageTypeId) executorStorage1 on executorStorage1.executorStorageTypeId = executorStorageType1.executorStorageTypeId
+            left join (select executorStorageTypeId, count(*) as algorithmStorageSupport_count from algorithmStorageSupport group by executorStorageTypeId) algorithmStorageSupport1 on algorithmStorageSupport1.executorStorageTypeId = executorStorageType1.executorStorageTypeId
+        </createView>
+
+
+        <createView  viewName="vExecutorStorageViewSummary">
+            select executorStorageView1.executorStorageViewId, executorStorageView1.guid, executorStorageView1.insertedRowDate, executorStorageView1.lastUpdatedDate, executorStorageView1.executorStorageSnapshotId, executorStorageView1.executorStorageId, executorStorageView1.sourceDownloadId, executorStorageView1.downloadTransformGroupId, executorStorageView1.sourceViewId, executorStorageView1.executorStorageResourceId
+            ,  coalesce(algorithmRunView1.algorithmRunView_count, 0) as algorithmRunView_count,  coalesce(downloadTransformExecutorStorage1.downloadTransformExecutorStorage_count, 0) as downloadTransformExecutorStorage_count
+            from executorStorageView executorStorageView1
+            left join (select executorStorageViewId, count(*) as algorithmRunView_count from algorithmRunView group by executorStorageViewId) algorithmRunView1 on algorithmRunView1.executorStorageViewId = executorStorageView1.executorStorageViewId
+            left join (select executorStorageViewId, count(*) as downloadTransformExecutorStorage_count from downloadTransformExecutorStorage group by executorStorageViewId) downloadTransformExecutorStorage1 on downloadTransformExecutorStorage1.executorStorageViewId = executorStorageView1.executorStorageViewId
+        </createView>
+
+
+        <createView  viewName="vExecutorTypeSummary">
+            select executorType1.executorTypeId, executorType1.guid, executorType1.insertedRowDate, executorType1.lastUpdatedDate, executorType1.executorTypeName, executorType1.executorTypeClass
+            ,  coalesce(algorithmImplementation1.algorithmImplementation_count, 0) as algorithmImplementation_count,  coalesce(executorTypeParam1.executorTypeParam_count, 0) as executorTypeParam_count,  coalesce(executorTypeHostParam1.executorTypeHostParam_count, 0) as executorTypeHostParam_count,  coalesce(executorInstance1.executorInstance_count, 0) as executorInstance_count
+            from executorType executorType1
+            left join (select executorTypeId, count(*) as algorithmImplementation_count from algorithmImplementation group by executorTypeId) algorithmImplementation1 on algorithmImplementation1.executorTypeId = executorType1.executorTypeId
+            left join (select executorTypeId, count(*) as executorTypeParam_count from executorTypeParam group by executorTypeId) executorTypeParam1 on executorTypeParam1.executorTypeId = executorType1.executorTypeId
+            left join (select executorTypeId, count(*) as executorTypeHostParam_count from executorTypeHostParam group by executorTypeId) executorTypeHostParam1 on executorTypeHostParam1.executorTypeId = executorType1.executorTypeId
+            left join (select executorTypeId, count(*) as executorInstance_count from executorInstance group by executorTypeId) executorInstance1 on executorInstance1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+        <createView  viewName="vResourceManagerSummary">
+            select resourceManager1.resourceManagerId, resourceManager1.guid, resourceManager1.insertedRowDate, resourceManager1.lastUpdatedDate, resourceManager1.resourceManagerTypeId, resourceManager1.executorHostId, resourceManager1.resourceManagerStatus
+            ,  coalesce(resourceManagerMeasure1.resourceManagerMeasure_count, 0) as resourceManagerMeasure_count,  coalesce(resourceManagerCheck1.resourceManagerCheck_count, 0) as resourceManagerCheck_count,  coalesce(resourceManagerAllocation1.resourceManagerAllocation_count, 0) as resourceManagerAllocation_count
+            from resourceManager resourceManager1
+            left join (select resourceManagerId, count(*) as resourceManagerMeasure_count from resourceManagerMeasure group by resourceManagerId) resourceManagerMeasure1 on resourceManagerMeasure1.resourceManagerId = resourceManager1.resourceManagerId
+            left join (select resourceManagerId, count(*) as resourceManagerCheck_count from resourceManagerCheck group by resourceManagerId) resourceManagerCheck1 on resourceManagerCheck1.resourceManagerId = resourceManager1.resourceManagerId
+            left join (select resourceManagerId, count(*) as resourceManagerAllocation_count from resourceManagerAllocation group by resourceManagerId) resourceManagerAllocation1 on resourceManagerAllocation1.resourceManagerId = resourceManager1.resourceManagerId
+        </createView>
+
+
+        <createView  viewName="vResourceManagerTypeSummary">
+            select resourceManagerType1.resourceManagerTypeId, resourceManagerType1.guid, resourceManagerType1.insertedRowDate, resourceManagerType1.lastUpdatedDate, resourceManagerType1.resourceManagerTypeName, resourceManagerType1.resourceManagerTypeClass
+            ,  coalesce(resourceManager1.resourceManager_count, 0) as resourceManager_count,  coalesce(resourceManagerAllocation1.resourceManagerAllocation_count, 0) as resourceManagerAllocation_count
+            from resourceManagerType resourceManagerType1
+            left join (select resourceManagerTypeId, count(*) as resourceManager_count from resourceManager group by resourceManagerTypeId) resourceManager1 on resourceManager1.resourceManagerTypeId = resourceManagerType1.resourceManagerTypeId
+            left join (select resourceManagerTypeId, count(*) as resourceManagerAllocation_count from resourceManagerAllocation group by resourceManagerTypeId) resourceManagerAllocation1 on resourceManagerAllocation1.resourceManagerTypeId = resourceManagerType1.resourceManagerTypeId
+        </createView>
+
+
+        <createView  viewName="vResourceMeasureSummary">
+            select resourceMeasure1.resourceMeasureId, resourceMeasure1.guid, resourceMeasure1.insertedRowDate, resourceMeasure1.lastUpdatedDate, resourceMeasure1.resourceMeasureName, resourceMeasure1.resourceMeasureClass
+            ,  coalesce(resourceManagerMeasure1.resourceManagerMeasure_count, 0) as resourceManagerMeasure_count,  coalesce(resourceManagerAllocation1.resourceManagerAllocation_count, 0) as resourceManagerAllocation_count
+            from resourceMeasure resourceMeasure1
+            left join (select resourceMeasureId, count(*) as resourceManagerMeasure_count from resourceManagerMeasure group by resourceMeasureId) resourceManagerMeasure1 on resourceManagerMeasure1.resourceMeasureId = resourceMeasure1.resourceMeasureId
+            left join (select resourceMeasureId, count(*) as resourceManagerAllocation_count from resourceManagerAllocation group by resourceMeasureId) resourceManagerAllocation1 on resourceManagerAllocation1.resourceMeasureId = resourceMeasure1.resourceMeasureId
+        </createView>
+
+
+        <createView  viewName="vSourceDownloadSummary">
+            select sourceDownload1.sourceDownloadId, sourceDownload1.guid, sourceDownload1.insertedRowDate, sourceDownload1.lastUpdatedDate, sourceDownload1.sourceScheduleId, sourceDownload1.downloadTransformGroupId, sourceDownload1.executorHostId, sourceDownload1.executorContextId, sourceDownload1.sourceViewId, sourceDownload1.retryNumber, sourceDownload1.isRunning, sourceDownload1.isFinished, sourceDownload1.isExcecption, sourceDownload1.excecptionDescription
+            ,  coalesce(sourceDownloadStat1.sourceDownloadStat_count, 0) as sourceDownloadStat_count,  coalesce(sourceDownloadStatColumn1.sourceDownloadStatColumn_count, 0) as sourceDownloadStatColumn_count,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count
+            from sourceDownload sourceDownload1
+            left join (select sourceDownloadId, count(*) as sourceDownloadStat_count from sourceDownloadStat group by sourceDownloadId) sourceDownloadStat1 on sourceDownloadStat1.sourceDownloadId = sourceDownload1.sourceDownloadId
+            left join (select sourceDownloadId, count(*) as sourceDownloadStatColumn_count from sourceDownloadStatColumn group by sourceDownloadId) sourceDownloadStatColumn1 on sourceDownloadStatColumn1.sourceDownloadId = sourceDownload1.sourceDownloadId
+            left join (select sourceDownloadId, count(*) as executorStorageView_count from executorStorageView group by sourceDownloadId) executorStorageView1 on executorStorageView1.sourceDownloadId = sourceDownload1.sourceDownloadId
+        </createView>
+
+
+        <createView  viewName="vSourceInstanceSummary">
+            select sourceInstance1.sourceInstanceId, sourceInstance1.guid, sourceInstance1.insertedRowDate, sourceInstance1.lastUpdatedDate, sourceInstance1.sourceTypeId, sourceInstance1.sourceInstanceName, sourceInstance1.errorCount, sourceInstance1.correctCount, sourceInstance1.lastStatus, sourceInstance1.lastConnectionDate
+            ,  coalesce(sourceParamValue1.sourceParamValue_count, 0) as sourceParamValue_count,  coalesce(sourceView1.sourceView_count, 0) as sourceView_count
+            from sourceInstance sourceInstance1
+            left join (select sourceInstanceId, count(*) as sourceParamValue_count from sourceParamValue group by sourceInstanceId) sourceParamValue1 on sourceParamValue1.sourceInstanceId = sourceInstance1.sourceInstanceId
+            left join (select sourceInstanceId, count(*) as sourceView_count from sourceView group by sourceInstanceId) sourceView1 on sourceView1.sourceInstanceId = sourceInstance1.sourceInstanceId
+        </createView>
+
+
+        <createView  viewName="vSourceParamSummary">
+            select sourceParam1.sourceParamId, sourceParam1.guid, sourceParam1.insertedRowDate, sourceParam1.lastUpdatedDate, sourceParam1.sourceParamName, sourceParam1.sourceParamType, sourceParam1.possibleValues
+            ,  coalesce(sourceTypeParam1.sourceTypeParam_count, 0) as sourceTypeParam_count,  coalesce(sourceParamValue1.sourceParamValue_count, 0) as sourceParamValue_count
+            from sourceParam sourceParam1
+            left join (select sourceParamId, count(*) as sourceTypeParam_count from sourceTypeParam group by sourceParamId) sourceTypeParam1 on sourceTypeParam1.sourceParamId = sourceParam1.sourceParamId
+            left join (select sourceParamId, count(*) as sourceParamValue_count from sourceParamValue group by sourceParamId) sourceParamValue1 on sourceParamValue1.sourceParamId = sourceParam1.sourceParamId
+        </createView>
+
+
+        <createView  viewName="vSourceScheduleSummary">
+            select sourceSchedule1.sourceScheduleId, sourceSchedule1.guid, sourceSchedule1.insertedRowDate, sourceSchedule1.lastUpdatedDate, sourceSchedule1.sourceViewId, sourceSchedule1.executorStorageId, sourceSchedule1.downloadTransformGroupId, sourceSchedule1.onDemand, sourceSchedule1.startTime, sourceSchedule1.intervalValue, sourceSchedule1.isScheduled, sourceSchedule1.deleteOldCopies
+            ,  coalesce(sourceDownload1.sourceDownload_count, 0) as sourceDownload_count
+            from sourceSchedule sourceSchedule1
+            left join (select sourceScheduleId, count(*) as sourceDownload_count from sourceDownload group by sourceScheduleId) sourceDownload1 on sourceDownload1.sourceScheduleId = sourceSchedule1.sourceScheduleId
+        </createView>
+
+
+        <createView  viewName="vSourceTypeSummary">
+            select sourceType1.sourceTypeId, sourceType1.guid, sourceType1.insertedRowDate, sourceType1.lastUpdatedDate, sourceType1.sourceTypeName, sourceType1.sourceTypeClass
+            ,  coalesce(sourceInstance1.sourceInstance_count, 0) as sourceInstance_count,  coalesce(sourceTypeParam1.sourceTypeParam_count, 0) as sourceTypeParam_count
+            from sourceType sourceType1
+            left join (select sourceTypeId, count(*) as sourceInstance_count from sourceInstance group by sourceTypeId) sourceInstance1 on sourceInstance1.sourceTypeId = sourceType1.sourceTypeId
+            left join (select sourceTypeId, count(*) as sourceTypeParam_count from sourceTypeParam group by sourceTypeId) sourceTypeParam1 on sourceTypeParam1.sourceTypeId = sourceType1.sourceTypeId
+        </createView>
+
+
+        <createView  viewName="vSourceViewSummary">
+            select sourceView1.sourceViewId, sourceView1.guid, sourceView1.insertedRowDate, sourceView1.lastUpdatedDate, sourceView1.sourceInstanceId, sourceView1.sourceViewTypeId, sourceView1.sourceViewFormatId, sourceView1.sourceViewName, sourceView1.sourceViewDefinition, sourceView1.isExisting, sourceView1.isCustom
+            ,  coalesce(sourceDownload1.sourceDownload_count, 0) as sourceDownload_count,  coalesce(executorStorageView1.executorStorageView_count, 0) as executorStorageView_count,  coalesce(algorithmScheduleView1.algorithmScheduleView_count, 0) as algorithmScheduleView_count,  coalesce(algorithmScheduleColumn1.algorithmScheduleColumn_count, 0) as algorithmScheduleColumn_count,  coalesce(sourceViewColumn1.sourceViewColumn_count, 0) as sourceViewColumn_count,  coalesce(sourceSchedule1.sourceSchedule_count, 0) as sourceSchedule_count
+            from sourceView sourceView1
+            left join (select sourceViewId, count(*) as sourceDownload_count from sourceDownload group by sourceViewId) sourceDownload1 on sourceDownload1.sourceViewId = sourceView1.sourceViewId
+            left join (select sourceViewId, count(*) as executorStorageView_count from executorStorageView group by sourceViewId) executorStorageView1 on executorStorageView1.sourceViewId = sourceView1.sourceViewId
+            left join (select sourceViewId, count(*) as algorithmScheduleView_count from algorithmScheduleView group by sourceViewId) algorithmScheduleView1 on algorithmScheduleView1.sourceViewId = sourceView1.sourceViewId
+            left join (select sourceViewId, count(*) as algorithmScheduleColumn_count from algorithmScheduleColumn group by sourceViewId) algorithmScheduleColumn1 on algorithmScheduleColumn1.sourceViewId = sourceView1.sourceViewId
+            left join (select sourceViewId, count(*) as sourceViewColumn_count from sourceViewColumn group by sourceViewId) sourceViewColumn1 on sourceViewColumn1.sourceViewId = sourceView1.sourceViewId
+            left join (select sourceViewId, count(*) as sourceSchedule_count from sourceSchedule group by sourceViewId) sourceSchedule1 on sourceSchedule1.sourceViewId = sourceView1.sourceViewId
+        </createView>
+
+
+        <createView  viewName="vSourceViewColumnSummary">
+            select sourceViewColumn1.sourceViewColumnId, sourceViewColumn1.guid, sourceViewColumn1.insertedRowDate, sourceViewColumn1.lastUpdatedDate, sourceViewColumn1.sourceViewId, sourceViewColumn1.columnName, sourceViewColumn1.columnType
+            ,  coalesce(sourceDownloadStatColumn1.sourceDownloadStatColumn_count, 0) as sourceDownloadStatColumn_count,  coalesce(downloadTransformColumn1.downloadTransformColumn_count, 0) as downloadTransformColumn_count,  coalesce(algorithmScheduleColumn1.algorithmScheduleColumn_count, 0) as algorithmScheduleColumn_count
+            from sourceViewColumn sourceViewColumn1
+            left join (select sourceViewColumnId, count(*) as sourceDownloadStatColumn_count from sourceDownloadStatColumn group by sourceViewColumnId) sourceDownloadStatColumn1 on sourceDownloadStatColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+            left join (select sourceViewColumnId, count(*) as downloadTransformColumn_count from downloadTransformColumn group by sourceViewColumnId) downloadTransformColumn1 on downloadTransformColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+            left join (select sourceViewColumnId, count(*) as algorithmScheduleColumn_count from algorithmScheduleColumn group by sourceViewColumnId) algorithmScheduleColumn1 on algorithmScheduleColumn1.sourceViewColumnId = sourceViewColumn1.sourceViewColumnId
+        </createView>
+
+
+        <createView  viewName="vSourceViewFormatSummary">
+            select sourceViewFormat1.sourceViewFormatId, sourceViewFormat1.guid, sourceViewFormat1.insertedRowDate, sourceViewFormat1.lastUpdatedDate, sourceViewFormat1.sourceViewFormatName, sourceViewFormat1.sourceViewFormatClass
+            ,  coalesce(sourceView1.sourceView_count, 0) as sourceView_count
+            from sourceViewFormat sourceViewFormat1
+            left join (select sourceViewFormatId, count(*) as sourceView_count from sourceView group by sourceViewFormatId) sourceView1 on sourceView1.sourceViewFormatId = sourceViewFormat1.sourceViewFormatId
+        </createView>
+
+
+        <createView  viewName="vSourceViewTypeSummary">
+            select sourceViewType1.sourceViewTypeId, sourceViewType1.guid, sourceViewType1.insertedRowDate, sourceViewType1.lastUpdatedDate, sourceViewType1.sourceViewTypeName, sourceViewType1.sourceViewTypeClass
+            ,  coalesce(sourceView1.sourceView_count, 0) as sourceView_count
+            from sourceViewType sourceViewType1
+            left join (select sourceViewTypeId, count(*) as sourceView_count from sourceView group by sourceViewTypeId) sourceView1 on sourceView1.sourceViewTypeId = sourceViewType1.sourceViewTypeId
+        </createView>
+
+
+    </changeSet>
+
+
+</databaseChangeLog>

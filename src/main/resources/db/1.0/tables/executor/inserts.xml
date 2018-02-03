@@ -1,0 +1,100 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="2" author="slawomirbankowski">
+
+        <insert tableName="executorCommand">
+            <column name="executorCommandName" value="STOP_CONTEXT"/>
+            <column name="executorCommandClass" value="com.mlasaf.commands.ExecutorCommandStop"/>
+        </insert>
+        <insert tableName="executorCommand">
+            <column name="executorCommandName" value="START_EXECUTOR"/>
+            <column name="executorCommandClass" value="com.mlasaf.commands.ExecutorCommandStartExecutor"/>
+        </insert>
+
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="LOCAL"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.LocalExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="R"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.RExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="WEKA"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.WekaExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="SPARK"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.SparkExecutor"/>
+        </insert>
+        <insert tableName="executorType" >
+            <column name="executorTypeName" value="SSAS"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.SsasExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="SAS"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.SasExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="TensorFlow"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.TensorFlowExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="Moa"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.MoaExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="KNIME"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.KnimeExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="Mahout"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.MahoutExecutor"/>
+        </insert>
+        <insert tableName="executorType">
+            <column name="executorTypeName" value="Python"/>
+            <column name="executorTypeClass" value="com.mlasaf.executors.PythonExecutor"/>
+        </insert>
+
+        <insert tableName="executorParam">
+            <column name="executorParamName" value="ShellScriptPath"/>
+            <column name="executorParamDescription" value="path to shell script to execute external executor"/>
+        </insert>
+        <insert tableName="executorParam">
+            <column name="executorParamName" value="ShellScriptName"/>
+            <column name="executorParamDescription" value="name of shell script to execute external executor"/>
+        </insert>
+        <insert tableName="executorParam">
+            <column name="executorParamName" value="ExternalExecutorUrl"/>
+            <column name="executorParamDescription" value="URL (host:port) of external executor"/>
+        </insert>
+        <insert tableName="executorParam">
+            <column name="executorParamName" value="ExternalExecutorUser"/>
+            <column name="executorParamDescription" value="user to be used for external executor"/>
+        </insert>
+        <insert tableName="executorParam">
+            <column name="executorParamName" value="ExternalExecutorPass"/>
+            <column name="executorParamDescription" value="password to be used for external executor"/>
+        </insert>
+
+        <insert tableName="executorStorageType">
+            <column name="executorStorageTypeName" value="LOCAL_DISK"/>
+            <column name="executorStorageTypeClass" value="com.mlasaf.storages.LocalDiskStorage"/>
+        </insert>
+        <insert tableName="executorStorageType">
+            <column name="executorStorageTypeName" value="HDFS"/>
+            <column name="executorStorageTypeClass" value="com.mlasaf.storages.HdfsStorage"/>
+        </insert>
+        <insert tableName="executorStorageType">
+            <column name="executorStorageTypeName" value="DB"/>
+            <column name="executorStorageTypeClass" value="com.mlasaf.storages.DbStorage"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

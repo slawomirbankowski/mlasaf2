@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <include file="/executor/tables.xml" relativeToChangelogFile="true"/>
+    <include file="/executor/inserts.xml" relativeToChangelogFile="true"/>
+
+    <include file="/resource/tables.xml" relativeToChangelogFile="true"/>
+    <include file="/resource/inserts.xml" relativeToChangelogFile="true"/>
+
+    <include file="/source/tables.xml" relativeToChangelogFile="true"/>
+    <include file="/source/inserts.xml" relativeToChangelogFile="true"/>
+
+    <include file="/algorithm/tables.xml" relativeToChangelogFile="true"/>
+    <include file="/algorithm/inserts.xml" relativeToChangelogFile="true"/>
+
+    <include file="/download/tables.xml" relativeToChangelogFile="true"/>
+    <include file="/download/inserts.xml" relativeToChangelogFile="true"/>
+
+
+</databaseChangeLog>

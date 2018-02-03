@@ -1,0 +1,589 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="7" author="slawomirbankowski">
+
+        <createTable tableName="algorithmType" remarks="DICTIONARY - algorithm connected with reason to build it, general class with input columns and output columns for results" >
+            <column name="algorithmTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmTypeName" type="nvarchar(200)"  />
+            <column name="algorithmTypeDescription" type="nvarchar(2000)" defaultValue="" />
+        </createTable>
+        <createIndex indexName="idx_at_algorithmTypeName" tableName="algorithmType" unique="false">
+            <column name="algorithmTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmVersion" remarks="DICTIONARY - version of algorithm, each version can have different (new) parameters and columns" >
+            <column name="algorithmVersionId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="algorithmTypeId" type="bigint"/>
+            <column name="algorithmVersionName" type="nvarchar(200)"/>
+        </createTable>
+        <createIndex indexName="idx_av_algorithmTypeId" tableName="algorithmVersion" unique="false">
+            <column name="algorithmTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_av_atvName" tableName="algorithmVersion" unique="false">
+            <column name="algorithmVersionName" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmVersion" baseColumnNames="algorithmTypeId" referencedTableName="algorithmType" referencedColumnNames="algorithmTypeId"  constraintName="fk_av_atId"  />
+
+
+        <createTable tableName="algorithmImplementation" remarks="DICTIONARY - implementation of algorithm version for given type of executor" >
+            <column name="algorithmImplementationId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmTypeId" type="bigint"/>
+            <column name="algorithmVersionId" type="bigint"/>
+            <column name="executorTypeId" type="bigint" remarks="FK to executorType table" />
+            <column name="algorithmImplementationName" type="nvarchar(200)"/>
+            <column name="algorithmImplementationClass" type="nvarchar(2000)"/>
+            <column name="algorithmImplementationDescription" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_ai_atvId" tableName="algorithmImplementation" unique="false">
+            <column name="algorithmVersionId" />
+        </createIndex>
+        <createIndex indexName="idx_ai_executorTypeId" tableName="algorithmImplementation" unique="false">
+            <column name="executorTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_ai_aiName" tableName="algorithmImplementation" unique="false">
+            <column name="algorithmImplementationName" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmImplementation" baseColumnNames="executorTypeId" referencedTableName="executorType" referencedColumnNames="executorTypeId"  constraintName="fk_ai_et"  />
+        <addForeignKeyConstraint baseTableName="algorithmImplementation" baseColumnNames="algorithmTypeId" referencedTableName="algorithmType" referencedColumnNames="algorithmTypeId"  constraintName="fk_ai_atId"  />
+        <addForeignKeyConstraint baseTableName="algorithmImplementation" baseColumnNames="algorithmVersionId" referencedTableName="algorithmVersion" referencedColumnNames="algorithmVersionId"  constraintName="fk_ai_atvId"  />
+
+
+        <createTable tableName="algorithmStorageSupport" remarks="DICTIONARY - M2M between algorithmImplementation and storage type" >
+            <column name="algorithmStorageSupportId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmImplementationId" type="bigint"/>
+            <column name="executorStorageTypeId" type="bigint" remarks="FK to executorType table" />
+            <column name="supportPriority" type="int" remarks="priority of support for given storage type 1 - HIGHEST, 2- HIGH, 3 - MEDIUM, 4 - LOW, 5 - NO SUPPORT" />
+        </createTable>
+        <createIndex indexName="idx_ass_aiId" tableName="algorithmStorageSupport" unique="false">
+            <column name="algorithmImplementationId" />
+        </createIndex>
+        <createIndex indexName="idx_ass_estId" tableName="algorithmStorageSupport" unique="false">
+            <column name="executorStorageTypeId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmStorageSupport" baseColumnNames="algorithmImplementationId" referencedTableName="algorithmImplementation" referencedColumnNames="algorithmImplementationId"  constraintName="fk_ass_ai"  />
+        <addForeignKeyConstraint baseTableName="algorithmStorageSupport" baseColumnNames="executorStorageTypeId" referencedTableName="executorStorageType" referencedColumnNames="executorStorageTypeId"  constraintName="fk_ass_est"  />
+
+
+        <createTable tableName="algorithmParam" remarks="DICTIONARY - parameter needed to run algorithm " >
+            <column name="algorithmParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmParamName" type="nvarchar(200)"/>
+            <column name="algorithmParamDescription" type="nvarchar(2000)" defaultValue="" />
+            <column name="algorithmParamType" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_ap_apName" tableName="algorithmParam" unique="false">
+            <column name="algorithmParamName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmVersionParamType" remarks="DICTIONARY - parameter needed to run algorithm " >
+            <column name="algorithmVersionParamTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmParamId" type="bigint" />
+            <column name="algorithmTypeId" type="bigint" />
+            <column name="algorithmVersionId" type="bigint" />
+        </createTable>
+        <createIndex indexName="idx_apt_algorithmTypeId" tableName="algorithmVersionParamType" unique="false">
+            <column name="algorithmTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_apt_atvId" tableName="algorithmVersionParamType" unique="false">
+            <column name="algorithmVersionId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmVersionParamType" baseColumnNames="algorithmParamId" referencedTableName="algorithmParam" referencedColumnNames="algorithmParamId"  constraintName="fk_apt_ap"  />
+        <addForeignKeyConstraint baseTableName="algorithmVersionParamType" baseColumnNames="algorithmTypeId" referencedTableName="algorithmType" referencedColumnNames="algorithmTypeId"  constraintName="fk_apt_at"  />
+        <addForeignKeyConstraint baseTableName="algorithmVersionParamType" baseColumnNames="algorithmVersionId" referencedTableName="algorithmVersion" referencedColumnNames="algorithmVersionId"  constraintName="fk_apt_atvId"  />
+
+
+        <createTable tableName="algorithmColumnType" remarks="DICTIONARY - type of column to be used for ML algorithm" >
+            <column name="algorithmColumnTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmColumnTypeName" type="nvarchar(200)"/>
+            <column name="algorithmColumnTypeDescription" type="nvarchar(2000)"/>
+            <column name="verificationClassName" type="nvarchar(2000)" defaultValue=""/>
+            <column name="verificationDefinition" type="nvarchar(2000)" defaultValue=""/>
+        </createTable>
+        <createIndex indexName="idx_act_actName" tableName="algorithmColumnType" unique="false">
+            <column name="algorithmColumnTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmVersionColumnType" remarks="DICTIONARY - mapping between algorithm type like Prediction or Classification and column type to be mapped from downloaded data" >
+            <column name="algorithmVersionColumnTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmVersionId" type="bigint" />
+            <column name="algorithmColumnTypeId" type="bigint"/>
+            <column name="allowMultiple" type="int" defaultValueNumeric="1"/>
+            <column name="allowEmpty" type="int" defaultValueNumeric="0"/>
+        </createTable>
+        <createIndex indexName="idx_atct_atvId" tableName="algorithmVersionColumnType" unique="false">
+            <column name="algorithmVersionId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmVersionColumnType" baseColumnNames="algorithmVersionId" referencedTableName="algorithmVersion" referencedColumnNames="algorithmVersionId"  constraintName="fk_atct_atvId"  />
+        <addForeignKeyConstraint baseTableName="algorithmVersionColumnType" baseColumnNames="algorithmColumnTypeId" referencedTableName="algorithmColumnType" referencedColumnNames="algorithmColumnTypeId"  constraintName="fk_atct_actId"  />
+
+
+        <createTable tableName="algorithmScheduleType" remarks="DICTIONARY - type of schedule of algorithm " >
+            <column name="algorithmScheduleTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleTypeName" type="nvarchar(200)"/>
+        </createTable>
+        <createIndex indexName="idx_ast_astName" tableName="algorithmScheduleType" unique="false">
+            <column name="algorithmScheduleTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmSchedule" remarks="schedule of run algorithm for given instance and parameters on given executor" >
+            <column name="algorithmScheduleId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmImplementationId" type="bigint"/>
+            <column name="algorithmScheduleTypeId" type="bigint"/>
+            <column name="algorithmScheduleName" type="nvarchar(2000)"/>
+            <column name="isScheduled" type="int"/>
+            <column name="intervalValue" type="bigint"/>
+            <column name="isRunning" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_ast_aiId" tableName="algorithmSchedule" unique="false">
+            <column name="algorithmImplementationId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmSchedule" baseColumnNames="algorithmImplementationId" referencedTableName="algorithmImplementation" referencedColumnNames="algorithmImplementationId"  constraintName="fk_asch_aiId"  />
+        <addForeignKeyConstraint baseTableName="algorithmSchedule" baseColumnNames="algorithmScheduleTypeId" referencedTableName="algorithmScheduleType" referencedColumnNames="algorithmScheduleTypeId"  constraintName="fk_asch_astId"  />
+
+
+        <createTable tableName="algorithmScheduleViewType" remarks="DICTIONARY - type of view for schedule - PRIMARY, TRAINING, TESTING, VALIDATION" >
+            <column name="algorithmScheduleViewTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleViewTypeName" type="nvarchar(200)"/>
+        </createTable>
+        <createIndex indexName="idx_asvt_asvtName" tableName="algorithmScheduleViewType" unique="false">
+            <column name="algorithmScheduleViewTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmScheduleView" remarks="connection between schedule of algorithm run and source view to be used" >
+            <column name="algorithmScheduleViewId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleViewTypeId" type="bigint"/>
+            <column name="algorithmScheduleId" type="bigint"/>
+            <column name="sourceViewId" type="bigint"/>
+            <column name="joinOnDefinition" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_asv_asId" tableName="algorithmScheduleView" unique="false">
+            <column name="algorithmScheduleId" />
+        </createIndex>
+        <createIndex indexName="idx_asv_asvtId" tableName="algorithmScheduleView" unique="false">
+            <column name="algorithmScheduleViewTypeId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmScheduleView" baseColumnNames="algorithmScheduleViewTypeId" referencedTableName="algorithmScheduleViewType" referencedColumnNames="algorithmScheduleViewTypeId"  constraintName="fk_asv_asvtId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleView" baseColumnNames="algorithmScheduleId" referencedTableName="algorithmSchedule" referencedColumnNames="algorithmScheduleId"  constraintName="fk_asv_asId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleView" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_asv_svId"  />
+
+
+        <createTable tableName="algorithmScheduleParam" remarks="" >
+            <column name="algorithmScheduleParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleId" type="bigint"/>
+            <column name="algorithmParamId" type="bigint"/>
+            <column name="algorithmParamValue" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_asp_asId" tableName="algorithmScheduleParam" unique="false">
+            <column name="algorithmScheduleId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmScheduleParam" baseColumnNames="algorithmScheduleId" referencedTableName="algorithmSchedule" referencedColumnNames="algorithmScheduleId"  constraintName="fk_asp_asId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleParam" baseColumnNames="algorithmParamId" referencedTableName="algorithmParam" referencedColumnNames="algorithmParamId"  constraintName="fk_asp_apId"  />
+
+
+        <createTable tableName="algorithmScheduleColumn" remarks="view column downloaded from source mapped for schedule to algorithm input column" >
+            <column name="algorithmScheduleColumnId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleId" type="bigint"/>
+            <column name="algorithmColumnTypeId" type="bigint"/>
+            <column name="algorithmScheduleViewId" type="bigint"/>
+            <column name="sourceViewId" type="bigint"/>
+            <column name="sourceViewColumnId" type="bigint"/>
+            <column name="extendedProperties" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_asc_asId" tableName="algorithmScheduleColumn" unique="false">
+            <column name="algorithmScheduleId" />
+        </createIndex>
+        <createIndex indexName="idx_asc_asvId" tableName="algorithmScheduleColumn" unique="false">
+            <column name="algorithmScheduleViewId" />
+        </createIndex>
+        <createIndex indexName="idx_asc_sourceViewId" tableName="algorithmScheduleColumn" unique="false">
+            <column name="sourceViewId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmScheduleColumn" baseColumnNames="algorithmScheduleId" referencedTableName="algorithmSchedule" referencedColumnNames="algorithmScheduleId"  constraintName="fk_asc_asId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleColumn" baseColumnNames="algorithmColumnTypeId" referencedTableName="algorithmColumnType" referencedColumnNames="algorithmColumnTypeId"  constraintName="fk_asc_actId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleColumn" baseColumnNames="algorithmScheduleViewId" referencedTableName="algorithmScheduleView" referencedColumnNames="algorithmScheduleViewId"  constraintName="fk_asc_asvId"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleColumn" baseColumnNames="sourceViewId" referencedTableName="sourceView" referencedColumnNames="sourceViewId"  constraintName="fk_asc_sv"  />
+        <addForeignKeyConstraint baseTableName="algorithmScheduleColumn" baseColumnNames="sourceViewColumnId" referencedTableName="sourceViewColumn" referencedColumnNames="sourceViewColumnId"  constraintName="fk_asc_svcId"  />
+
+
+        <createTable tableName="algorithmRunType" remarks="DICTIONARY - type of run for algorithm: NORMAL, SPECULATIVE, RERUN " >
+            <column name="algorithmRunTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmRunTypeName" type="nvarchar(200)"/>
+        </createTable>
+        <createIndex indexName="idx_art_artName" tableName="algorithmRunType" unique="false">
+            <column name="algorithmRunTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmRun" remarks="run of algorithm for given schedule that contains instance of algorithm, storage and downloaded view" >
+            <column name="algorithmRunId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleId" type="bigint"/>
+            <column name="executorInstanceId" type="bigint"/>
+            <column name="executorStorageId" type="bigint"/>
+            <column name="algorithmRunTypeId" type="bigint"/>
+            <column name="algorithmRunName" type="nvarchar(2000)"/>
+            <column name="runDate" type="timestamp"/>
+            <column name="runStatus" type="nvarchar(50)" remarks="status for running algorithm: CREATED, DOWNLOADING, PREPARING, RUNNING, CHECKING, FINISHED" />
+            <column name="isError" type="int" />
+            <column name="errorDescription" type="nvarchar(2000)" />
+            <column name="isRunning" type="int" />
+            <column name="isFinished" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_ar_algorithmScheduleId" tableName="algorithmRun" unique="false">
+            <column name="algorithmScheduleId" />
+        </createIndex>
+        <createIndex indexName="idx_ar_executorInstanceId" tableName="algorithmRun" unique="false">
+            <column name="executorInstanceId" />
+        </createIndex>
+        <createIndex indexName="idx_ar_executorStorageId" tableName="algorithmRun" unique="false">
+            <column name="executorStorageId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmRun" baseColumnNames="algorithmScheduleId" referencedTableName="algorithmSchedule" referencedColumnNames="algorithmScheduleId"  constraintName="fk_ar_asId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRun" baseColumnNames="executorInstanceId" referencedTableName="executorInstance" referencedColumnNames="executorInstanceId"  constraintName="fk_ar_eiId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRun" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_ar_esId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRun" baseColumnNames="algorithmRunTypeId" referencedTableName="algorithmRunType" referencedColumnNames="algorithmRunTypeId"  constraintName="fk_ar_artId"  />
+
+
+        <createTable tableName="algorithmInfoType" remarks="DICTIONARY - type of additional information produced by algorithm" >
+            <column name="algorithmInfoTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmInfoTypeName" type="nvarchar(200)"/>
+            <column name="algorithmInfoTypeDescription" type="nvarchar(2000)"/>
+            <column name="algorithmInfoTypeFormat" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_ait_algorithmInfoTypeName" tableName="algorithmInfoType" unique="false">
+            <column name="algorithmInfoTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmRunInfo" remarks="run of algorithm for given schedule that contains instance of algorithm, storage and downloaded view" >
+            <column name="algorithmRunInfoId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmScheduleId" type="bigint"/>
+            <column name="algorithmRunId" type="bigint"/>
+            <column name="executorStorageId" type="bigint"/>
+            <column name="algorithmInfoTypeId" type="bigint"/>
+            <column name="executorStorageResourceId" type="bigint"/>
+            <column name="isValid" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_ari_algorithmRunId" tableName="algorithmRunInfo" unique="false">
+            <column name="algorithmRunId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmRunInfo" baseColumnNames="algorithmScheduleId" referencedTableName="algorithmSchedule" referencedColumnNames="algorithmScheduleId"  constraintName="fk_ari_asId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunInfo" baseColumnNames="algorithmRunId" referencedTableName="algorithmRun" referencedColumnNames="algorithmRunId"  constraintName="fk_ari_arId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunInfo" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_ari_esId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunInfo" baseColumnNames="algorithmInfoTypeId" referencedTableName="algorithmInfoType" referencedColumnNames="algorithmInfoTypeId"  constraintName="fk_ari_aitId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunInfo" baseColumnNames="executorStorageResourceId" referencedTableName="executorStorageResource" referencedColumnNames="executorStorageResourceId"  constraintName="fk_ari_esrId"  />
+
+
+        <createTable tableName="algorithmRunView" remarks="view downloaded for algorithm run" >
+            <column name="algorithmRunViewId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}"  />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmRunId" type="bigint"/>
+            <column name="executorStorageViewId" type="bigint" />
+            <column name="algorithmScheduleViewId" type="bigint" />
+            <column name="isDownloaded" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_arv_algorithmRunId" tableName="algorithmRunView" unique="false">
+            <column name="algorithmRunId" />
+        </createIndex>
+        <createIndex indexName="idx_arv_esvId" tableName="algorithmRunView" unique="false">
+            <column name="executorStorageViewId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmRunView" baseColumnNames="algorithmRunId" referencedTableName="algorithmRun" referencedColumnNames="algorithmRunId"  constraintName="fk_arv_arId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunView" baseColumnNames="executorStorageViewId" referencedTableName="executorStorageView" referencedColumnNames="executorStorageViewId"  constraintName="fk_arv_esvId"  />
+        <addForeignKeyConstraint baseTableName="algorithmRunView" baseColumnNames="algorithmScheduleViewId" referencedTableName="algorithmScheduleView" referencedColumnNames="algorithmScheduleViewId"  constraintName="fk_arv_asvId"  />
+
+
+        <createTable tableName="algorithmOutputType" remarks="DICTIONARY - type of output" >
+            <column name="algorithmOutputTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}"  />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmOutputTypeName" type="nvarchar(200)"/>
+        </createTable>
+        <createIndex indexName="idx_aot_aotName" tableName="algorithmOutputType" unique="false">
+            <column name="algorithmOutputTypeName" />
+        </createIndex>
+
+
+        <createTable tableName="algorithmVersionOutputType" remarks="DICTIONARY - mapping between type of algorithm version and type of output" >
+            <column name="algorithmVersionOutputTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}"  />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmVersionId" type="bigint"/>
+            <column name="algorithmOutputTypeId" type="bigint"/>
+            <column name="isMandatory" type="int"/>
+            <column name="isMultiple" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_avot_avtId" tableName="algorithmVersionOutputType" unique="false">
+            <column name="algorithmVersionId" />
+        </createIndex>
+        <createIndex indexName="idx_avot_algorithmOutputTypeId" tableName="algorithmVersionOutputType" unique="false">
+            <column name="algorithmOutputTypeId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmVersionOutputType" baseColumnNames="algorithmVersionId" referencedTableName="algorithmVersion" referencedColumnNames="algorithmVersionId"  constraintName="fk_avot_avId"  />
+        <addForeignKeyConstraint baseTableName="algorithmVersionOutputType" baseColumnNames="algorithmOutputTypeId" referencedTableName="algorithmOutputType" referencedColumnNames="algorithmOutputTypeId"  constraintName="fk_avot_aotId"  />
+
+
+        <createTable tableName="algorithmOutput" remarks="schedule of run algorithm for given instance and parameters on given executor" >
+            <column name="algorithmOutputId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="algorithmRunId" type="bigint"/>
+            <column name="algorithmOutputTypeId" type="bigint"/>
+            <column name="executorStorageId" type="bigint"/>
+            <column name="executorStorageResourceId" type="bigint" />
+        </createTable>
+        <createIndex indexName="idx_ao_algorithmRunId" tableName="algorithmOutput" unique="false">
+            <column name="algorithmRunId" />
+        </createIndex>
+        <createIndex indexName="idx_ao_esId" tableName="algorithmOutput" unique="false">
+            <column name="executorStorageId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="algorithmOutput" baseColumnNames="algorithmRunId" referencedTableName="algorithmRun" referencedColumnNames="algorithmRunId"  constraintName="fk_ao_arId"  />
+        <addForeignKeyConstraint baseTableName="algorithmOutput" baseColumnNames="algorithmOutputTypeId" referencedTableName="algorithmOutputType" referencedColumnNames="algorithmOutputTypeId"  constraintName="fk_ao_aotId"  />
+        <addForeignKeyConstraint baseTableName="algorithmOutput" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_ao_es"  />
+        <addForeignKeyConstraint baseTableName="algorithmOutput" baseColumnNames="executorStorageResourceId" referencedTableName="executorStorageResource" referencedColumnNames="executorStorageResourceId"  constraintName="fk_ao_esr"  />
+
+
+
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Prediction"/>
+        </insert>
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Classification"/>
+        </insert>
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Market Basket"/>
+        </insert>
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Outlier Detection"/>
+        </insert>
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Sentiment"/>
+        </insert>
+
+        <insert tableName="algorithmParam">
+            <column name="algorithmParamName" value="Prediction Times"/>
+            <column name="algorithmParamType" value="Double"/>
+        </insert>
+
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Group"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationAny"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="SingleGroup"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationAny"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Time"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationTime"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Date"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationDate"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Identifier"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationIdentifier"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="PredictionValue"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationValue"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Feature"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationAny"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="NumericValue"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationValue"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Label"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationAny"/>
+        </insert>
+        <insert tableName="algorithmColumnType">
+            <column name="algorithmColumnTypeName" value="Sequence"/>
+            <column name="algorithmColumnTypeDescription" value=""/>
+            <column name="verificationClassName" value="com.mlasaf.verification.VerificationSequence"/>
+        </insert>
+
+        <insert tableName="algorithmScheduleType">
+            <column name="algorithmScheduleTypeName" value="SINGLE"/>
+        </insert>
+        <insert tableName="algorithmScheduleType">
+            <column name="algorithmScheduleTypeName" value="INTERVAL"/>
+        </insert>
+
+        <insert tableName="algorithmScheduleViewType">
+            <column name="algorithmScheduleViewTypeName" value="PRIMARY"/>
+        </insert>
+        <insert tableName="algorithmScheduleViewType">
+            <column name="algorithmScheduleViewTypeName" value="TRAINING"/>
+        </insert>
+        <insert tableName="algorithmScheduleViewType">
+            <column name="algorithmScheduleViewTypeName" value="TESTING"/>
+        </insert>
+        <insert tableName="algorithmScheduleViewType">
+            <column name="algorithmScheduleViewTypeName" value="VALIDATION"/>
+        </insert>
+
+
+        <insert tableName="algorithmRunType">
+            <column name="algorithmRunTypeName" value="NORMAL"/>
+        </insert>
+        <insert tableName="algorithmRunType">
+            <column name="algorithmRunTypeName" value="RERUN"/>
+        </insert>
+        <insert tableName="algorithmRunType">
+            <column name="algorithmRunTypeName" value="SPECULATIVE"/>
+        </insert>
+
+
+        <insert tableName="algorithmInfoType">
+            <column name="algorithmInfoTypeName" value="LOG"/>
+            <column name="algorithmInfoTypeDescription" value="log file"/>
+            <column name="algorithmInfoTypeFormat" value="#TEXT"/>
+        </insert>
+        <insert tableName="algorithmInfoType">
+            <column name="algorithmInfoTypeName" value="PROGRESS"/>
+            <column name="algorithmInfoTypeDescription" value="file with progress"/>
+            <column name="algorithmInfoTypeFormat" value="algorithmId,progressDate,progressValue,progressStatus"/>
+        </insert>
+
+        <insert tableName="algorithmOutputType">
+            <column name="algorithmOutputTypeName" value="PRIMARY_PREDICTED"/>
+        </insert>
+        <insert tableName="algorithmOutputType">
+            <column name="algorithmOutputTypeName" value="MERGED"/>
+        </insert>
+        <insert tableName="algorithmOutputType">
+            <column name="algorithmOutputTypeName" value="SECONDARY"/>
+        </insert>
+        <insert tableName="algorithmOutputType">
+            <column name="algorithmOutputTypeName" value="SUMMARY"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

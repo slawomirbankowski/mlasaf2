@@ -1,0 +1,444 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="1" author="slawomirbankowski">
+
+        <createTable tableName="executorHost" remarks="host on which executor can execute" >
+            <column name="executorHostId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="hostName" type="nvarchar(200)" remarks="name of host like serv001" />
+            <column name="hostIp" type="nvarchar(200)" remarks="IP of host in format x.x.x.x "/>
+            <column name="hostDomain" type="nvarchar(2000)" remarks="domain name"/>
+            <column name="hostOsType" type="nvarchar(2000)" remarks="host Operating System type: Windows, Linux Red Hat, ..."/>
+            <column name="hostOsVersion" type="nvarchar(2000)" remarks="version number of Operating System"/>
+            <column name="isWorking" type="int" defaultValueNumeric="1"/>
+        </createTable>
+        <createIndex indexName="idx_eh_hostIp" tableName="executorHost" unique="false">
+            <column name="hostIp" />
+        </createIndex>
+        <createIndex indexName="idx_eh_hostName" tableName="executorHost" unique="false">
+            <column name="hostName" />
+        </createIndex>
+
+
+        <createTable tableName="executorContext" remarks="context - JVM with executors" >
+            <column name="executorContextId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="isWorking" type="int" defaultValueNumeric="1"/>
+            <column name="properties" type="varchar(4000)" defaultValue=""/>
+            <column name="properties2" type="varchar(4000)" defaultValue=""/>
+            <column name="properties3" type="varchar(4000)" defaultValue=""/>
+            <column name="entryParams" type="varchar(4000)" defaultValue=""/>
+        </createTable>
+        <createIndex indexName="idx_ec_executorHostId" tableName="executorContext" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorContext" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_ec_ehId"  />
+
+
+        <createTable tableName="executorContextState" remarks="status of context over time" >
+            <column name="executorContextStateId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorContextId" type="bigint"/>
+            <column name="stateName" type="nvarchar(200)"/>
+            <column name="infoContent" type="nvarchar(2000)" remarks="" />
+            <column name="exceptionDescription" type="nvarchar(2000)" remarks="" />
+        </createTable>
+        <createIndex indexName="idx_ecs_executorContextId" tableName="executorContextState" unique="false">
+            <column name="executorContextId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorContextState" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_ecs_ecId"  />
+
+
+        <createTable tableName="executorContextThread" remarks="thread of context" >
+            <column name="executorContextThreadId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorContextId" type="bigint"/>
+            <column name="threadId" type="int"/>
+            <column name="threadName" type="nvarchar(200)"/>
+            <column name="threadPriority" type="int"/>
+            <column name="threadStatus" type="nvarchar(2000)" remarks="" />
+            <column name="isRunning" type="int" remarks="" />
+            <column name="isInitialized" type="int" remarks="" />
+            <column name="isWorking" type="int" remarks="" />
+            <column name="isStopped" type="int" remarks="" />
+            <column name="isDaemon" type="int" remarks="" />
+            <column name="runInterval" type="int"/>
+            <column name="startTime" type="timestamp"/>
+            <column name="stopTime" type="timestamp"/>
+            <column name="endTime" type="timestamp"/>
+        </createTable>
+        <createIndex indexName="idx_ect_executorContextId" tableName="executorContextThread" unique="false">
+            <column name="executorContextId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorContextThread" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_ect_ecId"  />
+
+
+        <createTable tableName="executorCommand" remarks="commands for context" >
+            <column name="executorCommandId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorCommandName" type="varchar(200)" defaultValue=""/>
+            <column name="executorCommandClass" type="varchar(2000)" defaultValue=""/>
+        </createTable>
+        <createIndex indexName="idx_ecomm_executorCommandName" tableName="executorCommand" unique="false">
+            <column name="executorCommandName" />
+        </createIndex>
+
+
+
+        <createTable tableName="executorContextCommand" remarks="commands for context" >
+            <column name="executorContextCommandId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorContextId" type="bigint" remarks="FK to executorContext table" />
+            <column name="executorCommandId" type="bigint" remarks="FK to executorCommand table" />
+            <column name="isRunning" type="int" remarks="if command is running on context" />
+            <column name="isExecuted" type="int" remarks="if command is executed on context" />
+            <column name="commandParam1" type="varchar(2000)" defaultValue="" remarks="parameter 1 for command " />
+            <column name="commandParam2" type="varchar(2000)" defaultValue="" remarks="parameter 2 for command " />
+            <column name="commandParam3" type="varchar(2000)" defaultValue="" remarks="parameter 3 for command " />
+            <column name="commandParam4" type="varchar(2000)" defaultValue="" remarks="parameter 4 for command " />
+            <column name="commandParam5" type="varchar(2000)" defaultValue="" remarks="parameter 5 for command " />
+            <column name="resultStatus" type="varchar(200)" defaultValue="" remarks="status of running this command in given context " />
+        </createTable>
+        <createIndex indexName="idx_eccomm_executorContextId" tableName="executorContextCommand" unique="false">
+            <column name="executorContextId" />
+        </createIndex>
+        <createIndex indexName="idx_eccomm_executorCommandId" tableName="executorContextCommand" unique="false">
+            <column name="executorCommandId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorContextCommand" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_eccomm_ecId"  />
+        <addForeignKeyConstraint baseTableName="executorContextCommand" baseColumnNames="executorCommandId" referencedTableName="executorCommand" referencedColumnNames="executorCommandId"  constraintName="fk_eccomm_ecommId"  />
+
+
+        <createTable tableName="executorContextRuntime" remarks="context - JVM with executors" >
+            <column name="executorContextRuntimeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorContextId" type="bigint" remarks="FK to executorHost table" />
+            <column name="availableProcessors" type="float"/>
+            <column name="freeMemory" type="float"/>
+            <column name="maxMemory" type="float"/>
+            <column name="totalMemory" type="float"/>
+            <column name="diskInfo" type="nvarchar(2000)"/>
+            <column name="currentDiskFreeSpace" type="float"/>
+            <column name="allThreadsCount" type="int"/>
+            <column name="contextThreadsCount" type="int"/>
+            <column name="threadIds" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_ecr_executorHostId" tableName="executorContextRuntime" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <createIndex indexName="idx_ecr_executorContextId" tableName="executorContextRuntime" unique="false">
+            <column name="executorContextId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorContextRuntime" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_ecr_ehId"  />
+        <addForeignKeyConstraint baseTableName="executorContextRuntime" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_ecr_ecId"  />
+
+
+        <createTable tableName="executorType" remarks="DICTIONARY - type of executor to run algorithms on">
+            <column name="executorTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorTypeName" type="nvarchar(200)"/>
+            <column name="executorTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_et_executorTypeName" tableName="executorType" unique="true">
+            <column name="executorTypeName" />
+        </createIndex>
+
+
+
+        <createTable tableName="executorParam" remarks="DICTIONARY - paramerters for executors">
+            <column name="executorParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorParamName" type="nvarchar(200)"/>
+            <column name="executorParamDescription" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_ep_executorParamName" tableName="executorParam" unique="true">
+            <column name="executorParamName" />
+        </createIndex>
+
+
+
+        <createTable tableName="executorTypeParam" remarks="DICTIONARY - assignment between executor type and parameters that could be assigned to it">
+            <column name="executorTypeParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorTypeId" type="bigint" remarks="FK to executorType table" />
+            <column name="executorParamId" type="bigint" remarks="FK to executorParam table" />
+            <column name="IsMandatory" type="int" defaultValue="1"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="executorTypeParam" baseColumnNames="executorTypeId" referencedTableName="executorType" referencedColumnNames="executorTypeId"  constraintName="fk_etp_etId"  />
+        <addForeignKeyConstraint baseTableName="executorTypeParam" baseColumnNames="executorParamId" referencedTableName="executorParam" referencedColumnNames="executorParamId"  constraintName="fk_etp_epId"  />
+        <createIndex indexName="idx_etp_executorTypeId" tableName="executorTypeParam" unique="true">
+            <column name="executorTypeId" />
+        </createIndex>
+
+
+        <createTable tableName="executorTypeHostParam" remarks="parameters assigned for given executor types on host">
+            <column name="executorTypeHostParamId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorTypeId" type="bigint" remarks="FK to executorType table" />
+            <column name="executorParamId" type="bigint" remarks="FK to executorParam table" />
+            <column name="paramValue" type="nvarchar(2000)" defaultValue=""/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="executorTypeHostParam" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_ethp_ehId"  />
+        <addForeignKeyConstraint baseTableName="executorTypeHostParam" baseColumnNames="executorTypeId" referencedTableName="executorType" referencedColumnNames="executorTypeId"  constraintName="fk_ethp_etId"  />
+        <addForeignKeyConstraint baseTableName="executorTypeHostParam" baseColumnNames="executorParamId" referencedTableName="executorParam" referencedColumnNames="executorParamId"  constraintName="fk_ethp_epId"  />
+        <createIndex indexName="idx_ethp_executorHostId" tableName="executorTypeHostParam" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <createIndex indexName="idx_ethp_executorTypeId" tableName="executorTypeHostParam" unique="false">
+            <column name="executorTypeId" />
+        </createIndex>
+
+
+        <createTable tableName="executorRest" remarks="REST servcice registered on host on given port number">
+            <column name="executorRestId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="restPort" type="int" defaultValueNumeric="0" />
+            <column name="restVersion" type="nvarchar(2000)" defaultValue="1.0"/>
+            <column name="restStatus" type="nvarchar(400)" defaultValue="STARTING"/>
+        </createTable>
+        <createIndex indexName="idx_er_executorHostId" tableName="executorRest" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorRest" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_erest_ehId"  />
+
+
+        <createTable tableName="executorRestCall" remarks="single call to REST service">
+            <column name="executorRestCallId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorRestId" type="bigint" remarks="FK to executorRest table" />
+            <column name="requestMethod" type="nvarchar(2000)"/>
+            <column name="requestHeader" type="nvarchar(2000)"/>
+            <column name="requestBody" type="nvarchar(2000)"/>
+            <column name="responseBody" type="nvarchar(2000)"/>
+            <column name="runTime" type="bigint"/>
+            <column name="headers" type="nvarchar(2000)"/>
+            <column name="cookies" type="nvarchar(2000)"/>
+            <column name="clientHost" type="nvarchar(2000)"/>
+            <column name="protocol" type="nvarchar(2000)"/>
+            <column name="session" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_erc_executorHostId" tableName="executorRestCall" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <createIndex indexName="idx_erc_executorRestId" tableName="executorRestCall" unique="false">
+            <column name="executorRestId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorRestCall" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_erc_eh"  />
+        <addForeignKeyConstraint baseTableName="executorRestCall" baseColumnNames="executorRestId" referencedTableName="executorRest" referencedColumnNames="executorRestId"  constraintName="fk_erc_er"  />
+
+
+        <createTable tableName="executorInstance" remarks="instance of executor in context">
+            <column name="executorInstanceId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorTypeId" type="bigint" remarks="FK to executorType table" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorContextId" type="bigint" remarks="FK to executorContext table" />
+            <column name="executorInstanceName" type="nvarchar(2000)"/>
+            <column name="executorDefinition" type="nvarchar(2000)"/>
+            <column name="executorParameters" type="nvarchar(2000)"/>
+            <column name="isRunning" type="int" defaultValueNumeric="1" />
+            <column name="isFinished" type="int" defaultValueNumeric="0"/>
+            <column name="portNumber" type="int"/>
+            <column name="endDate" type="timestamp"/>
+        </createTable>
+        <createIndex indexName="idx_ei_executorTypeId" tableName="executorInstance" unique="false">
+            <column name="executorTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_ei_executorHostId" tableName="executorInstance" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorInstance" baseColumnNames="executorTypeId" referencedTableName="executorType" referencedColumnNames="executorTypeId"  constraintName="fk_ei_et"  />
+        <addForeignKeyConstraint baseTableName="executorInstance" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_ei_eh"  />
+        <addForeignKeyConstraint baseTableName="executorInstance" baseColumnNames="executorContextId" referencedTableName="executorContext" referencedColumnNames="executorContextId"  constraintName="fk_ei_ec"  />
+
+
+        <createTable tableName="executorInstanceState" remarks="state of instance over time">
+            <column name="executorInstanceStateId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorInstanceId" type="bigint"/>
+            <column name="stateName" type="nvarchar(200)"/>
+            <column name="infoContent" type="nvarchar(2000)" remarks="" />
+            <column name="exceptionDescription" type="nvarchar(2000)" remarks="" />
+        </createTable>
+        <createIndex indexName="idx_eis_executorTypeId" tableName="executorInstanceState" unique="false">
+            <column name="executorInstanceId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorInstanceState" baseColumnNames="executorInstanceId" referencedTableName="executorInstance" referencedColumnNames="executorInstanceId"  constraintName="fk_eis_ei"  />
+
+
+        <createTable tableName="executorStorageType" remarks="type of storage: disk, HDFS, database">
+            <column name="executorStorageTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorStorageTypeName" type="nvarchar(200)" remarks="type of storage like: LOCAL, HDFS, DB" />
+            <column name="executorStorageTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_est_estName" tableName="executorStorageType" unique="false">
+            <column name="executorStorageTypeName" />
+        </createIndex>
+
+
+
+        <createTable tableName="executorStorage" remarks="Storage assigned to executor" >
+            <column name="executorStorageId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorHostId" type="bigint" remarks="FK to executorHost table" />
+            <column name="executorStorageTypeId" type="bigint"/>
+            <column name="storageDefinition" type="nvarchar(2000)"/>
+            <column name="storageBasePath" type="nvarchar(2000)"/>
+            <column name="storageFulllPath" type="nvarchar(2000)"/>
+            <column name="isRunning" type="int"/>
+            <column name="portNumber" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_es_executorhostid" tableName="executorStorage" unique="false">
+            <column name="executorHostId" />
+        </createIndex>
+        <createIndex indexName="idx_es_estypeid" tableName="executorStorage" unique="false">
+            <column name="executorStorageTypeId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorStorage" baseColumnNames="executorHostId" referencedTableName="executorHost" referencedColumnNames="executorHostId"  constraintName="fk_es_eh"  />
+        <addForeignKeyConstraint baseTableName="executorStorage" baseColumnNames="executorStorageTypeId" referencedTableName="executorStorageType" referencedColumnNames="executorStorageTypeId"  constraintName="fk_es_estId"  />
+
+
+        <createTable tableName="executorStorageSnapshot" remarks="Snapshot of checking storage views for storage" >
+            <column name="executorStorageSnapshotId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorInstanceId" type="bigint"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="executorStorageSnapshot" baseColumnNames="executorInstanceId" referencedTableName="executorInstance" referencedColumnNames="executorInstanceId"  constraintName="fk_ess_ei"  />
+
+
+        <createTable tableName="executorStorageResource" remarks="Resource on storage" >
+            <column name="executorStorageResourceId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorStorageId" type="bigint"/>
+            <column name="resourcePath" type="nvarchar(2000)"/>
+            <column name="resourceSize" type="bigint"/>
+            <column name="resourceRowsCount" type="bigint"/>
+            <column name="isValid" type="int"/>
+        </createTable>
+        <createIndex indexName="idx_esr_esId" tableName="executorStorageResource" unique="false">
+            <column name="executorStorageId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorStorageResource" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_esr_es"  />
+
+
+        <createTable tableName="executorStorageView" remarks="Storage assigned to executor" >
+            <column name="executorStorageViewId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="executorStorageSnapshotId" type="bigint" remarks="PARENT" />
+            <column name="executorStorageId" type="bigint"/>
+            <column name="sourceDownloadId" type="bigint"/>
+            <column name="downloadTransformGroupId" type="bigint" defaultValueNumeric="1"/>
+            <column name="sourceViewId" type="bigint" />
+            <column name="executorStorageResourceId" type="bigint" />
+        </createTable>
+        <createIndex indexName="idx_esv_essId" tableName="executorStorageView" unique="false">
+            <column name="executorStorageSnapshotId" />
+        </createIndex>
+        <createIndex indexName="idx_esv_esId" tableName="executorStorageView" unique="false">
+            <column name="executorStorageId" />
+        </createIndex>
+        <createIndex indexName="idx_esv_sdId" tableName="executorStorageView" unique="false">
+            <column name="sourceDownloadId" />
+        </createIndex>
+        <createIndex indexName="idx_esv_esrId" tableName="executorStorageView" unique="false">
+            <column name="executorStorageResourceId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="executorStorageSnapshotId" referencedTableName="executorStorageSnapshot" referencedColumnNames="executorStorageSnapshotId"  constraintName="fk_esv_ess"  />
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="executorStorageId" referencedTableName="executorStorage" referencedColumnNames="executorStorageId"  constraintName="fk_esv_es"  />
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="executorStorageResourceId" referencedTableName="executorStorageResource" referencedColumnNames="executorStorageResourceId"  constraintName="fk_esv_esr"  />
+
+    </changeSet>
+
+</databaseChangeLog>

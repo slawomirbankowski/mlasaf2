@@ -1,0 +1,154 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="9" author="slawomirbankowski">
+
+        <createTable tableName="downloadTransformGroup" remarks="group of transformations" >
+            <column name="downloadTransformGroupId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformGroupName" type="nvarchar(200)"/>
+            <column name="downloadTransformGroupDescription" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_dtg_downloadTransformGroupName" tableName="downloadTransformGroup" unique="false">
+            <column name="downloadTransformGroupName" />
+        </createIndex>
+        <insert tableName="downloadTransformGroup">
+            <column name="downloadTransformGroupName" value="DEFAULT"/>
+            <column name="downloadTransformGroupDescription" value=""/>
+        </insert>
+
+
+        <createTable tableName="downloadTransformAlgorithmSchedule" remarks="" >
+            <column name="downloadTransformAlgorithmScheduleId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformGroupId" type="bigint"/>
+            <column name="algorithmScheduleViewId" type="bigint"/>
+        </createTable>
+        <createIndex indexName="idx_dtas_downloadTransformGroupId" tableName="downloadTransformAlgorithmSchedule" unique="false">
+            <column name="downloadTransformGroupId" />
+        </createIndex>
+        <createIndex indexName="idx_dtas_algorithmScheduleViewId" tableName="downloadTransformAlgorithmSchedule" unique="false">
+            <column name="algorithmScheduleViewId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="downloadTransformAlgorithmSchedule" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_dtas_dtgId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransformAlgorithmSchedule" baseColumnNames="algorithmScheduleViewId" referencedTableName="algorithmScheduleView" referencedColumnNames="algorithmScheduleViewId"  constraintName="fk_dtas_asvId"  />
+
+
+        <createTable tableName="downloadTransformExecutorStorage" remarks="" >
+            <column name="downloadTransformExecutorStorageId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformGroupId" type="bigint"/>
+            <column name="executorStorageViewId" type="bigint"/>
+        </createTable>
+        <createIndex indexName="idx_dtes_downloadTransformGroupId" tableName="downloadTransformExecutorStorage" unique="false">
+            <column name="downloadTransformGroupId" />
+        </createIndex>
+        <createIndex indexName="idx_dtes_executorStorageViewId" tableName="downloadTransformExecutorStorage" unique="false">
+            <column name="executorStorageViewId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="downloadTransformExecutorStorage" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_dtes_dtgId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransformExecutorStorage" baseColumnNames="executorStorageViewId" referencedTableName="executorStorageView" referencedColumnNames="executorStorageViewId"  constraintName="fk_dtes_esvId"  />
+
+
+        <createTable tableName="downloadTransformType" remarks="" >
+            <column name="downloadTransformTypeId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformTypeName" type="nvarchar(200)"/>
+            <column name="downloadTransformTypeClass" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_dtt_downloadTransformTypeName" tableName="downloadTransformType" unique="false">
+            <column name="downloadTransformTypeName" />
+        </createIndex>
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="TO_DATE"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformColumnToDate"/>
+        </insert>
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="DATE_TO_SEQ"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformColumnDateToSeq"/>
+        </insert>
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="FILTER_ON_ROW"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformFilterOnRow"/>
+        </insert>
+
+
+        <createTable tableName="downloadTransform" remarks="" >
+            <column name="downloadTransformId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformTypeId" type="bigint"/>
+            <column name="downloadTransformGroupId" type="bigint"/>
+            <column name="downloadTransformDefinition" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_dt_downloadTransformTypeId" tableName="downloadTransform" unique="false">
+            <column name="downloadTransformTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_dt_downloadTransformGroupId" tableName="downloadTransform" unique="false">
+            <column name="downloadTransformGroupId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="downloadTransform" baseColumnNames="downloadTransformTypeId" referencedTableName="downloadTransformType" referencedColumnNames="downloadTransformTypeId"  constraintName="fk_dt_dttId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransform" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_dt_dtgId"  />
+
+
+        <createTable tableName="downloadTransformColumn" remarks="" >
+            <column name="downloadTransformColumnId" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="guid" type="bigint" defaultValue="${seqvalue}" remarks="globally unique ID of single row" />
+            <column name="insertedRowDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of insertion given row to database" />
+            <column name="lastUpdatedDate" type="timestamp" defaultValueDate="${now}" remarks="date and time of change this row" />
+            <column name="downloadTransformTypeId" type="bigint"/>
+            <column name="downloadTransformId" type="bigint"/>
+            <column name="algorithmScheduleColumnId" type="bigint"/>
+            <column name="sourceViewColumnId" type="bigint"/>
+            <column name="downloadTransformDefinition" type="nvarchar(2000)"/>
+        </createTable>
+        <createIndex indexName="idx_dtc_downloadTransformTypeId" tableName="downloadTransformColumn" unique="false">
+            <column name="downloadTransformTypeId" />
+        </createIndex>
+        <createIndex indexName="idx_dtc_downloadTransformId" tableName="downloadTransformColumn" unique="false">
+            <column name="downloadTransformId" />
+        </createIndex>
+        <createIndex indexName="idx_dtc_sourceViewColumnId" tableName="downloadTransformColumn" unique="false">
+            <column name="sourceViewColumnId" />
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="downloadTransformColumn" baseColumnNames="downloadTransformTypeId" referencedTableName="downloadTransformType" referencedColumnNames="downloadTransformTypeId"  constraintName="fk_dtc_dttId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransformColumn" baseColumnNames="downloadTransformId" referencedTableName="downloadTransform" referencedColumnNames="downloadTransformId"  constraintName="fk_dtc_dtId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransformColumn" baseColumnNames="algorithmScheduleColumnId" referencedTableName="algorithmScheduleColumn" referencedColumnNames="algorithmScheduleColumnId"  constraintName="fk_dtc_ascId"  />
+        <addForeignKeyConstraint baseTableName="downloadTransformColumn" baseColumnNames="sourceViewColumnId" referencedTableName="sourceViewColumn" referencedColumnNames="sourceViewColumnId"  constraintName="fk_dtc_svcId"  />
+
+
+        <addForeignKeyConstraint baseTableName="executorStorageView" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_esv_dtg"  />
+        <addForeignKeyConstraint baseTableName="sourceSchedule" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_ss_dtg"  />
+        <addForeignKeyConstraint baseTableName="sourceDownload" baseColumnNames="downloadTransformGroupId" referencedTableName="downloadTransformGroup" referencedColumnNames="downloadTransformGroupId"  constraintName="fk_sd_dtg"  />
+
+
+    </changeSet>
+
+
+</databaseChangeLog>

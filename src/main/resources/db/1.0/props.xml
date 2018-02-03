@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="getdate()" dbms="mssql"/>
+    <property name="now" value="CURRENT TIMESTAMP" dbms="db2"/>
+    <property name="now" value="sysdate" dbms="oracle"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+    <property name="now" value="CURRENT_TIMESTAMP()" dbms="h2"/>
+
+    <property name="seqvalue" value="0" dbms="mysql"/>
+    <property name="seqvalue" value="(NEXT VALUE FOR seq_id)" dbms="mssql"/>
+    <property name="seqvalue" value="0" dbms="db2"/>
+    <property name="seqvalue" value="seq_id.nextval" dbms="oracle"/>
+    <property name="seqvalue" value="nextval('seq_id')" dbms="postgresql"/>
+    <property name="seqvalue" value="0" dbms="h2"/>
+
+    <changeSet id="0" author="slawomirbankowski">
+        <createSequence cycle="false" incrementBy="1"  sequenceName="seq_id" />
+    </changeSet>
+
+
+
+
+</databaseChangeLog>
