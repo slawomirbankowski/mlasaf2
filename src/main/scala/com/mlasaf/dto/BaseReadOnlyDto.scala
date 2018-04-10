@@ -4,6 +4,8 @@
 */
 package com.mlasaf.dto
 
+import com.mlasaf.common.CustomUtils
+
 /** base DTO class for views - read only DB objects */
 trait BaseReadOnlyDto {
   /** unique GUID */
@@ -33,19 +35,7 @@ trait BaseReadOnlyDto {
   def toFullString() : String;
 
   def toFullJson() : String = {
-    val json = new StringBuilder
-    try {
-      this.getClass.getDeclaredFields.foreach(f => {
-        f.setAccessible(true)
-        f.get(this)
-        f.setAccessible(false)
-      })
-    } catch {
-      case _ : Exception => {
-
-      }
-    }
-    json.toString()
+    CustomUtils.toJson(this)
   }
   override def toString: String = toStringArray().mkString(",");
 }

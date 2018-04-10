@@ -266,6 +266,6 @@ class Context extends ThreadBase {
   }
 
   def getInfoJson() : String = {
-    " { \"guid\":" + this.guid + ",\"startTime\":\"" + this.startTime + "\",\"actualWorkingTime\":" + actualWorkingTime() + ", \"isStopped\":" + this.isStopped + ", \"threadsCount\":" + this.threads.size+ ", \"sourcesCount\":" + this.sources.size + ", \"storagesCount\":" + this.storages.size + ", \"executorsCount\":" + this.executors.size + ", \"contextDto\":" + this.contextDto.toJson() + ", \"hostDto\":" + this.hostDto.toJson() + " }"
+    " { \"guid\":" + this.guid + ",\"startTime\":\"" + this.startTime + "\",\"actualWorkingTime\":" + actualWorkingTime() + ", \"isStopped\":" + this.isStopped + ", \"threadsCount\":" + this.threads.size+ ", \"sourcesCount\":" + this.sources.size + ", \"storagesCount\":" + this.storages.size + ", \"executorsCount\":" + this.executors.size + ", \"contextDto\":" + this.contextDto.toFullJson() + ", \"hostDto\":" + this.hostDto.toFullJson() + " }"
   }
 }

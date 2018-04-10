@@ -63,7 +63,7 @@ class Checker extends ThreadBase {
     }
   }
   def getInfoJson() : String = {
-    " { \"checkCounter\":" + checkCounter + ",\"latestContextRuntimeDto\":" + this.parentContext.latestContextRuntimeDto.toJson() + " } "
+    " { \"checkCounter\":" + checkCounter + ",\"latestContextRuntimeDto\":" + this.parentContext.latestContextRuntimeDto.toFullJson() + " } "
   }
 
 }

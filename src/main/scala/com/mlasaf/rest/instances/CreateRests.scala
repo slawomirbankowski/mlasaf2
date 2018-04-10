@@ -14,7 +14,9 @@ class CreateRests extends RestBase  {
 
   /** define all RESTs methods for create objects */
   def initialize() : Unit = {
+
     spark.Spark.post("/algorithm-schedule", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing algorithm-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val algoScheduleParams = parse(req.body()).extract[CreateAlgorithmScheduleParams];
@@ -50,9 +52,10 @@ class CreateRests extends RestBase  {
           parentRest.parentContext.daoFactory.daos.algorithmScheduleParamDao.createAndInsertAlgorithmScheduleParamDto(algScheduleDto.algorithmScheduleId, paramNameDto.get.algorithmParamId, paramValue);
         }
       })
-      algScheduleDto.toJson();
+      algScheduleDto.toFullJson();
     });
     spark.Spark.post("/algorithm-implementation", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing algorithm-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val algoImplParams = parse(req.body()).extract[CreateAlgorithmImplementationParams];
@@ -69,9 +72,10 @@ class CreateRests extends RestBase  {
         val storageTypeId = parentRest.parentContext.daoFactory.daos.executorStorageTypeDao.getExecutorStorageTypeFirstByName(supsto).get.executorStorageTypeId;
         parentRest.parentContext.daoFactory.daos.algorithmStorageSupportDao.createAndInsertAlgorithmStorageSupportDto(algImplDto.algorithmImplementationId, storageTypeId, 3);
       });
-      algImplDto.toJson();
+      algImplDto.toFullJson();
     });
     spark.Spark.post("/algorithm-type", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing algorithm-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val algTypeParams = parse(req.body()).extract[CreateAlgorithmTypeParams];
@@ -79,13 +83,14 @@ class CreateRests extends RestBase  {
       if (currentAlgoTypes.size == 0 ) {
         val algType = parentRest.parentContext.daoFactory.daos.algorithmTypeDao.createAndInsertAlgorithmTypeDto(algTypeParams.algorithmType, "");
         logger.info("NEW algType: " + algType);
-        algType.toJson();
+        algType.toFullJson();
       } else {
         logger.info("EXISTING algType: " );
-        currentAlgoTypes.head.toJson();
+        currentAlgoTypes.head.toFullJson();
       }
     });
     spark.Spark.post("/algorithm-version", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing algorithm-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val algTypeVersionParams = parse(req.body()).extract[CreateAlgorithmTypeVersionParams];
@@ -108,9 +113,10 @@ class CreateRests extends RestBase  {
         val algTypeOutType = parentRest.parentContext.daoFactory.daos.algorithmVersionOutputTypeDao.createAndInsertAlgorithmVersionOutputTypeDto(algTypeVer.algorithmVersionId, algOutypeId, 1, 0);
         logger.info("algTypeOutType: " + algTypeOutType);
       });
-      algTypeVer.toJson();
+      algTypeVer.toFullJson();
     });
     spark.Spark.post("/source-instance", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing algorithm-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val siParams = parse(req.body()).extract[CreateSourceInstanceParams];
@@ -122,9 +128,10 @@ class CreateRests extends RestBase  {
       siParams.sourceParamNames.split(",").zip(siParams.sourceParamValues.split(",")).foreach(pv => {
         parentRest.parentContext.daoFactory.daos.sourceParamValueDao.createAndInsertSourceParamValueDto(srcInstanceDto.sourceInstanceId,  parentRest.parentContext.daoFactory.daos.sourceParamDao.getSourceParamFirstByName(pv._1).get.sourceParamId, "1", pv._2);
       });
-      srcInstanceDto.toJson();
+      srcInstanceDto.toFullJson();
     });
     spark.Spark.post("/source-schedule", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       logger.info("Executing source-schedule CREATE (POST) with body: " + req.body());
       implicit val formats = org.json4s.DefaultFormats
       val srcScheduleParams = parse(req.body()).extract[CreateSourceScheduleParams];
@@ -139,15 +146,17 @@ class CreateRests extends RestBase  {
       val downloadTransformGroupId = parentRest.parentContext.daoFactory.daos.downloadTransformGroupDao.getDownloadTransformGroupFirstByName("DEFAULT").get.downloadTransformGroupId;
       logger.info("Creating SourceSchedule for view: " + srcViewId + ", storage: " + execStorageId)
       val sourceScheduleDto = parentRest.parentContext.daoFactory.daos.sourceScheduleDao.createAndInsertSourceScheduleDto(srcViewId, execStorageId, downloadTransformGroupId, 0, new java.util.Date(), 0, 1, 0);
-      sourceScheduleDto.toJson();
+      sourceScheduleDto.toFullJson();
     });
     spark.Spark.post("/executor", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       implicit val formats = org.json4s.DefaultFormats
       val executorParams = parse(req.body()).extract[CreateExecutorParams];
       val executorDto = this.parentRest.parentContext.defineExecutor(executorParams.executorType, executorParams.portNumber);
-      executorDto.executorInstanceDto.toJson();
+      executorDto.executorInstanceDto.toFullJson();
     });
     spark.Spark.post("/type-host-param", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       implicit val formats = org.json4s.DefaultFormats
       val typeHostParam = parse(req.body()).extract[CreateTypeHostParams];
       val execTypeId = parentRest.parentContext.daoFactory.daos.executorTypeDao.getExecutorTypeFirstByName(typeHostParam.executorType).get.executorTypeId
@@ -155,7 +164,7 @@ class CreateRests extends RestBase  {
       val paramId = parentRest.parentContext.daoFactory.daos.executorParamDao.getExecutorParamFirstByName(typeHostParam.paramName).get.executorParamId;
       logger.info("Adding host-type-param, execTypeId: " + execTypeId + ", hostId: " + hostId + ", paramId: " + paramId);
       val execTypeHostParamDto = parentRest.parentContext.daoFactory.daos.executorTypeHostParamDao.createAndInsertExecutorTypeHostParamDto(hostId, execTypeId, paramId, typeHostParam.paramValue);
-      execTypeHostParamDto.toJson();
+      execTypeHostParamDto.toFullJson();
     });
 
 

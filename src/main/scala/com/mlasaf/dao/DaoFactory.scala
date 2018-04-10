@@ -11,9 +11,9 @@ import com.mlasaf.base.ThreadBase
 import com.mlasaf.dto._
 import com.mlasaf.utils._
 import org.apache.commons.dbcp._
-
-
 import java.sql.Connection
+
+import com.mlasaf.common.CustomUtils
 
 /** main factory class for all DAOs and connection managers */
 class DaoFactory extends ThreadBase {
@@ -78,7 +78,7 @@ class DaoFactory extends ThreadBase {
 
     }
     def getInfoJson() : String = {
-      " { \"connectionCounter\":" + daoConn.connTotalCounter + ",\"daoCount\":" + daos.getClass.getFields.size + ",\"connectionsInUseCount\":" + daoConn.connInUse.size() + ", \"jdbcString\":\"" + daoConn.jdbcString + "\", \"jdbcUser\":\"" + daoConn.jdbcUser + "\",\"jdbcDriverClass\":\"" + daoConn.jdbcDriverClass + "\" } "
+      " { \"connectionCounter\":" + daoConn.connTotalCounter + ",\"daoCount\":" + daos.getClass.getFields.size + ",\"connectionsInUseCount\":" + daoConn.connInUse.size() + ", \"jdbcString\":" + CustomUtils.toJson(daoConn.jdbcString) + ", \"jdbcUser\":" + CustomUtils.toJson(daoConn.jdbcUser) + ",\"jdbcDriverClass\":" + CustomUtils.toJson(daoConn.jdbcDriverClass) + " } "
     }
 
 }

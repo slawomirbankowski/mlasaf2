@@ -54,4 +54,7 @@ trait Source extends ThreadBase {
   /**  */
   def downloadView(viewName : VSourceViewDto) : SouceViewDownloader;
 
+  def toJson() : String = {
+    " { \"viewsCount\":" + views.size + ",\"runInterval\":" + runInterval + ",\"params\":[" + vSourceParamsDtos.map(p => p.toFullJson()).mkString(",") + "] } "
+  }
 }

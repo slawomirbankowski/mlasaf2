@@ -4,6 +4,8 @@
 */
 package com.mlasaf.common
 
+import com.mlasaf.dto.AlgorithmColumnTypeDto
+
 /** all static util classes */
 object CustomUtils {
 
@@ -119,13 +121,117 @@ object CustomUtils {
 
 
   }
+  def jsonEscape(s : String) : String = {
+    s.replace("\\", "\\\\")
+      .replace("\t", "\\t")
+      .replace("\b", "\\b")
+      .replace("\f", "\\f")
+      .replace("\n", "\\n")
+      .replace("\r", "\\r")
+      .replace("\"", "\\\"")
+  }
+  def toJson(x : Any ) : String = {
+    println("")
+    print("CLASS " + x.getClass.getName + " RECOGNIZED AS " )
+    if (x.isInstanceOf[java.lang.String]) {
+      print("String type")
+      return "\"" + jsonEscape(""+x) + "\"";
+    } else if (x.isInstanceOf[java.lang.Number]) {
+      print("Number type")
+      return "" + x;
+    } else if (x.isInstanceOf[java.util.Date]) {
+      print("Date type")
+      return "\"" + fullDateFormat.format(x.asInstanceOf[java.util.Date]) + "\"";
+    } else if (x.isInstanceOf[java.lang.Boolean]) {
+      print("Boolean type")
+      return "\"" + x + "\"";
+    } else if (x.isInstanceOf[Array[Any]]) {
+      print("Array type")
+      val arr = (x.asInstanceOf[Array[Any]])
+      val s = new StringBuilder
+      s.append(" [ ")
+      (0 to arr.length-1).foreach(i => {
+        if (i > 0) {
+          s.append(" , ")
+        }
+        s.append(toJson(arr.apply(i)))
+      })
+      s.append(" ] ")
+      return s.toString()
+    } else if (x.isInstanceOf[List[Any]]) {
+      print("List type")
+      val l = (x.asInstanceOf[List[Any]])
+      val s = new StringBuilder
+      s.append(" [ ")
+      var isFirst = true
+      l.foreach(item => {
+        if (isFirst) {
+          isFirst = false
+        } else {
+          s.append(" , ")
+        }
+        s.append(toJson(item))
+      })
+      s.append(" ] ")
+      return s.toString()
+    } else if (x.isInstanceOf[Map[Any, Any]]) {
+      print("Map type")
+      val l = (x.asInstanceOf[Map[Any, Any]])
+      val s = new StringBuilder
+      s.append(" [ ")
+      var isFirst = true
+      l.foreach(item => {
+        if (isFirst) {
+          isFirst = false
+        } else {
+          s.append(" , ")
+        }
+        s.append("\"")
+        s.append("" + item._1)
+        s.append("\":")
+        s.append(toJson(item._2))
+      })
+      s.append(" ] ")
+      return s.toString()
+    } else {
+      print("Complex type")
+      val s = new StringBuilder
+      s.append(" { ")
+      var isFirst = true
+       x.getClass.getDeclaredFields.foreach(f => {
+         if (isFirst) {
+           isFirst = false
+         } else {
+           s.append(" , ")
+         }
+        f.setAccessible(true)
+         s.append("\"")
+         s.append(f.getName)
+         s.append("\":")
+         s.append(toJson(f.get(x)))
+         f.setAccessible(false)
+         s.append(" ")
+       })
+      s.append(" } ")
+      return s.toString()
+    }
 
+
+    //println("" + x.getClass.getDeclaredFields.map(x => x.getName + ":" + x.getType).mkString(" , "))
+    //s.toString()
+  }
   def main(args : Array[String]) : Unit = {
     println("TEST");
-    println("CUT 123456789012345678901234567890: " + cutString("123456789012345678901234567890", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
-    println("CUT 123: " + cutString("123", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
-    println("CUT : " + cutString("", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
-
+    //println("CUT 123456789012345678901234567890: " + cutString("123456789012345678901234567890", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
+    //println("CUT 123: " + cutString("123", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
+    //println("CUT : " + cutString("", 12, 10).zipWithIndex.map(x => x._2 +":" + x._1).mkString(","));
+    val x = Array(AlgorithmColumnTypeDto(1, 2, new java.util.Date(), new java.util.Date(), "a", "aa", "aaa", "C:\\Project\\abc\\xyz\tC:\\Others\\lang"), AlgorithmColumnTypeDto(3, 4, new java.util.Date(), new java.util.Date(), "bbbb", "bb", "b", ""))
+    val y = List(AlgorithmColumnTypeDto(1, 2, new java.util.Date(), new java.util.Date(), "a", "aa", "aaa", "C:\\Project\\abc\\xyz\tC:\\Others\\lang"), AlgorithmColumnTypeDto(3, 4, new java.util.Date(), new java.util.Date(), "bbbb", "bb", "b", ""))
+    if (y.isInstanceOf[List[Any]]) {
+      println(" LIST !!! ")
+    }
+    println(toJson(x))
+    println(toJson(y))
   }
 
 }

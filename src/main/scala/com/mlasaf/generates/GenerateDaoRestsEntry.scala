@@ -44,7 +44,7 @@ object GenerateDaoRestsEntry {
       val daoObjName = tableName + "Dao";
       val listDefName = "get" + objName + "sList";
       val countDefName = "get" + objName + "sCount";
-      outputContent.write("      spark.Spark.get(\"/" + tableName + "\", (req: spark.Request, resp: spark.Response) => \" [ \" + parentRest.parentContext.daoFactory.daos." + daoObjName + "." + listDefName + "().map(a => a.toJson()).mkString(\",\") + \" ] \" ); ");
+      outputContent.write("      spark.Spark.get(\"/" + tableName + "\", (req: spark.Request, resp: spark.Response) => \" [ \" + parentRest.parentContext.daoFactory.daos." + daoObjName + "." + listDefName + "().map(a => a.toFullJson()).mkString(\",\") + \" ] \" ); ");
       outputContent.write("\n");
       outputContent.write("      spark.Spark.get(\"/" + tableName + "-count\", (req: spark.Request, resp: spark.Response) => \" { \\\"count\\\":\" + parentRest.parentContext.daoFactory.daos." + daoObjName + "." + countDefName + "() + \" } \" ); ");
       outputContent.write("\n");

@@ -15,6 +15,7 @@ class StorageRests extends RestBase {
       "[ " + storageResources.map(r => r.toJson()).mkString(",") + " ] "
     });
     spark.Spark.get("/storage-resource-download", (req: spark.Request, resp: spark.Response) => {
+      resp.raw().setContentType("application/json")
       val storageViewId = 1;
       val storageResourcesToDownload = parentRest.parentContext.daoFactory.daos.vExecutorStorageViewDao.getDtosByExecutorStorageViewId(storageViewId);
       val storagesBuffer = new StringBuilder();

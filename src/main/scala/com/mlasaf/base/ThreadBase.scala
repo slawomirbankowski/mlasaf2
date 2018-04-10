@@ -118,6 +118,9 @@ trait ThreadBase extends Runnable {
       Thread.sleep(3000L)
     }
   }
+  def toInfoJson() : String = {
+    "{ \"id\":" + thread.getId + ",\"name\":\"" + thread.getName + "\",\"priority\":" + thread.getPriority + ",\"state\":\"" + thread.getState.toString + "\",\"className\":\"" + getClass.getName + "\"}"
+  }
   /** get name for threadable object */
   def getName() : String;
   /** run at the begin of working in thread */

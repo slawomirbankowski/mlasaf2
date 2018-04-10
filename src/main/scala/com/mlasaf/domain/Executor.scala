@@ -197,6 +197,9 @@ trait Executor extends ThreadBase {
   /** */
   def toJson() : String = { "{ \"executorType\":\"" + getTypeName() + "\",\"runsCount\":" + algoRunObjs.size + ",\"runInterval\":" + runInterval + "} "    }
 
+  def toFullJson() : String = {
+    "{ \"executorType\":\"" + getTypeName() + "\",\"runsCount\":" +algoRunObjs.size + ",\"runInterval\":" + runInterval + "} "
+  }
 
 }
 object ExecutorExternalStatus {
