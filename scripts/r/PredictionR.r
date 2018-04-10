@@ -1,10 +1,11 @@
 args <- commandArgs(trailingOnly = TRUE)
-inputFile = args[1]
-outputFile = args[2]
-columnsStr = args[3]
-paramsStr = args[4]
-logFile = args[5]
-progressFile = args[6]
+optionParam = args[1]
+inputFile = args[2]
+outputFile = args[3]
+columnsStr = args[4]
+paramsStr = args[5]
+logFile = args[6]
+progressFile = args[7]
 inputFile
 outputFile
 columnsStr

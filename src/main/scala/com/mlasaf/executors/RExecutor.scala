@@ -29,7 +29,7 @@ class RExecutor extends Executor {
     logger.info("<<<<<<<< EXECUTOR:R >>>>>>>>>>> Run EXTERNAL R command with parameters: " + args.mkString(","));
     val shellScriptName = paramsForHostExecutorType.filter(p => p.executorParam_executorParamName.equals("ShellScriptName")).map(p => p.paramValue).headOption.getOrElse("Rscript.exe")
     val shellScriptPath = paramsForHostExecutorType.filter(p => p.executorParam_executorParamName.equals("ShellScriptPath")).map(p => p.paramValue).headOption.getOrElse("C:\\Program Files\\R\\R-3.4.3\\bin\\")
-    val rScriptPathName = shellScriptPath + shellScriptName
+    val rScriptPathName = "\"" + shellScriptPath + shellScriptName + "\""
     logger.info("<<<<<<<< EXECUTOR:R >>>>>>>>>>> R Executor path: " + rScriptPathName);
     val params : java.util.List[String] = new util.LinkedList[String]();
     params.add(rScriptPathName);

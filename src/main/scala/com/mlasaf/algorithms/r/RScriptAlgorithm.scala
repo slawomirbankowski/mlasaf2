@@ -18,6 +18,7 @@ class RScriptAlgorithm extends AlgorithmInstance {
     val columns = run.algorithmScheduleColumnDtos.filter(c => c.sourceView_sourceViewId == viewId);
     val colStr = columns.map(c => c.algorithmColumnType_algorithmColumnTypeName + "=" + c.sourceViewColumn_columnName).mkString(",")
     val exitValue = run.parentExecutor.executeExternal(Array[String](run.algorithmImplementationDto.scriptName, run.algorithmImplementationDto.scriptParams, inputPath, outputPath, colStr, paramStr, logFile, progressFile));
+
     AlgorithmExitParams(AlgorithmInstance.STATUS_OK, true, Option(exitValue));
   }
 
