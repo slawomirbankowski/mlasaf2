@@ -32,8 +32,14 @@ class PredictionLocalSma5 extends AlgorithmInstance {
       logger.info("======================     OUTPUT files: " + run.outputs.map(o => "{outputId:" + o.algorithmOutputId + ",type:" + o.algorithmOutputType_algorithmOutputTypeName + ",path:" + o.executorStorageResource_resourcePath + ",storageId:" + o.executorStorage_executorStorageId +"}").mkString(","));
       logger.info("======================     outputPath: " + outputPath);
 
+      val timeItems = new scala.collection.mutable.ListBuffer[PredictionRow]()
+
+
 
       AlgorithmExitParams(AlgorithmInstance.STATUS_OK, true, None);
     }
   }
+}
+case class PredictionRow(timeId : Long, group : String, value : Double) {
+
 }

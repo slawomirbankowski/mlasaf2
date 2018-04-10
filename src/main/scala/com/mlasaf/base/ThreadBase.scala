@@ -113,9 +113,9 @@ trait ThreadBase extends Runnable {
   /** wait in this thread till end of service execution */
   def waitTillEnd(maxWaitingTimeMilliseconds : Long) : Unit = {
     val startWaitingTime = new java.util.Date();
-    Thread.sleep(5000L);
+    Thread.sleep(5000L)
     while (!isInitialized || (isRunning && (maxWaitingTimeMilliseconds > 0L && maxWaitingTimeMilliseconds <= (new java.util.Date().getTime -  startWaitingTime.getTime) ))) {
-      Thread.sleep(3000L);
+      Thread.sleep(3000L)
     }
   }
   /** get name for threadable object */

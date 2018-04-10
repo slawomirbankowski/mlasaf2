@@ -41,7 +41,7 @@ class Checker extends ThreadBase {
     logger.info(">>>>>>>>>>>>>>>>>> End of working for Checker")
   }
   def onStop() : Unit = {
-    logger.info(">>>>>>>>>>>>>>>>>> Stopping Checker...");
+    logger.info(">>>>>>>>>>>>>>>>>> Stopping Checker...")
   }
   /** restart THREAD for given ID */
   def restartThread(thId : Int) : Unit = {
@@ -59,7 +59,7 @@ class Checker extends ThreadBase {
         // TODO: restarting is not so easy because some classes might have been initialized !!!
         //th.thread = new Thread(th);
         //th.start();
-      });
+      })
     }
   }
   def getInfoJson() : String = {

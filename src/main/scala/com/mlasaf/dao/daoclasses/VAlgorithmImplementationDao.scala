@@ -120,6 +120,18 @@ import java.util.Date
    releaseConnection(connection);  
    dtos  
  }  
+ def getDtosByScriptName(colValue : String) : List[VAlgorithmImplementationDto] = { 
+   implicit val connection = getConnection();  
+   val dtos : List[VAlgorithmImplementationDto] = SQL("select * from vAlgorithmImplementation where scriptName = {colValue} ").on("colValue" -> colValue).as(anorm.Macro.namedParser[VAlgorithmImplementationDto].*);  
+   releaseConnection(connection);  
+   dtos  
+ }  
+ def getDtosByScriptParams(colValue : String) : List[VAlgorithmImplementationDto] = { 
+   implicit val connection = getConnection();  
+   val dtos : List[VAlgorithmImplementationDto] = SQL("select * from vAlgorithmImplementation where scriptParams = {colValue} ").on("colValue" -> colValue).as(anorm.Macro.namedParser[VAlgorithmImplementationDto].*);  
+   releaseConnection(connection);  
+   dtos  
+ }  
  def getDtosByAlgorithmType_algorithmTypeId(colValue : Long) : List[VAlgorithmImplementationDto] = { 
    implicit val connection = getConnection();  
    val dtos : List[VAlgorithmImplementationDto] = SQL("select * from vAlgorithmImplementation where algorithmType_algorithmTypeId = {colValue} ").on("colValue" -> colValue).as(anorm.Macro.namedParser[VAlgorithmImplementationDto].*);  

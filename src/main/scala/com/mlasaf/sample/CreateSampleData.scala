@@ -13,7 +13,7 @@ object CreateSampleData {
   def main(args : Array[String]) = {
     logger.info(" MSSQLSERVER - DRIVER ")
     Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    val connmssql = java.sql.DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS2014;DatabaseName=client_test", "sa", "sapass");
+    val connmssql = java.sql.DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=client_test", "sa", "sapass");
     logger.info(" MSSQLSERVER - CONNECTED ")
     connmssql.createStatement().execute("create table dbo.sales(yearmonth int, product varchar(50), sale_value float, sale_units float)");
 

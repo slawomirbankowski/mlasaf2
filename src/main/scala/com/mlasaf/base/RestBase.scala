@@ -24,6 +24,8 @@ trait RestBase {
     new spark.Route {
       override def handle(request: spark.Request, response: spark.Response): AnyRef = {
         val startTime = System.currentTimeMillis();
+        logger.info("------------------------------------------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        logger.info("------------------------------------------------------------------------>>> REQUEST START " + request.requestMethod() + " " + request.uri() + ", host: " + request.host() )
         val ret = fun(request, response);
         response.raw().setContentType("application/json");
         val executeTime : Long = System.currentTimeMillis() - startTime;
@@ -37,8 +39,10 @@ trait RestBase {
           val responseArray = com.mlasaf.common.CustomUtils.cutString("" + ret, 2000, 2);
           val requestBody = reqBodyArray(0);
           val responseBody = responseArray(0);
-          val clientHost = request.host();
-          val protocol = request.protocol();
+          val clientHost = request.host()
+          val protocol = request.protocol()
+          logger.info("------------------------------------------------------------------------<<< REQUEST END " + request.uri() + ", time: " + executeTime)
+          logger.info("------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
           parentRest.parentContext.daoFactory.daos.executorRestCallDao.createAndInsertExecutorRestCallDto(parentRest.parentContext.hostDto.executorHostId, parentRest.executorRestDto.executorRestId, requestMethod, requestHeader , requestBody , responseBody, executeTime, headersStr, cookiesStr, clientHost, protocol, sessionStr);
         } catch {
           case ex : Exception => {

@@ -31,6 +31,15 @@ class PredictionLocalRandom extends AlgorithmInstance {
       val outputPath = run.outputs.head.executorStorageResource_resourcePath;
 
 
+      // TODO: implement simple statistics
+      // - average
+      // - lead
+      // - lag
+      // - SMA5, SMA7, EMA5, EMA7
+      // - correlation, prediction, trend
+      // - time series anomaly
+      // - Natural Filter
+      // -
 
       logger.info("======================     timeColName: " + timeColName);
       logger.info("======================     groupColName: " + groupColName);

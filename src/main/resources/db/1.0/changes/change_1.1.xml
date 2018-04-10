@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="12" author="slawomirbankowski">
+
+        <addColumn tableName="algorithmImplementation">
+            <column name="scriptName" type="nvarchar(2000)" defaultValue="" />
+            <column name="scriptParams" type="nvarchar(2000)" defaultValue="" />
+        </addColumn>
+
+
+    </changeSet>
+
+    <changeSet id="13" author="slawomirbankowski">
+
+        <createView replaceIfExists="true"
+                    viewName="vAlgorithmImplementation">
+            select algorithmImplementation1.algorithmImplementationId, algorithmImplementation1.guid, algorithmImplementation1.insertedRowDate, algorithmImplementation1.lastUpdatedDate, algorithmImplementation1.algorithmTypeId, algorithmImplementation1.algorithmVersionId, algorithmImplementation1.executorTypeId, algorithmImplementation1.algorithmImplementationName, algorithmImplementation1.algorithmImplementationClass, algorithmImplementation1.algorithmImplementationDescription, algorithmImplementation1.scriptName, algorithmImplementation1.scriptParams
+            ,  algorithmType1.algorithmTypeId as algorithmType_algorithmTypeId ,  algorithmType1.guid as algorithmType_guid ,  algorithmType1.insertedRowDate as algorithmType_insertedRowDate ,  algorithmType1.lastUpdatedDate as algorithmType_lastUpdatedDate ,  algorithmType1.algorithmTypeName as algorithmType_algorithmTypeName ,  algorithmType1.algorithmTypeDescription as algorithmType_algorithmTypeDescription
+            ,  algorithmVersion1.algorithmVersionId as algorithmVersion_algorithmVersionId ,  algorithmVersion1.insertedRowDate as algorithmVersion_insertedRowDate ,  algorithmVersion1.lastUpdatedDate as algorithmVersion_lastUpdatedDate ,  algorithmVersion1.guid as algorithmVersion_guid ,  algorithmVersion1.algorithmTypeId as algorithmVersion_algorithmTypeId ,  algorithmVersion1.algorithmVersionName as algorithmVersion_algorithmVersionName
+            ,  executorType1.executorTypeId as executorType_executorTypeId ,  executorType1.guid as executorType_guid ,  executorType1.insertedRowDate as executorType_insertedRowDate ,  executorType1.lastUpdatedDate as executorType_lastUpdatedDate ,  executorType1.executorTypeName as executorType_executorTypeName ,  executorType1.executorTypeClass as executorType_executorTypeClass
+            from algorithmImplementation algorithmImplementation1
+            join algorithmType algorithmType1 on algorithmImplementation1.algorithmTypeId = algorithmType1.algorithmTypeId
+            join algorithmVersion algorithmVersion1 on algorithmImplementation1.algorithmVersionId = algorithmVersion1.algorithmVersionId
+            join executorType executorType1 on algorithmImplementation1.executorTypeId = executorType1.executorTypeId
+        </createView>
+
+
+    </changeSet>
+
+</databaseChangeLog>

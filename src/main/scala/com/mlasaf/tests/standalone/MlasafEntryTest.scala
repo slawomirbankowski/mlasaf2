@@ -13,17 +13,21 @@ object MlasafEntryTest {
   def main(args : Array[String]) = {
 
     val newargs = Array(
-      "--jdbcString", "jdbc:mysql://localhost:3307/mlasaf41?useSSL=false"
-      , "--jdbcUser" , System.getenv("MLASAF_USER")
-      , "--jdbcPass" , System.getenv("MLASAF_PASS")
-      , "--jdbcDriver", System.getenv("MLASAF_DRIVER")
-      , "--restPort" , System.getenv("MLASAF_PORT")
-      , "--restAlternativePort", System.getenv("MLASAF_PORT_ALTERNATIVE")
-      , "--executorDefinition", """[ {"executorType":"R", "portNumber":8806}, {"executorType":"WEKA", "portNumber":8810 } ] """
+      // jdbc:jtds:sqlserver://127.0.0.1:1433/Blog
+      // jdbc:jtds:sqlserver://localhost;instance=SQLEXPRESS;DatabaseName=mlasaf01
+      // jdbc:mysql://localhost:3307/mlasaf29
+      // jdbc:sqlserver://localhost\SQLEXPRESS;DatabaseName=mlasaf01
+      "--jdbcString", "jdbc:mysql://localhost:3306/mlasaf02?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false"
+      , "--jdbcUser" , "root"
+      , "--jdbcPass" , "rootpass"
+      , "--jdbcDriver", "com.mysql.jdbc.Driver"
+      , "--restPort" , "8300"
+      , "--restAlternativePort", "8301"
+      , "--executorDefinition", """[ {"executorType":"R", "portNumber":8806}, {"executorType":"TensorFlow", "portNumber":8810 } ] """
       , "--storageDefinition", """ [ {"storageType":"LOCAL_DISK", "storageSimplePath":"../data2/", "storageFullPath":"", "storagePort":8815 }, {"storageType":"LOCAL_DISK", "storageSimplePath":"../data3/", "storageFullPath":"", "storagePort":8817 } ] """
-      , "--executorClasses", System.getenv("MLASAF_EXECUTOR_CLASSES")
-      , "--simpleStorage", System.getenv("MLASAF_SIMPLE_STORAGE")
-      , "--maxWorkingTimeSeconds", "100000" // only 60 seconds of run
+      , "--executorClasses", "com.mlasaf.executors.LocalExecutor"
+      , "--simpleStorage", "../data"
+      , "--maxWorkingTimeSeconds", "1000000" // only 60 seconds of run
     );
     MlasafEntry.main(newargs);
   }

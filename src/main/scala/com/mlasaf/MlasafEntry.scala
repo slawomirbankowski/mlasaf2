@@ -25,25 +25,31 @@ object MlasafEntry {
   // TODO: implement basic UI page to create basic flow
   // TODO: prepare full testing environment - Docker + scripts
 
+  // TODO: dashboard with many output results
+  // TODO: loading data to kibana
+  // TODO: filling missing data
+  // TODO: getting data back to JDBC source - insert/update
+  // TODO:
+
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) = {
-    logger.info("START MLASAF " + MLASAF_VERSION);
-    System.getProperties.list(System.out);
-    logger.info("MLASAF Parameters: " + args.mkString(" "));
-    logger.info("DISK spaces: " + com.mlasaf.common.CustomUtils.diskSpaces);
-    val context = new Context();
+    logger.info("|||||||||||||| START MLASAF " + MLASAF_VERSION)
+    logger.info("|||||||||||||| JAVA Properties: " + System.getProperties.stringPropertyNames().toArray.map(p => "" + p + "='" + System.getProperties.getProperty(""+p) + "'" ).mkString(","))
+    logger.info("|||||||||||||| MLASAF Parameters: " + args.mkString(" "))
+    logger.info("|||||||||||||| DISK spaces: " + com.mlasaf.common.CustomUtils.diskSpaces)
+    val context = new Context()
     val entryOptions = new MlasafEntryOptions(args);
-    logger.info("restPort: " + entryOptions.restPort)
-    logger.info("restAlternativePort: " + entryOptions.restAlternativePort)
-    logger.info("jdbcString: " + entryOptions.jdbcString.toString())
-    logger.info("jdbcUser: " + entryOptions.jdbcUser.toString())
-    logger.info("jdbcDriver: " + entryOptions.jdbcDriver.toString())
-    logger.info("storageDefinition: " + entryOptions.storageDefinition.toString())
-    logger.info("executorDefinitionStr: " + entryOptions.executorDefinition.toString())
+    logger.info("|||||||||||||| restPort: " + entryOptions.restPort)
+    logger.info("|||||||||||||| restAlternativePort: " + entryOptions.restAlternativePort)
+    logger.info("|||||||||||||| jdbcString: " + entryOptions.jdbcString.toString())
+    logger.info("|||||||||||||| jdbcUser: " + entryOptions.jdbcUser.toString())
+    logger.info("|||||||||||||| jdbcDriver: " + entryOptions.jdbcDriver.toString())
+    logger.info("|||||||||||||| storageDefinition: " + entryOptions.storageDefinition.toString())
+    logger.info("|||||||||||||| executorDefinitionStr: " + entryOptions.executorDefinition.toString())
     context.setRunningOptions(entryOptions)
     context.start();
-    context.waitTillEnd(0L);
-    logger.info("End MLASAF " + MLASAF_VERSION);
+    context.waitTillEnd(0L)
+    logger.info("|||||||||||||| End MLASAF " + MLASAF_VERSION);
   }
 
 }

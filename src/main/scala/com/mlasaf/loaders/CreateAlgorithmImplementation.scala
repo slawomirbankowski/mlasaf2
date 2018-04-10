@@ -40,7 +40,7 @@ object CreateAlgorithmImplementation {
     logger.info("algTypeId: " + algTypeId);
     val algVerId = daoFactory.daos.algorithmVersionDao.getAlgorithmVersionsList().filter(a => (a.algorithmVersionName.equals(algorithmVersion) && a.algorithmTypeId == algTypeId)).head.algorithmVersionId;
     logger.info("algVerId: " + algVerId);
-    val algImplDto = daoFactory.daos.algorithmImplementationDao.createAndInsertAlgorithmImplementationDto(algTypeId, algVerId, execTypeId, algorithmImplementationName, algorithmImplementationClass, algorithmImplementationDesc);
+    val algImplDto = daoFactory.daos.algorithmImplementationDao.createAndInsertAlgorithmImplementationDto(algTypeId, algVerId, execTypeId, algorithmImplementationName, algorithmImplementationClass, algorithmImplementationDesc, "", "");
     logger.info("algImplDto: " + algImplDto);
 
     /*

@@ -10,19 +10,19 @@ object DbRefreshTest {
 
   val logger = org.slf4j.LoggerFactory.getLogger("MlasafEntry");
 
-  def main(args : Array[String]) = {
+  def main(args : Array[String]) : Unit = {
     logger.info("START NEW DB");
-    val jdbcString = "jdbc:mysql://localhost:3307/mlasaf29"
-    val jdbcUser = System.getenv("MLASAF_USER")
-    val jdbcPass = System.getenv("MLASAF_PASS")
+    val jdbcString = "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02" // "jdbc:mysql://localhost:3306/mlasaf02?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false"
+    val jdbcUser = "sa" // "root"
+    val jdbcPass = "sapass" // "rootpass"
     val jdbcDriver = System.getenv("MLASAF_DRIVER");
-    val changeLogResource = "/db/db_1.0.xml";
-    val changeLogFile = "./src/main/resources/db/db_1.0.xml";
+    val changeLogFile = "./src/main/resources/db/1.0/v1.0.xml";
     val changeLogFilePath = new java.io.File(changeLogFile).getCanonicalPath;
     //val changeLogResourceFile = DbRefreshTest.getClass.getResource(changeLogFile).getPath;
     logger.info("CURRENT_PATH: " + changeLogFile);
     logger.info("CURRENT_PATH resource: " + changeLogFilePath);
-    DatabaseRefreshSchema.main(Array(
+    com.mlasaf.liquibase.LiquibaseRun.main(Array(changeLogFile, jdbcString, jdbcUser, jdbcPass))
+  /*DatabaseRefreshSchema.main(Array(
       "--jdbcString", jdbcString
       , "--jdbcUser", System.getenv("MLASAF_USER")
       , "--jdbcPass", System.getenv("MLASAF_PASS")
@@ -30,6 +30,7 @@ object DbRefreshTest {
       , "--changeLogFile", changeLogFile
       , "--jdbcJarPath", "./libstatic/mysql-connector-java-5.1.45-bin.jar"
     ));
+    */
   }
 
 }

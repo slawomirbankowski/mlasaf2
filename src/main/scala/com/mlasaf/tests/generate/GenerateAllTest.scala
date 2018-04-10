@@ -11,7 +11,7 @@ object GenerateAllTest {
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) : Unit = {
 
-    val jdbcString = "jdbc:sqlserver://localhost\\SQLEXPRESS2014;DatabaseName=mlasaf32";
+    val jdbcString = "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02";
     val jdbcUser = "sa";
     val jdbcPass = "sapass";
     val jdbcDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";

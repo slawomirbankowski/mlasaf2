@@ -117,14 +117,14 @@ import java.util.Date
       null; 
     } 
  } 
-  def createAndInsertAlgorithmImplementationDto(algorithmTypeId : Long, algorithmVersionId : Long, executorTypeId : Long, algorithmImplementationName : String, algorithmImplementationClass : String, algorithmImplementationDescription : String) : AlgorithmImplementationDto = {
-    val dto = new AlgorithmImplementationDto(0,0,new Date(),new Date(),algorithmTypeId,algorithmVersionId,executorTypeId,algorithmImplementationName,algorithmImplementationClass,algorithmImplementationDescription)
+  def createAndInsertAlgorithmImplementationDto(algorithmTypeId : Long, algorithmVersionId : Long, executorTypeId : Long, algorithmImplementationName : String, algorithmImplementationClass : String, algorithmImplementationDescription : String, scriptName : String, scriptParams : String) : AlgorithmImplementationDto = {
+    val dto = new AlgorithmImplementationDto(0,0,new Date(),new Date(),algorithmTypeId,algorithmVersionId,executorTypeId,algorithmImplementationName,algorithmImplementationClass,algorithmImplementationDescription,scriptName,scriptParams)
     insertAlgorithmImplementationDto(dto);   
   }   
   def updateAlgorithmImplementationDto(dto : AlgorithmImplementationDto): AlgorithmImplementationDto = {  
     implicit val connection = getConnection();  
-      val resCnt = SQL("update algorithmImplementation set  lastUpdatedDate = {lastUpdatedDate} ,  algorithmTypeId = {algorithmTypeId} ,  algorithmVersionId = {algorithmVersionId} ,  executorTypeId = {executorTypeId} ,  algorithmImplementationName = {algorithmImplementationName} ,  algorithmImplementationClass = {algorithmImplementationClass} ,  algorithmImplementationDescription = {algorithmImplementationDescription}  where  algorithmImplementationId = {algorithmImplementationId}  ")
-      .on("lastUpdatedDate" -> dto.lastUpdatedDate , "algorithmTypeId" -> dto.algorithmTypeId , "algorithmVersionId" -> dto.algorithmVersionId , "executorTypeId" -> dto.executorTypeId , "algorithmImplementationName" -> dto.algorithmImplementationName , "algorithmImplementationClass" -> dto.algorithmImplementationClass , "algorithmImplementationDescription" -> dto.algorithmImplementationDescription, "algorithmImplementationId" -> dto.algorithmImplementationId ).executeInsert() 
+      val resCnt = SQL("update algorithmImplementation set  lastUpdatedDate = {lastUpdatedDate} ,  algorithmTypeId = {algorithmTypeId} ,  algorithmVersionId = {algorithmVersionId} ,  executorTypeId = {executorTypeId} ,  algorithmImplementationName = {algorithmImplementationName} ,  algorithmImplementationClass = {algorithmImplementationClass} ,  algorithmImplementationDescription = {algorithmImplementationDescription} ,  scriptName = {scriptName} ,  scriptParams = {scriptParams}  where  algorithmImplementationId = {algorithmImplementationId}  ")
+      .on("lastUpdatedDate" -> dto.lastUpdatedDate , "algorithmTypeId" -> dto.algorithmTypeId , "algorithmVersionId" -> dto.algorithmVersionId , "executorTypeId" -> dto.executorTypeId , "algorithmImplementationName" -> dto.algorithmImplementationName , "algorithmImplementationClass" -> dto.algorithmImplementationClass , "algorithmImplementationDescription" -> dto.algorithmImplementationDescription , "scriptName" -> dto.scriptName , "scriptParams" -> dto.scriptParams, "algorithmImplementationId" -> dto.algorithmImplementationId ).executeInsert() 
    releaseConnection(connection);  
      getAlgorithmImplementationByPk(dto.algorithmImplementationId) 
     } 

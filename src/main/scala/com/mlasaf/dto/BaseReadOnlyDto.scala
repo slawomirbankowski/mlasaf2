@@ -32,5 +32,20 @@ trait BaseReadOnlyDto {
   def toJson() : String;
   def toFullString() : String;
 
+  def toFullJson() : String = {
+    val json = new StringBuilder
+    try {
+      this.getClass.getDeclaredFields.foreach(f => {
+        f.setAccessible(true)
+        f.get(this)
+        f.setAccessible(false)
+      })
+    } catch {
+      case _ : Exception => {
+
+      }
+    }
+    json.toString()
+  }
   override def toString: String = toStringArray().mkString(",");
 }

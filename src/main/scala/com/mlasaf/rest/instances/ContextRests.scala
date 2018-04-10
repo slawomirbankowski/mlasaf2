@@ -26,7 +26,7 @@ class ContextRests extends RestBase  {
       "[" + this.parentRest.parentContext.storages.map(st => st.storageDto.toJson()).mkString(",") + "]"
     });
     spark.Spark.get("/context-executors", (req: spark.Request, resp: spark.Response) => {
-      "[" + this.parentRest.parentContext.executors.map(e => "{ \"executorType\":\"" + e.getTypeName() + "\",\"runsCount\":" + e.algoRunObjs.size + ",runInterval:" + e.runInterval + "} ").mkString(",") + "]"
+      "[" + this.parentRest.parentContext.executors.map(e => "{ \"executorType\":\"" + e.getTypeName() + "\",\"runsCount\":" + e.algoRunObjs.size + ",\"runInterval\":" + e.runInterval + "} ").mkString(",") + "]"
     });
     spark.Spark.get("/context-sources", (req: spark.Request, resp: spark.Response) => {
       "[" + this.parentRest.parentContext.sources.map(s => " { \"viewsCount\":" + s.views.size + ",\"runInterval\":" + s.runInterval + ",\"params\":[" + s.vSourceParamsDtos.map(p => p.toJson()).mkString(",") + "] } ").mkString(",") + "]"

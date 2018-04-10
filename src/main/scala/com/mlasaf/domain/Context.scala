@@ -59,12 +59,12 @@ class Context extends ThreadBase {
   /** run in case of invoke start() method */
   override def onBeforeStart() : Unit = {
     //runOptions = opts;
-    logger.info("Start context for guid: " + guid);
+    logger.info("!!!!!!!!!!!!!!>>> Start context for guid: " + guid);
     // add CONTEXT to threads
     this.setParentContext(this);
     threads += this;
     val javaProperties = System.getProperties.stringPropertyNames().toArray.map(prop => "" + prop + "='" + System.getProperties.getProperty("" + prop) + "'").mkString(";");
-    logger.info("Java properties: " + javaProperties);
+    logger.info("!!!!!!!!!!!!!!>>> Java properties: " + javaProperties);
     // initialize DAO to read data from DB - creates new factory with all DAOs
     daoFactory = new DaoFactory();
     //context.daoFactory.registerExecutorInstance();
@@ -76,11 +76,11 @@ class Context extends ThreadBase {
     val entryOptionsCut = com.mlasaf.common.CustomUtils.cutString(entryOptionsSerialized, 1999, 10);
     // register current HOST
     hostDto = daoFactory.daoCustom.registerHost();
-    logger.info("---> Registered host: " + hostDto);
+    logger.info("!!!!!!!!!!!!!!>>> Registered host: " + hostDto);
     // register context
     val javaProps = com.mlasaf.common.CustomUtils.cutString(javaProperties, 1999, 10);
     contextDto = daoFactory.daos.executorContextDao.createAndInsertExecutorContextDto(hostDto.executorHostId, 1, javaProps(0), javaProps(1), javaProps(2), entryOptionsCut(0));
-    logger.info("---> Registered context: " + contextDto);
+    logger.info("!!!!!!!!!!!!!!>>> Registered context: " + contextDto);
   };
   /** run at the begin of working in thread */
   def onRunBegin() : Unit = {
@@ -88,7 +88,7 @@ class Context extends ThreadBase {
     refreshSources();
     // initialize SIMPLE storage - each storage has own thread to download data
     val storagesInHost = daoFactory.daos.executorStorageDao.getExecutorStorageByFkExecutorHostId(hostDto.executorHostId);
-    logger.info("Number of storages in host: " + storagesInHost.size + ", paths: " + storagesInHost.map(s => "{id:" + s.executorStorageId + ",typeId:" + s.executorStorageTypeId + ",path:" + s.storageFulllPath + "}").mkString(", ") );
+    logger.info("!!!!!!!!!!!!!!>>> Number of storages in host: " + storagesInHost.size + ", paths: " + storagesInHost.map(s => "{id:" + s.executorStorageId + ",typeId:" + s.executorStorageTypeId + ",path:" + s.storageFulllPath + "}").mkString(", ") );
     if (runOptions.simpleStorage.isDefined ) {
       //daoFactory.daos.executorStorageTypeDao.getExecutorStorageTypeFirstByName(LocalStorage.NAME).get.executorStorageTypeClass
       val simpleStoragePath = runOptions.simpleStorage.getOrElse(LocalDiskStorage.DEFAULT_PATH);
@@ -100,7 +100,7 @@ class Context extends ThreadBase {
       defineStorage(storageDef.storageType, storageDef.storageSimplePath, storageDef.storageFullPath, storageDef.storagePort );
     });
     // initialize ALL executors - each executor has own thread to run and control algorithm
-    logger.info("Starting initialization for executors ");
+    logger.info("!!!!!!!!!!!!!!>>> Starting initialization for executors ");
     runOptions.executorClasses.getOrElse("").split(",").foreach(exeClass => {
       defineExecutor(exeClass, 0);
     });
@@ -111,27 +111,30 @@ class Context extends ThreadBase {
     restManager.setParentContext(this);
     restManager.restDefaultPort = runOptions.restPort.getOrElse(8301);
     restManager.restAlternativePort = runOptions.restAlternativePort.getOrElse(8305);
+    logger.info("!!!!!!!!!!!!!!>>> Starting initialization for RestManager on port: " + restManager.restDefaultPort);
     restManager.start();
     threads += restManager;
     // initailize internal checker
+    logger.info("!!!!!!!!!!!!!!>>> Starting initialization for Checker ");
     checker.setParentContext(this);
     checker.start();
     threads += checker;
+    logger.info("!!!!!!!!!!!!!!>>> Starting initialization for ResourceManager ");
     resourceManager.setParentContext(this);
     resourceManager.start();
     threads += resourceManager;
     runInterval = 20000L;
     // BEGIN info
-    logger.info("BEGIN CONTEXT INFO => Total executors running: " + executors.size + ", total threads: " + threads.size + ", total storages: " + storages.size + ", total sources: " + sources.size);
+    logger.info("!!!!!!!!!!!!!!>>> BEGIN CONTEXT INFO => Total executors running: " + executors.size + ", total threads: " + threads.size + ", total storages: " + storages.size + ", total sources: " + sources.size);
   }
   def refreshSources() : Unit = {
     // initialization of ALL sources - each source has own thread to run refresh methods
     val allSourcesInDb = daoFactory.daos.vSourceInstanceDao.getVSourceInstancesList();
-    logger.info("Number of all sources: " + allSourcesInDb.size + ", types: " + allSourcesInDb.map(x => x.sourceType_sourceTypeName).mkString(", "));
+    logger.info("!!!!!!!!!!!!!!>>> Number of all sources: " + allSourcesInDb.size + ", types: " + allSourcesInDb.map(x => x.sourceType_sourceTypeName).mkString(", "));
     val newSources = allSourcesInDb.filter(newSrc => !sources.map(s => s.vSourceDto.sourceInstanceId).contains(newSrc.sourceInstanceId))
-    logger.info("Already registered sources: " + sources.map(s => s.vSourceDto.sourceInstanceId).mkString(",") + ", new sources count: " + newSources.size + ", IDs: " + newSources.map(s => s.sourceInstanceId).mkString(","));
+    logger.info("!!!!!!!!!!!!!!>>> Already registered sources: " + sources.map(s => s.vSourceDto.sourceInstanceId).mkString(",") + ", new sources count: " + newSources.size + ", IDs: " + newSources.map(s => s.sourceInstanceId).mkString(","));
     newSources.foreach(siDto => {
-      logger.info("Creating SourceInstance for DTO: " + siDto);
+      logger.info("!!!!!!!!!!!!!!>>> Creating SourceInstance for DTO: " + siDto);
       val srcObj = Class.forName(siDto.sourceType_sourceTypeClass).newInstance().asInstanceOf[Source];
       val sourceParams = daoFactory.daos.vSourceParamValueDao.getDtosBySourceInstance_sourceInstanceId(siDto.sourceInstanceId);
       srcObj.initialize(this, siDto, sourceParams);
@@ -139,7 +142,7 @@ class Context extends ThreadBase {
       threads += srcObj;
       sources += srcObj;
     });
-    logger.info("All initialized sources: " + sources.size + ", sources: " + sources.map(s => "{id:" + s.vSourceDto.sourceInstanceId + ",type:" + s.vSourceDto.sourceType_sourceTypeName + ",name:" + s.vSourceDto.sourceInstanceName + "}").mkString(", "));
+    logger.info("!!!!!!!!!!!!!!>>> All initialized sources: " + sources.size + ", sources: " + sources.map(s => "{id:" + s.vSourceDto.sourceInstanceId + ",type:" + s.vSourceDto.sourceType_sourceTypeName + ",name:" + s.vSourceDto.sourceInstanceName + "}").mkString(", "));
   }
   def delayedStop() : Unit = {
   }
@@ -150,7 +153,7 @@ class Context extends ThreadBase {
     // TODO: check new sources
     if (actualWorkingTimeSeconds() > runOptions.maxWorkingTimeSeconds.getOrElse(DEFAULT_MAX_WORKING_TIME)) {
       isStopped = true;
-      logger.info("Time is UP - stopping context, actualWorkingTime: " + actualWorkingTime() + ", maxWorkingTime: " + runOptions.maxWorkingTimeSeconds.getOrElse(DEFAULT_MAX_WORKING_TIME));
+      logger.info("!!!!!!!!!!!!!!>>> Time is UP - stopping context, actualWorkingTime: " + actualWorkingTime() + ", maxWorkingTime: " + runOptions.maxWorkingTimeSeconds.getOrElse(DEFAULT_MAX_WORKING_TIME));
     }
     // check commands for context
     readExecuteCommands();
@@ -159,18 +162,25 @@ class Context extends ThreadBase {
     daoFactory.daos.executorContextStateDao.createAndInsertExecutorContextStateDto(contextDto.executorContextId, "RUNNING", getPartialInfoJson(), "")
   }
   def onRunEnd() : Unit = {
-    logger.info("STOPPING context: " + contextDto);
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING context: " + contextDto);
     daoFactory.daos.executorContextDao.updateField(contextDto, ExecutorContextDto.FIELD_isWorking, 0);
     daoFactory.daos.executorContextDao.changeUpdatedDate(contextDto);
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING ResourceManager: " + contextDto);
     resourceManager.stop();
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING restManager: " + contextDto);
     restManager.stop();
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING executors: " + contextDto);
     executors.foreach(x => x.stop());
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING sources: " + contextDto);
     sources.foreach(x => { x.stop(); });
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING storages: " + contextDto);
     storages.foreach(x => { x.stop() });
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING checker: " + contextDto);
     checker.stop();
+    logger.info("!!!!!!!!!!!!!!>>> STOPPING daoFactory: " + contextDto);
     daoFactory.stop();
     Thread.sleep(10000L);
-    logger.info("END context for guid: " + guid);
+    logger.info("!!!!!!!!!!!!!!>>> END context for guid: " + guid);
   }
   override def onRunError(ex : Exception) : Unit = {
   }
@@ -181,7 +191,7 @@ class Context extends ThreadBase {
   def readExecuteCommands() : Unit = {
     val commands = daoFactory.daos.vExecutorContextCommandDao.getDtosByExecutorContext_executorContextId(contextDto.executorContextId).filter(cmd => cmd.isExecuted == 0);
     commands.foreach(command => {
-      logger.info("Running command: " + command.executorCommand_executorCommandName + ", dto: " + command.toString);
+      logger.info("!!!!!!!!!!!!!!>>> Running command: " + command.executorCommand_executorCommandName + ", dto: " + command.toJson());
       executeCommand(command);
     });
   }
@@ -197,7 +207,7 @@ class Context extends ThreadBase {
       daoFactory.daos.executorContextCommandDao.updateField(commandDto, ExecutorContextCommandDto.FIELD_isExecuted, 1);
     } catch {
       case ex : Exception => {
-        logger.info("Exception while executing command, reason: " + ex.getMessage, ex);
+        logger.info("!!!!!!!!!!!!!!>>> Exception while executing command, reason: " + ex.getMessage, ex);
       }
     }
     daoFactory.daos.executorContextCommandDao.updateField(commandDto, ExecutorContextCommandDto.FIELD_isRunning, 0);
@@ -205,20 +215,20 @@ class Context extends ThreadBase {
   /** define new executor and add to executors and threads */
   def defineExecutor(executorTypeOrClass : String, portNumber : Int) : Executor = {
     try {
-      logger.info("Create new executor for type or class: " + executorTypeOrClass + ", portNumber: " + portNumber);
+      logger.info("!!!!!!!!!!!!!!>>> Create new executor for type or class: " + executorTypeOrClass + ", portNumber: " + portNumber);
       val executorsTypes = daoFactory.daos.executorTypeDao.getExecutorTypeByName(executorTypeOrClass);
       val executorClassName = if (executorsTypes.size == 0) { executorTypeOrClass } else { executorsTypes.head.executorTypeClass }
-      logger.info("Got class name for new Executor: " + executorClassName);
+      logger.info("!!!!!!!!!!!!!!>>> Got class name for new Executor: " + executorClassName);
       val executorObj = Class.forName(executorClassName).newInstance().asInstanceOf[Executor]
       executorObj.setParentContext(this);
       executors += executorObj;
       executorObj.start();
       threads += executorObj;
-      logger.info("Thread started for executor: " + executorObj.getClass.getName);
+      logger.info("!!!!!!!!!!!!!!>>> Thread started for executor: " + executorObj.getClass.getName);
       executorObj
     } catch {
       case ex : Exception => {
-        logger.error("Cannot create new executor for type: " + executorTypeOrClass + ", portNumber: " + portNumber, ex);
+        logger.error("!!!!!!!!!!!!!!>>> Cannot create new executor for type: " + executorTypeOrClass + ", portNumber: " + portNumber, ex);
         null
       }
     }
@@ -230,9 +240,9 @@ class Context extends ThreadBase {
       val storTypeId = storTypeDto.executorStorageTypeId
       val storagesInHost = daoFactory.daos.executorStorageDao.getExecutorStorageByFkExecutorHostId(hostDto.executorHostId);
       val existingSimpleStorages = storagesInHost.filter(s => s.storageFulllPath.equals(storageFullPath));
-      logger.info("Create OR GET new storage for path: " + storageSimplePath + ", fullPath: " + storageFullPath);
+      logger.info("!!!!!!!!!!!!!!>>> Create OR GET new storage for path: " + storageSimplePath + ", fullPath: " + storageFullPath);
       val simpleStorageDto = if (existingSimpleStorages.size > 0) existingSimpleStorages.head else daoFactory.daos.executorStorageDao.createAndInsertExecutorStorageDto(hostDto.executorHostId, storTypeId, "definition of storage ... ", storageSimplePath, storageFullPath, 1, storageRestPort);
-      logger.info("Created storage DTO: " + simpleStorageDto);
+      logger.info("!!!!!!!!!!!!!!>>> Created storage DTO: " + simpleStorageDto);
       val storageObj = Class.forName(storTypeDto.executorStorageTypeClass).newInstance().asInstanceOf[Storage];
       storageObj.initialize( this, simpleStorageDto);
       storageObj.start();
@@ -241,7 +251,7 @@ class Context extends ThreadBase {
       storageObj
     } catch {
       case ex : Exception => {
-        logger.error("Cannot create new storage for type: " + storageType + ", path: " + storageSimplePath, ex);
+        logger.error("!!!!!!!!!!!!!!>>> Cannot create new storage for type: " + storageType + ", path: " + storageSimplePath, ex);
         null
       }
     }

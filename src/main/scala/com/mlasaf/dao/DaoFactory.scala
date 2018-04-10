@@ -58,7 +58,7 @@ class DaoFactory extends ThreadBase {
       val sql = "select count(*) as cnt from " + d.tableName
       logger.info("Executing QUERY: " + sql);
       val queryRes = SQL(sql)
-        .executeQuery()(conn).as[Int](SqlParser.int("cnt").single)(conn);;
+        .executeQuery()(conn).as[Int](SqlParser.int("cnt").single)(conn);
       daoConn.releaseConnection(conn);
       queryRes
     }

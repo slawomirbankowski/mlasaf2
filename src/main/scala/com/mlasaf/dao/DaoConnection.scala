@@ -23,6 +23,9 @@ class DaoConnection {
   var jdbcPass = "";
   /** driverClass */
   var jdbcDriverClass = "";
+  var dataSource : org.apache.commons.dbcp.BasicDataSource = null
+  //TODO: remove connInUse and connectionsInUse and connectionsFree - now we have DBCP for connection pooling
+  /** */
   var connInUse : java.util.concurrent.ConcurrentLinkedQueue[java.sql.Connection] = new java.util.concurrent.ConcurrentLinkedQueue();
   /** */
   var connectionsInUse : scala.collection.mutable.ListBuffer[java.sql.Connection] = new scala.collection.mutable.ListBuffer();
@@ -58,20 +61,26 @@ class DaoConnection {
     jdbcString = jdbc;
     jdbcUser = user;
     jdbcPass = pass;
+    dataSource = new org.apache.commons.dbcp.BasicDataSource();
+    logger.info("Basic Data source: " + dataSource);
+    dataSource.setDriverClassName(driverClass)
+    dataSource.setUrl(jdbcString);
+    dataSource.setUsername(jdbcUser);
+    dataSource.setPassword(jdbcPass);
+    dataSource.setInitialSize(3);
     //createDataSource();
     isInitialized = true;
   }
   /** create new connection - to be used internally only */
   def createConnection() : Connection = {
-    DriverManager.getConnection(jdbcString, jdbcUser, jdbcPass);
+    dataSource.getConnection
+    // DriverManager.getConnection(jdbcString, jdbcUser, jdbcPass);
   }
   /** acquire new connection for all operations on configurational database */
   def getConnection() : Connection = {
     connTotalCounter = connTotalCounter + 1;
-    // TODO: change this to use DataSource and internal pool
-    val conn = DriverManager.getConnection(jdbcString, jdbcUser, jdbcPass);
+    val conn = createConnection() // DriverManager.getConnection(jdbcString, jdbcUser, jdbcPass);
     connInUse.add(conn);
-    //connectionsInUse += conn;
     conn;
   }
   /** release or close connection */
@@ -81,36 +90,8 @@ class DaoConnection {
       connReleaseCounter = connReleaseCounter + 1;
       connInUse.remove(conn);
       conn.close();
-
     }
-    //connectionsFree += conn;
   }
-  /** */
-  def createDataSource() : javax.sql.DataSource = {
-    // TODO: finish DataSource for a connection pool, use internal synchronization to prevent large number of opened connections
-    //DriverManagerConnectionFactory
-    //PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
-    val pds = new org.apache.commons.dbcp.PoolingDataSource
-    logger.info("Pooling data source: " + pds)
-    //val org.apache.commons.dbcp.PoolingDataSource
-    val bds : org.apache.commons.dbcp.BasicDataSource = new org.apache.commons.dbcp.BasicDataSource();
-    logger.info("Basic Data source: " + bds);
-    bds.setUrl(jdbcString);
-    bds.setUsername(jdbcUser);
-    bds.setPassword(jdbcPass);
-    bds.setInitialSize(3);
-    //bds.setDriverClassName(jdbcDriverClass)
-    //bds.setValidationQuery("select 1")
-    println("DS: " + bds)
-    val conn = bds.getConnection;
-    logger.info("Connection: " + conn);
-    logger.info("  Catalog: " + conn.getCatalog);
-    conn.createStatement().executeQuery("select * from INFORMATION_SCHEMA.TABLES");
-    conn.close();
-    bds.isClosed();
-    null
-  }
-
 
 
 

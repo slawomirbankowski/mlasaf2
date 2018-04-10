@@ -18,11 +18,13 @@ class ProcessRunner {
 
   /** initialize */
   def initialize(params : java.util.List[String]) : ExternalExitParams = {
-    logger.info("Run EXTERNAL Python command with parameters: " + params.toArray.mkString(","));
+    logger.info("#######################################################################################################################################")
+    logger.info("#######################################################################################################################################")
+    logger.info("#### Run EXTERNAL command with parameters: " + params.toArray.mkString(","));
     val startTime = System.currentTimeMillis();
     val outputContent = new StringBuilder();
     try {
-      logger.info("Run ProcessBuilder with parameters: " + params.toArray.mkString(" | "));
+      logger.info("#### Run ProcessBuilder with parameters: " + params.toArray.mkString(" "));
       val rProcessBuilder = new java.lang.ProcessBuilder().command(params);
       val rProcess = rProcessBuilder.start();
       val inStream = new java.io.BufferedInputStream(rProcess.getInputStream)
@@ -37,16 +39,18 @@ class ProcessRunner {
         c = errStream.read();
         outputContent.append(c);
       }
-      logger.info("Process ran, waiting for END...");
+      logger.info("#### Process ran, waiting for END...");
       rProcess.waitFor();
-      logger.info("Process finished, OUTPUT CONTENT: " + outputContent.toString());
+      logger.info("#### Process finished, OUTPUT CONTENT: " + outputContent.toString());
       val exitValue = rProcess.exitValue();
       val totalExecutionTime = System.currentTimeMillis() - startTime;
-      logger.info("Process ended, exitCode: " + exitValue);
+      logger.info("#### Process ended, exitCode: " + exitValue + ", execution time: " + totalExecutionTime);
+      logger.info("#######################################################################################################################################")
       new ExternalExitParams(params.toArray.mkString("\t"), ExecutorExternalStatus.STATUS_OK, exitValue, outputContent.toString(), totalExecutionTime, "");
     } catch {
       case ex : Exception => {
-        logger.error("Exception while running R script", ex);
+        logger.error("#### Exception while running external process", ex);
+        logger.info("#######################################################################################################################################")
         new ExternalExitParams(params.toArray.mkString("\t"), ExecutorExternalStatus.STATUS_EXCEPTION, -1, outputContent.toString(), System.currentTimeMillis() - startTime, "" + ex.getMessage);
       }
     }

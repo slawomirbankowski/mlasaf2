@@ -23,6 +23,9 @@ class MoaExecutor extends Executor {
   }
   /** execute external script */
   def onExecuteExternal(args : Array[String]) : ExternalExitParams = {
+
+
+
     new ExternalExitParams("", ExecutorExternalStatus.STATUS_NOT_IMPLEMENTED, -1, "", 0L, "NOT_IMPLEMENTED");
 
   }

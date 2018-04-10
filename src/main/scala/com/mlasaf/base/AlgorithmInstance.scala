@@ -25,9 +25,10 @@ trait AlgorithmInstance {
   /** run of algorithm to produce outputs */
   def run(run : AlgorithmRun) : String = {
     logger.info("============================================================================================================================== ");
-    logger.info("==========================> RUNNING ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto);
+    logger.info("==========================> RUNNING ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto.toJson());
     Thread.sleep(500L);
     printInfo(run);
+
     logger.info("============================= STARTING ... ");
     val scheduleValidationInputResult = validateRunInput(run);
     if (scheduleValidationInputResult) {
@@ -51,10 +52,13 @@ trait AlgorithmInstance {
   }
   /** print information to logger about AlgorithmRun object */
   def printInfo(run : AlgorithmRun) : Unit = {
-    logger.info("======================>    algorithmRunDto: " + run.algorithmRunDto);
+    logger.info("======================>    algorithmRunDto: " + run.algorithmRunDto.toJson());
     logger.info("======================>    run.status: " + run.status);
+    logger.info("======================>    run.algorithmScheduleDto: " + run.algorithmScheduleDto.toJson());
+    logger.info("======================>    run.algorithmVersionDto: " + run.algorithmVersionDto.toJson());
+    logger.info("======================>    run.algorithmImplementationDto: " + run.algorithmImplementationDto.toJson());
     logger.info("======================>    algorithmInstance: " + run.algorithmInstance);
-    logger.info("======================>    storageDto: " + run.storage.storageDto);
+    logger.info("======================>    run.storageDto: " + run.storage.storageDto.toJson());
     logger.info("======================>    executorType: " + run.parentExecutor.getTypeName());
     logger.info("======================>    executorStorageViewDtos.size: " + run.executorStorageViewDtos.size);
     logger.info("======================>    executorStorageViewDtos: " + run.executorStorageViewDtos.map(sv => sv.sourceView_sourceViewName + "=" +  sv.executorStorageResource_resourcePath).mkString(","));
@@ -63,7 +67,7 @@ trait AlgorithmInstance {
     logger.info("======================>    algorithmScheduleColumnDtos.size: " + run.algorithmScheduleColumnDtos.size);
     logger.info("======================>    algorithmScheduleColumnDtos: " + run.algorithmScheduleColumnDtos.map(c => "{asvcId:" + c.algorithmScheduleViewId + ",columnName:" + c.sourceViewColumn_columnName + ",sourceViewId:" + c.algorithmScheduleView_sourceViewId + ",type:" + c.algorithmColumnType_algorithmColumnTypeName + "}").mkString(","));
     logger.info("======================>    algorithmScheduleViewDtos.size: " + run.algorithmScheduleViewDtos.size);
-    logger.info("======================>    algorithmScheduleViewDtos: " + run.algorithmScheduleViewDtos.size);
+    logger.info("======================>    algorithmScheduleViewDtos: " + run.algorithmScheduleViewDtos.map(x => x.toJson()).mkString(" , "));
     logger.info("======================>    outputs.size: " + run.outputs.size);
     logger.info("======================>    outputs: " + run.outputs.map(o => o.algorithmOutputType_algorithmOutputTypeName + "=" + o.executorStorageResource_resourcePath).mkString(","));
     logger.info("======================>    parameters.size: " + run.parameters.size);
@@ -72,6 +76,7 @@ trait AlgorithmInstance {
     logger.info("======================>    paramsForHostExecutorType: " + run.paramsForHostExecutorType.map(p => p.executorParam_executorParamName + "=" + p.paramValue).mkString(","));
     logger.info("======================>    runInfos.size: " + run.runInfos.size);
     logger.info("======================>    runInfos: " + run.runInfos.map(p => p.algorithmInfoType_algorithmInfoTypeName + "=" + p.executorStorageResource_resourcePath).mkString(","));
+
   }
   def validateRunInput(run : AlgorithmRun) : Boolean = {
       // TODO: implement basic checks for input parameters for all algorithms
@@ -90,6 +95,7 @@ trait AlgorithmInstance {
   def validateRunOutput(run : AlgorithmRun) : Boolean = {
     // TODO: implement basic checks for output parameters for all algorithms
 
+    
 
     true
   }

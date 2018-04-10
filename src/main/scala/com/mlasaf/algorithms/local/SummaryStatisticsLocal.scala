@@ -1,7 +1,3 @@
-/*
-  Author(s): Slawomir Bankowski
-  Project: mlasaf
-*/
 package com.mlasaf.algorithms.local
 
 import com.mlasaf.base.AlgorithmInstance
@@ -11,7 +7,7 @@ import com.mlasaf.tests.standalone.MutableDouble
 
 import scala.collection.mutable
 
-class CorrelationPearsonLocal extends AlgorithmInstance {
+class SummaryStatisticsLocal extends AlgorithmInstance {
 
   /** */
   def onAlgorithmRun(run : AlgorithmRun) : AlgorithmExitParams = {
@@ -29,7 +25,6 @@ class CorrelationPearsonLocal extends AlgorithmInstance {
       // add values to calculate correlation
       val timeItems = new scala.collection.mutable.ListBuffer[PredictionRow]()
       val timeItemsMapped = new mutable.HashMap[String,PredictionRow ]()
-
       //val avgTime : Double =  timeItemsMapped.map(x => x._2.timeId.toDouble).toArray.sum
       var smaValues = new mutable.HashMap[String, MutableDouble]()
       timeItemsMapped.map(x => x._2).toList.sortBy(_.timeId).foreach(x => {
@@ -41,9 +36,6 @@ class CorrelationPearsonLocal extends AlgorithmInstance {
 
     });
     val outputPath = run.outputs.head.executorStorageResource_resourcePath;
-
-
-
     AlgorithmExitParams(AlgorithmInstance.STATUS_OK, true, None);
   }
 

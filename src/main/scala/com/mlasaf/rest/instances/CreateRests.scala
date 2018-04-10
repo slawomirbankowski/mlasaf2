@@ -62,7 +62,7 @@ class CreateRests extends RestBase  {
       logger.info("algTypeId: " + algTypeId);
       val algVerId = parentRest.parentContext.daoFactory.daos.algorithmVersionDao.getAlgorithmVersionsList().filter(a => (a.algorithmVersionName.equals(algoImplParams.algorithmVersion) && a.algorithmTypeId == algTypeId)).head.algorithmVersionId;
       logger.info("algTypeVerId: " + algVerId);
-      val algImplDto = parentRest.parentContext.daoFactory.daos.algorithmImplementationDao.createAndInsertAlgorithmImplementationDto(algTypeId, algVerId, execTypeId, algoImplParams.algorithmImplementationName, algoImplParams.algorithmImplementationClass, "");
+      val algImplDto = parentRest.parentContext.daoFactory.daos.algorithmImplementationDao.createAndInsertAlgorithmImplementationDto(algTypeId, algVerId, execTypeId, algoImplParams.algorithmImplementationName, algoImplParams.algorithmImplementationClass, algoImplParams.algorithmImplementationDescription.getOrElse(""), algoImplParams.scriptName.getOrElse(""), algoImplParams.scriptParams.getOrElse(""));
       logger.info("algImplDto: " + algImplDto);
       // supported storages
       algoImplParams.supportedStorages.split(",").foreach(supsto => {

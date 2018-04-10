@@ -20,9 +20,16 @@ class SparkExecutor extends Executor {
   }
   /** run given instance of algorithm */
   def runAlgorithmInstance(run : AlgorithmRun) : Unit = {
+
+
+
   }
   /** execute external script */
   def onExecuteExternal(args : Array[String]) : ExternalExitParams = {
+
+
+
+
     new ExternalExitParams("", ExecutorExternalStatus.STATUS_NOT_IMPLEMENTED, -1, "", 0L, "NOT_IMPLEMENTED");
 
   }
