@@ -11,24 +11,27 @@ object GenerateTestData {
   /** logger */
   val logger = org.slf4j.LoggerFactory.getLogger("TestManager");
 
-  def main(args : Array[String]) : Unit = {
-    logger.info("Start generating sample data")
-    var dimensionsCount = 4
-    var totalPoints = 80000
-    var classesCount = 6
-    var testPercent = 0.2
-    // variables
-    var pointPerDimension = Math.pow(totalPoints, 1.0/dimensionsCount)
-    val minValue = -1.0
-    val maxValue = 1.0
-    var maxRadius = Math.pow(dimensionsCount, 1.0 / dimensionsCount)
-    val stepValue = (maxValue - minValue) / pointPerDimension
-    println("totalPoints: " + totalPoints + ", dimensionsCount: " + dimensionsCount+ ", stepValue:" + stepValue + ", pointPerDimension: " + pointPerDimension + ", classesCount: " + classesCount + ", maxRadius: " + maxRadius)
-    var point : Array[Double] = new Array[Double](dimensionsCount)
-    var pointsPerClasses : Array[Int] = new Array[Int](classesCount)
-    (0 to dimensionsCount-1).foreach(i => {
-      point(i) = minValue
-    })
+    def main(args : Array[String]) : Unit = {
+      logger.info("Start generating sample data")
+      var dimensionsCount = 4
+      var totalPoints = 80000
+      var classesCount = 4
+      var testPercent = 0.2
+      //def x : (Long, Long, Array[Double]) => Int = {
+
+      //}
+      // variables
+      var pointPerDimension = Math.pow(totalPoints, 1.0/dimensionsCount)
+      val minValue = -1.0
+      val maxValue = 1.0
+      var maxRadius = Math.pow(dimensionsCount, 1.0 / dimensionsCount)
+      val stepValue = (maxValue - minValue) / pointPerDimension
+      println("totalPoints: " + totalPoints + ", dimensionsCount: " + dimensionsCount+ ", stepValue:" + stepValue + ", pointPerDimension: " + pointPerDimension + ", classesCount: " + classesCount + ", maxRadius: " + maxRadius)
+      var point : Array[Double] = new Array[Double](dimensionsCount)
+      var pointsPerClasses : Array[Int] = new Array[Int](classesCount)
+      (0 to dimensionsCount-1).foreach(i => {
+        point(i) = minValue
+      })
     val rnd = new Random()
     val trainFileName = "../hypersphere." + dimensionsCount + "." + classesCount +  "." + totalPoints + "." + CustomUtils.yyyyMMDDHHmmss +  ".train.csv"
     val testFileName = "../hypersphere." + dimensionsCount + "." + classesCount +  "." + totalPoints +  "." + CustomUtils.yyyyMMDDHHmmss + ".test.csv"
@@ -73,17 +76,9 @@ object GenerateTestData {
         outTestFile.flush()
       }
     }
-    //outFile.write("")
     outTrainFile.close()
     outTestFile.close()
-   // Thread.sleep(20);
-
     println("pointsPerClasses: " + pointsPerClasses.zipWithIndex.map(x => x._2 + ":" + x._1).mkString(", "));
-    //outFile.close()
-
-    //data.map(x => x.)
-
-
 
   }
 }
