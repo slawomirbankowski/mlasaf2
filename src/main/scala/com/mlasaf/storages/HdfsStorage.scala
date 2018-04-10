@@ -22,9 +22,13 @@ class HdfsStorage extends Storage {
   def downloadView(sourceView : VSourceViewDto, sourceSchedule : VSourceScheduleDto, sourceDownloadDto : SourceDownloadDto, source : Source, downloader : SouceViewDownloader) : ExecutorStorageViewDto = {
     null
   }
+  def saveContent(path : String, content : String) : Unit = {
+
+  }
+
   def onRunStorage() = {
 
-  };
+  }
 
 }
 

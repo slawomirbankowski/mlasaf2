@@ -32,8 +32,13 @@ trait AlgorithmInstance {
     logger.info("============================= STARTING ... ");
     val scheduleValidationInputResult = validateRunInput(run);
     if (scheduleValidationInputResult) {
-      logger.info("============================= INPUT VALIDATION OK ... ");
+      logger.info("============================= INPUT VALIDATION OK ... RUNNING ALGORITHM ");
       val retStatus = onAlgorithmRun(run);
+      val outputContentDto = run.runInfos.filter(i => i.algorithmInfoType_algorithmInfoTypeName.equals("OUTPUT"))
+      if (!outputContentDto.isEmpty && !retStatus.externalExit.isEmpty) {
+        // TODO: save output content retStatus.externalExit.get.outputContent TO storage outputContentDto.executorStorageResource_resourcePath
+        run.storage.saveContent(outputContentDto.head.executorStorageResource_resourcePath, retStatus.externalExit.get.outputContent)
+      }
       logger.info("============================= FINISHED ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto + ", STATUS: " + retStatus.toJson + "");
       logger.info("============================================================================================================================== ");
       val validationOutput = validateRunOutput(run);
@@ -63,9 +68,9 @@ trait AlgorithmInstance {
     logger.info("======================>    executorStorageViewDtos.size: " + run.executorStorageViewDtos.size);
     logger.info("======================>    executorStorageViewDtos: " + run.executorStorageViewDtos.map(sv => sv.sourceView_sourceViewName + "=" +  sv.executorStorageResource_resourcePath).mkString(","));
     logger.info("======================>    algorithmRunViewDtos.size: " + run.algorithmRunViewDtos.size);
-    logger.info("======================>    algorithmRunViewDtos: " + run.algorithmRunViewDtos.map(x => x.toString).mkString(";"));
+    logger.info("======================>    algorithmRunViewDtos: " + run.algorithmRunViewDtos.map(x => x.toFullJson()).mkString(";"));
     logger.info("======================>    algorithmScheduleColumnDtos.size: " + run.algorithmScheduleColumnDtos.size);
-    logger.info("======================>    algorithmScheduleColumnDtos: " + run.algorithmScheduleColumnDtos.map(c => "{asvcId:" + c.algorithmScheduleViewId + ",columnName:" + c.sourceViewColumn_columnName + ",sourceViewId:" + c.algorithmScheduleView_sourceViewId + ",type:" + c.algorithmColumnType_algorithmColumnTypeName + "}").mkString(","));
+    logger.info("======================>    algorithmScheduleColumnDtos: " + run.algorithmScheduleColumnDtos.map(c => "{sourceViewName:" + c.sourceView_sourceViewName+ ", sourceViewId:" + c.algorithmScheduleView_sourceViewId + ", asvcId:"  + c.algorithmScheduleViewId + ", columnName:" + c.sourceViewColumn_columnName  + ",type:" + c.algorithmColumnType_algorithmColumnTypeName + "}").mkString(","));
     logger.info("======================>    algorithmScheduleViewDtos.size: " + run.algorithmScheduleViewDtos.size);
     logger.info("======================>    algorithmScheduleViewDtos: " + run.algorithmScheduleViewDtos.map(x => x.toJson()).mkString(" , "));
     logger.info("======================>    outputs.size: " + run.outputs.size);
