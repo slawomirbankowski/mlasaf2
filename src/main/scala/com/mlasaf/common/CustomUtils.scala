@@ -215,8 +215,6 @@ object CustomUtils {
       s.append(" } ")
       return s.toString()
     }
-
-
     //println("" + x.getClass.getDeclaredFields.map(x => x.getName + ":" + x.getType).mkString(" , "))
     //s.toString()
   }

@@ -27,8 +27,7 @@ trait AlgorithmInstance {
     logger.info("============================================================================================================================== ");
     logger.info("==========================> RUNNING ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto.toJson());
     Thread.sleep(500L);
-    printInfo(run);
-
+    printInfo(run)
     logger.info("============================= STARTING ... ");
     val scheduleValidationInputResult = validateRunInput(run);
     if (scheduleValidationInputResult) {
@@ -38,6 +37,7 @@ trait AlgorithmInstance {
       if (!outputContentDto.isEmpty && !retStatus.externalExit.isEmpty) {
         // TODO: save output content retStatus.externalExit.get.outputContent TO storage outputContentDto.executorStorageResource_resourcePath
         run.storage.saveContent(outputContentDto.head.executorStorageResource_resourcePath, retStatus.externalExit.get.outputContent)
+        run.storage.validateResurce(outputContentDto.head.executorStorageResource_executorStorageResourceId)
       }
       logger.info("============================= FINISHED ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto + ", STATUS: " + retStatus.toJson + "");
       logger.info("============================================================================================================================== ");

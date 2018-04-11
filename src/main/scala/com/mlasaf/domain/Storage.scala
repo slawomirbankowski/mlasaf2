@@ -102,5 +102,7 @@ trait Storage extends ThreadBase {
 
   def saveContent(path : String, content : String) : Unit;
 
+  def validateResurce(executorStorageResourceId : Long) : Unit ;
+
 }
 

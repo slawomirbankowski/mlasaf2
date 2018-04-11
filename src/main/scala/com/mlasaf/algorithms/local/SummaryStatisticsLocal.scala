@@ -17,6 +17,7 @@ class SummaryStatisticsLocal extends AlgorithmInstance {
     run.algorithmRunViewDtos.filter(x => x.algorithmScheduleViewId > 0).foreach(x => {
 
     })
+    run.storage.saveContent("X", "content")
     run.executorStorageViewDtos.filter(x => true).foreach(esv => {
       val inputFileFullPath = esv.executorStorageResource_resourcePath;
       val timeColName = run.algorithmScheduleColumnDtos.filter(c => c.algorithmColumnType_algorithmColumnTypeName.equals("Time") && c.sourceView_sourceViewId == esv.sourceView_sourceViewId).head.sourceViewColumn_columnName;
