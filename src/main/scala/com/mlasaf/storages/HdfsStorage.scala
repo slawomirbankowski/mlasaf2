@@ -25,6 +25,10 @@ class HdfsStorage extends Storage {
   def saveContent(path : String, content : String) : Unit = {
 
   }
+  def checkPath(path : String) : Boolean = {
+    return true
+  }
+
 
   def validateResurce(executorStorageResourceId : Long) : Unit = {
     val esrDto = parentContext.daoFactory.daos.executorStorageResourceDao.getExecutorStorageResourceByPk(executorStorageResourceId)

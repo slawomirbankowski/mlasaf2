@@ -114,6 +114,7 @@ trait ThreadBase extends Runnable {
   def waitTillEnd(maxWaitingTimeMilliseconds : Long) : Unit = {
     val startWaitingTime = new java.util.Date();
     Thread.sleep(5000L)
+    logger.info("Waiting till end, isInitialized: " + isInitialized + ", isRunning: " + isRunning + ", maxWaitingTimeMilliseconds: " + maxWaitingTimeMilliseconds)
     while (!isInitialized || (isRunning && (maxWaitingTimeMilliseconds > 0L && maxWaitingTimeMilliseconds <= (new java.util.Date().getTime -  startWaitingTime.getTime) ))) {
       Thread.sleep(3000L)
     }

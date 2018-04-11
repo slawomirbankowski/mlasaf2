@@ -39,7 +39,7 @@ trait AlgorithmInstance {
         run.storage.saveContent(outputContentDto.head.executorStorageResource_resourcePath, retStatus.externalExit.get.outputContent)
         run.storage.validateResurce(outputContentDto.head.executorStorageResource_executorStorageResourceId)
       }
-      logger.info("============================= FINISHED ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto + ", STATUS: " + retStatus.toJson + "");
+      logger.info("============================= FINISHED ALGORITHM FOR SCHEDULE: " + run.algorithmScheduleDto.toFullJson() + ", STATUS: " + retStatus.toJson + "");
       logger.info("============================================================================================================================== ");
       val validationOutput = validateRunOutput(run);
       if (validationOutput) {
@@ -86,6 +86,10 @@ trait AlgorithmInstance {
   def validateRunInput(run : AlgorithmRun) : Boolean = {
       // TODO: implement basic checks for input parameters for all algorithms
       // check inputs
+    run.executorStorageViewDtos.foreach(s => {
+      val validatedPath = run.storage.checkPath(s.executorStorageResource_resourcePath)
+
+    })
       val neededColumnTypes = run.parentExecutor.parentContext.daoFactory.daos.vAlgorithmVersionColumnTypeDao.getDtosByAlgorithmVersion_algorithmVersionId(run.algorithmScheduleDto.algorithmImplementation_algorithmVersionId).map(x => x.algorithmColumnType_algorithmColumnTypeId);
       val existingColumnTypes = run.parentExecutor.parentContext.daoFactory.daos.vAlgorithmScheduleColumnDao.getDtosByAlgorithmScheduleView_algorithmScheduleId(run.algorithmScheduleDto.algorithmScheduleId).map(x => x.algorithmColumnType_algorithmColumnTypeId);
       // check parameters

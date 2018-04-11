@@ -70,6 +70,11 @@ class LocalDiskStorage extends Storage {
     writer.write(content)
     writer.close()
   }
+  def checkPath(path : String) : Boolean = {
+    val f = new java.io.File(path)
+    return f.exists()
+  }
+
   def validateResurce(executorStorageResourceId : Long) : Unit = {
     val esrDto = parentContext.daoFactory.daos.executorStorageResourceDao.getExecutorStorageResourceByPk(executorStorageResourceId)
     val f = new java.io.File(esrDto.resourcePath)

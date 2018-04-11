@@ -12,9 +12,9 @@ object DbRefreshTest {
 
   def main(args : Array[String]) : Unit = {
     logger.info("START NEW DB");
-    val jdbcString = "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02" // "jdbc:mysql://localhost:3306/mlasaf02?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false"
-    val jdbcUser = "sa" // "root"
-    val jdbcPass = "sapass" // "rootpass"
+    val jdbcString ="jdbc:mysql://localhost:3306/mlasaf02?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false" //  "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02" //
+    val jdbcUser = "root" // "root"
+    val jdbcPass = "rootpass" // "rootpass"
     val jdbcDriver = System.getenv("MLASAF_DRIVER");
     val changeLogFile = "./src/main/resources/db/1.0/v1.0.xml";
     val changeLogFilePath = new java.io.File(changeLogFile).getCanonicalPath;

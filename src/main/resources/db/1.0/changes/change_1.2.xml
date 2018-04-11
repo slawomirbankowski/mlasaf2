@@ -11,7 +11,11 @@
         <insert tableName="algorithmInfoType">
             <column name="algorithmInfoTypeName" value="OUTPUT"/>
             <column name="algorithmInfoTypeDescription" value="output content from process"/>
-            <column name="algorithmInfoTypeFormat" value="#TEXT"/>
+            <column name="algorithmInfoTypeFormat" value="TEXT"/>
+        </insert>
+
+        <insert tableName="algorithmType">
+            <column name="algorithmTypeName" value="Statistics"/>
         </insert>
 
     </changeSet>
