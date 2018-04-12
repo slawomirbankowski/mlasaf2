@@ -7,13 +7,12 @@ package com.mlasaf
 import com.mlasaf.domain._
 import org.rogach.scallop.ScallopConf
 import com.mlasaf.structures._
+import com.typesafe.scalalogging.StrictLogging
 
 /** Entry point for all Mlasaf applications - executors, RESTs, storages, source managers */
-object MlasafEntry {
+object MlasafEntry extends StrictLogging {
 
   val MLASAF_VERSION = "0.5.0";
-  val logger = org.slf4j.LoggerFactory.getLogger("MlasafEntry");
-
   // TODO: prepare RESTs for storage
   // TODO: prepare RESTs for executor
   // TODO: prepare RESTs for source
@@ -34,7 +33,7 @@ object MlasafEntry {
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) = {
     logger.info("|||||||||||||| START MLASAF " + MLASAF_VERSION)
-    logger.info("|||||||||||||| JAVA Properties: " + System.getProperties.stringPropertyNames().toArray.map(p => "" + p + "='" + System.getProperties.getProperty(""+p) + "'" ).mkString(","))
+    logger.debug("|||||||||||||| JAVA Properties: \n" + System.getProperties.stringPropertyNames().toArray.map(p => "" + p + "='" + System.getProperties.getProperty(""+p) + "'" ).sorted.mkString("\n"))
     logger.info("|||||||||||||| MLASAF Parameters: " + args.mkString(" "))
     logger.info("|||||||||||||| DISK spaces: " + com.mlasaf.common.CustomUtils.diskSpaces)
     val context = new Context()

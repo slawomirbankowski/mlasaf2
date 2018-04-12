@@ -5,9 +5,10 @@
 package com.mlasaf.tests.standalone
 
 import com.mlasaf.MlasafEntry
+import com.typesafe.scalalogging.StrictLogging
 
 /** entry test */
-object MlasafEntryTest {
+object MlasafEntryTest extends StrictLogging {
 
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) = {

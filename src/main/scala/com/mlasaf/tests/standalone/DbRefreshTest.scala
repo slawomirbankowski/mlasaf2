@@ -5,10 +5,9 @@
 package com.mlasaf.tests.standalone
 
 import com.mlasaf.loaders._
+import com.typesafe.scalalogging.StrictLogging
 
-object DbRefreshTest {
-
-  val logger = org.slf4j.LoggerFactory.getLogger("MlasafEntry");
+object DbRefreshTest extends StrictLogging {
 
   def main(args : Array[String]) : Unit = {
     logger.info("START NEW DB");

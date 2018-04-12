@@ -7,9 +7,10 @@ package com.mlasaf.dao
 import java.sql.{Connection, DriverManager}
 
 import com.mlasaf.domain.Storage
+import com.typesafe.scalalogging.StrictLogging
 
 /** connection manager for all DAO objects - main method getConnection() should be used to acquire new connection */
-class DaoConnection {
+class DaoConnection extends StrictLogging {
 
   /** */
   var isInitialized = false;
@@ -34,9 +35,6 @@ class DaoConnection {
   /** counter for all created connections */
   var connTotalCounter : Long = 0;
   var connReleaseCounter : Long = 0;
-  /** logger for DAO */
-  val logger = org.slf4j.LoggerFactory.getLogger("DaoConnection");
-
   /** initialize connection - create template */
   def initialize(jdbc : String, user: String, pass : String, driverClass : String) = {
     if (! driverClass.isEmpty) {

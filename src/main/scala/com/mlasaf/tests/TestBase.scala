@@ -5,12 +5,10 @@
 package com.mlasaf.tests
 
 import com.mlasaf.domain._
+import com.typesafe.scalalogging.StrictLogging
 
 /** base class for all automated scenario tests */
-trait TestBase {
-
-  /** logger for tests */
-  val logger = org.slf4j.LoggerFactory.getLogger("TestBase");
+trait TestBase extends StrictLogging {
 
   /** run scenario test on exclusive MLASAF Context  */
   def runTest(context : Context): Boolean;

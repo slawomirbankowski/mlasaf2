@@ -9,12 +9,10 @@ import java.util
 
 import com.mlasaf.domain.ExecutorExternalStatus
 import com.mlasaf.structures.ExternalExitParams
+import com.typesafe.scalalogging.StrictLogging
 
 /** process runner */
-class ProcessRunner {
-
-  /** logger */
-  val logger = org.slf4j.LoggerFactory.getLogger("ThreadBase");
+class ProcessRunner extends StrictLogging {
 
   /** initialize */
   def initialize(params : java.util.List[String]) : ExternalExitParams = {

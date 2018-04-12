@@ -6,12 +6,11 @@ package com.mlasaf.domain
 
 import com.mlasaf.base.AlgorithmInstance
 import com.mlasaf.dto._
+import com.typesafe.scalalogging.StrictLogging
 
 /** representation of algorithm run to run algorithm */
-class AlgorithmRun {
+class AlgorithmRun extends StrictLogging {
 
-  /** logger */
-  val logger = org.slf4j.LoggerFactory.getLogger("DaoCustom");
   /** current status of RUN */
   var status : String = AlgorithmRun.STATUS_CREATED;
   /** parent EXECUTOR */

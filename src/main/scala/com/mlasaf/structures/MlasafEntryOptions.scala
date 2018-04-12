@@ -5,15 +5,13 @@
 package com.mlasaf.structures
 
 import com.mlasaf.tests.standalone.CEDefinition
+import com.typesafe.scalalogging.StrictLogging
 import org.rogach.scallop.ScallopConf
 import org.json4s.native.JsonMethods._
 import org.json4s.Formats._
 
 /** entry options for MlasafEntry class - all input options that should be provided with values */
-class MlasafEntryOptions(args : Array[String]) extends ScallopConf(args) {
-
-  /** logger for DAO */
-  val logger = org.slf4j.LoggerFactory.getLogger("MlasafEntryOptions");
+class MlasafEntryOptions(args : Array[String]) extends ScallopConf(args) with StrictLogging {
 
   var restAlternativePort =  opt[Int](descr="Alternative port number for storages and extenrnal API", name = "restAlternativePort", short='a')
   var jdbcString =  opt[String](descr="JDBC connection string", name = "jdbcString", short='c', required = true)

@@ -4,8 +4,9 @@
 */
 package com.mlasaf.tests.standalone
 
-object LoggerTest {
-  val logger = org.slf4j.LoggerFactory.getLogger("LoggerTest");
+import com.typesafe.scalalogging.StrictLogging
+
+object LoggerTest extends StrictLogging {
 
   def main(args : Array[String]) : Unit = {
     logger.info(" START ")

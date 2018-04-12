@@ -5,13 +5,11 @@
 package com.mlasaf.loaders
 
 import com.mlasaf.dao.DaoFactory
+import com.typesafe.scalalogging.StrictLogging
 import org.rogach.scallop.ScallopConf
 
 /** LOADER class for creating algorithm implementation */
-object CreateAlgorithmImplementation {
-
-  /** logger for DAO */
-  val logger = org.slf4j.LoggerFactory.getLogger("CreateAlgorithmImplementation");
+object CreateAlgorithmImplementation extends StrictLogging {
 
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) : Unit = {

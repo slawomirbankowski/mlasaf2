@@ -7,12 +7,11 @@ package com.mlasaf.dao
 import anorm.{SQL, SqlParser}
 import com.mlasaf.dto.{ExecutorHostDto, ExecutorInstanceDto}
 import com.mlasaf.utils.MlUtils
+import com.typesafe.scalalogging.StrictLogging
 
 /** cutsom DAO for custom not generated methods */
-class DaoCustom {
+class DaoCustom extends StrictLogging {
 
-  /** logger */
-  val logger = org.slf4j.LoggerFactory.getLogger("DaoCustom");
   /** factory of DAOs */
   var daoFactory : DaoFactory = null;
   /** create new custom DAO */

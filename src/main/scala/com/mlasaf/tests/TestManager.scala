@@ -8,12 +8,10 @@ import com.mlasaf.MlasafEntry
 import com.mlasaf.domain.Context
 import com.mlasaf.loaders.{DatabaseCreateNew, DatabaseRefreshSchema}
 import com.mlasaf.structures.MlasafEntryOptions
+import com.typesafe.scalalogging.StrictLogging
 
 /** main manager for scenario tests */
-object TestManager {
-
-  /** logger */
-  val logger = org.slf4j.LoggerFactory.getLogger("TestManager");
+object TestManager extends StrictLogging {
 
   /** main entry for test manager */
   def main(args : Array[String]) : Unit = {

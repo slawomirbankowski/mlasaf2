@@ -7,12 +7,11 @@ package com.mlasaf.base
 import com.mlasaf.domain.AlgorithmRun
 import com.mlasaf.dto.VExecutorTypeHostParamDto
 import com.mlasaf.structures.AlgorithmExitParams
+import com.typesafe.scalalogging.StrictLogging
 
 /** base class for any implementation of ML algorithm */
-trait AlgorithmInstance {
+trait AlgorithmInstance extends StrictLogging {
 
-  /** logger object */
-  val logger = org.slf4j.LoggerFactory.getLogger("AlgorithmInstance");
   /** all configuration parameters for instance of algorithm - this could contain path to R.exe or spark commit path or spark API port or SAS user/password */
   var paramsForHostExecutorType : scala.collection.mutable.ListBuffer[VExecutorTypeHostParamDto] = new scala.collection.mutable.ListBuffer();
 

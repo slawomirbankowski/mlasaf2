@@ -1,9 +1,8 @@
 package com.mlasaf.tests.data
 
-object GenerateTestData {
+import com.typesafe.scalalogging.StrictLogging
 
-  /** logger */
-  val logger = org.slf4j.LoggerFactory.getLogger("TestManager");
+object GenerateTestData extends StrictLogging {
 
   def main(args : Array[String]) : Unit = {
     logger.info("Start generating sample data")

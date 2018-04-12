@@ -8,9 +8,9 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 import com.mlasaf.loaders.DatabaseRefreshSchema
-import com.mlasaf.tests.standalone.DbRefreshTest.logger
+import com.typesafe.scalalogging.StrictLogging
 
-object H2DatabaseTest {
+object H2DatabaseTest extends StrictLogging {
 
   def main(args : Array[String]) : Unit = {
     println("Try to initialize Driver for H2 database")

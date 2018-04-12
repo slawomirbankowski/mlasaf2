@@ -7,11 +7,10 @@ package com.mlasaf.base
 import com.mlasaf.domain.Context
 import com.mlasaf.dto._
 import com.mlasaf.common._
+import com.typesafe.scalalogging.StrictLogging
 
 /** base class for all object with Thread assigned */
-trait ThreadBase extends Runnable {
-
-  val logger = org.slf4j.LoggerFactory.getLogger("ThreadBase");
+trait ThreadBase extends Runnable with StrictLogging {
   /** if object is still working - set internally by methods */
   var isWorking : Boolean = true;
   /** if object is still working - set internally by methods */

@@ -7,12 +7,11 @@ package com.mlasaf.base
 import java.util.Map
 
 import com.mlasaf.rest.RestManager
+import com.typesafe.scalalogging.StrictLogging
 
 /** base class for all REST objects for all methods */
-trait RestBase {
+trait RestBase extends StrictLogging {
 
-  /** common logger for REST classes */
-  val logger = org.slf4j.LoggerFactory.getLogger("RestBase");
   /** parent REST */
   var parentRest : RestManager = null;
   /** set parent REST*/
