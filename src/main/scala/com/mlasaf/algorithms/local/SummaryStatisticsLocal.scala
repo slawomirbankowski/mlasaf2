@@ -57,7 +57,7 @@ class SummaryStatisticsLocal extends AlgorithmInstance {
         output.append("\r\n")
         output.append(inputFileFullPath)
         output.append("\tstdev\t")
-        output.append(stat.valueMean)
+        output.append(stat.valueStdev)
       });
       val totalTime = System.currentTimeMillis() - startTime
       run.storage.saveContent(outputPath, output.toString())
