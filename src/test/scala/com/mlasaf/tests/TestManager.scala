@@ -4,9 +4,8 @@
 */
 package com.mlasaf.tests
 
-import com.mlasaf.MlasafEntry
 import com.mlasaf.domain.Context
-import com.mlasaf.loaders.{DatabaseCreateNew, DatabaseRefreshSchema}
+import com.mlasaf.loaders.DatabaseRefreshSchema
 import com.mlasaf.structures.MlasafEntryOptions
 import com.typesafe.scalalogging.StrictLogging
 

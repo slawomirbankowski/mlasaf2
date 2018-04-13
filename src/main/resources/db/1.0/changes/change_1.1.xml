@@ -13,7 +13,6 @@
             <column name="scriptParams" type="nvarchar(2000)" defaultValue="" />
         </addColumn>
 
-
     </changeSet>
 
     <changeSet id="13" author="slawomirbankowski">

@@ -8,10 +8,7 @@
     <include file="props.xml" relativeToChangelogFile="true"/>
     <include file="tables/tables.xml" relativeToChangelogFile="true"/>
     <include file="views/views.xml" relativeToChangelogFile="true"/>
-    <include file="changes/change_1.1.xml" relativeToChangelogFile="true"/>
-
-
-
+    <includeAll path="changes" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>
