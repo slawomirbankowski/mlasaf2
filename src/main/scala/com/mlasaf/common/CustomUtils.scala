@@ -131,22 +131,22 @@ object CustomUtils {
       .replace("\"", "\\\"")
   }
   def toJson(x : Any ) : String = {
-    println("")
-    print("CLASS " + x.getClass.getName + " RECOGNIZED AS " )
+    //println("")
+    //print("CLASS " + x.getClass.getName + " RECOGNIZED AS " )
     if (x.isInstanceOf[java.lang.String]) {
-      print("String type")
+      //print("String type")
       return "\"" + jsonEscape(""+x) + "\"";
     } else if (x.isInstanceOf[java.lang.Number]) {
-      print("Number type")
+      //print("Number type")
       return "" + x;
     } else if (x.isInstanceOf[java.util.Date]) {
-      print("Date type")
+      //print("Date type")
       return "\"" + fullDateFormat.format(x.asInstanceOf[java.util.Date]) + "\"";
     } else if (x.isInstanceOf[java.lang.Boolean]) {
-      print("Boolean type")
+      //print("Boolean type")
       return "\"" + x + "\"";
     } else if (x.isInstanceOf[Array[Any]]) {
-      print("Array type")
+      //print("Array type")
       val arr = (x.asInstanceOf[Array[Any]])
       val s = new StringBuilder
       s.append(" [ ")
@@ -159,7 +159,7 @@ object CustomUtils {
       s.append(" ] ")
       return s.toString()
     } else if (x.isInstanceOf[List[Any]]) {
-      print("List type")
+      //print("List type")
       val l = (x.asInstanceOf[List[Any]])
       val s = new StringBuilder
       s.append(" [ ")
@@ -175,7 +175,7 @@ object CustomUtils {
       s.append(" ] ")
       return s.toString()
     } else if (x.isInstanceOf[Map[Any, Any]]) {
-      print("Map type")
+      //print("Map type")
       val l = (x.asInstanceOf[Map[Any, Any]])
       val s = new StringBuilder
       s.append(" [ ")
@@ -194,7 +194,7 @@ object CustomUtils {
       s.append(" ] ")
       return s.toString()
     } else {
-      print("Complex type")
+      //print("Complex type")
       val s = new StringBuilder
       s.append(" { ")
       var isFirst = true
@@ -215,8 +215,6 @@ object CustomUtils {
       s.append(" } ")
       return s.toString()
     }
-
-
     //println("" + x.getClass.getDeclaredFields.map(x => x.getName + ":" + x.getType).mkString(" , "))
     //s.toString()
   }

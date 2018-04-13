@@ -4,7 +4,7 @@
 */
 package com.mlasaf.storages
 
-import java.io.FileWriter
+import java.io.{File, FileWriter}
 
 import com.mlasaf.base.SouceViewDownloader
 import com.mlasaf.domain._
@@ -65,9 +65,26 @@ class LocalDiskStorage extends Storage {
     val storageViewDto = parentContext.daoFactory.daos.executorStorageViewDao.createAndInsertExecutorStorageViewDto(storageSnapshotDto.executorStorageSnapshotId, this.storageDto.executorStorageId, sourceDownloadDto.sourceDownloadId, downloadTransformGroupId, sourceView.sourceViewId, storageResourceDto.executorStorageResourceId);
     storageViewDto
   }
+  def saveContent(path : String, content : String) : Unit = {
+    val writer = new java.io.BufferedWriter(new FileWriter(path))
+    writer.write(content)
+    writer.close()
+  }
+  def checkPath(path : String) : Boolean = {
+    val f = new java.io.File(path)
+    return f.exists()
+  }
+
+  def validateResurce(executorStorageResourceId : Long) : Unit = {
+    val esrDto = parentContext.daoFactory.daos.executorStorageResourceDao.getExecutorStorageResourceByPk(executorStorageResourceId)
+    val f = new java.io.File(esrDto.resourcePath)
+    parentContext.daoFactory.daos.executorStorageResourceDao.updateField(esrDto, ExecutorStorageResourceDto.FIELD_isValid, (if (f.exists()) 1 else 0))
+    parentContext.daoFactory.daos.executorStorageResourceDao.updateField(esrDto, ExecutorStorageResourceDto.FIELD_resourceSize, (if (f.exists()) f.length() else 0))
+    parentContext.daoFactory.daos.executorStorageResourceDao.changeUpdatedDate(esrDto)
+  }
   def onRunStorage() = {
 
-  };
+  }
 }
 
 object LocalDiskStorage {

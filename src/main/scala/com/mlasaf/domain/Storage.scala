@@ -98,6 +98,12 @@ trait Storage extends ThreadBase {
   }
   /** download view */
   def downloadView(sourceView : VSourceViewDto, sourceSchedule : VSourceScheduleDto, sourceDownloadDto : SourceDownloadDto, source : Source, downloader : SouceViewDownloader) : ExecutorStorageViewDto;
+  /** save content in storage in given path */
+  def saveContent(path : String, content : String) : Unit;
+  /** validate given resource */
+  def validateResurce(executorStorageResourceId : Long) : Unit ;
+  /** check path or definition in storage*/
+  def checkPath(path : String) : Boolean;
 
 
 }

@@ -40,7 +40,7 @@ class ProcessRunner extends StrictLogging {
         c = errStream.read();
         outputContent.append(c.toChar);
       }
-      logger.info("#### Process finished, OUTPUT CONTENT: " + outputContent.toString());
+      logger.info("#### Process finished, OUTPUT CONTENT: \r\n" + outputContent.toString().split("\r").map(l => "   ###   " + l ).mkString("\r"));
       val exitValue = rProcess.exitValue();
       val totalExecutionTime = System.currentTimeMillis() - startTime;
       logger.info("#### Process ended, exitCode: " + exitValue + ", execution time: " + totalExecutionTime);

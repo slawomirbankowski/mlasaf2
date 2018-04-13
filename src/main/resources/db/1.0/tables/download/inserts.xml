@@ -7,6 +7,19 @@
 
     <changeSet id="10" author="slawomirbankowski">
 
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="TO_DATE"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformColumnToDate"/>
+        </insert>
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="DATE_TO_SEQ"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformColumnDateToSeq"/>
+        </insert>
+        <insert tableName="downloadTransformType">
+            <column name="downloadTransformTypeName" value="FILTER_ON_ROW"/>
+            <column name="downloadTransformTypeClass" value="com.mlasaf.transform.instances.TransformFilterOnRow"/>
+        </insert>
+
 
 
     </changeSet>
