@@ -18,7 +18,7 @@ object MlasafEntryTest extends StrictLogging {
       // jdbc:jtds:sqlserver://localhost;instance=SQLEXPRESS;DatabaseName=mlasaf01
       // jdbc:mysql://localhost:3307/mlasaf29
       // jdbc:sqlserver://localhost\SQLEXPRESS;DatabaseName=mlasaf01
-      "--jdbcString", "jdbc:mysql://localhost:3306/mlasaf02?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false"
+      "--jdbcString", "jdbc:mysql://localhost:3306/mlasaf03?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false"
       , "--jdbcUser" , "root"
       , "--jdbcPass" , "rootpass"
       , "--jdbcDriver", "com.mysql.jdbc.Driver"

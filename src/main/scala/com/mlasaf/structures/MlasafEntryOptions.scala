@@ -4,7 +4,6 @@
 */
 package com.mlasaf.structures
 
-import com.mlasaf.tests.standalone.CEDefinition
 import com.typesafe.scalalogging.StrictLogging
 import org.rogach.scallop.ScallopConf
 import org.json4s.native.JsonMethods._

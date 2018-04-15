@@ -22,3 +22,5 @@ libraryDependencies += "com.sparkjava" % "spark-core" % "2.7.1"
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.6.0-M2"
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4.1210"
 
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"

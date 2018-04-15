@@ -3,7 +3,6 @@ package com.mlasaf.algorithms.local
 import com.mlasaf.base.AlgorithmInstance
 import com.mlasaf.domain.AlgorithmRun
 import com.mlasaf.structures.{AlgorithmExitParams, ExternalExitParams}
-import com.mlasaf.tests.standalone.MutableDouble
 import com.mlasaf.utils.SimpleStatistics
 import liquibase.util.csv.opencsv.CSVParser
 
@@ -58,10 +57,11 @@ class SummaryStatisticsLocal extends AlgorithmInstance {
         output.append(inputFileFullPath)
         output.append("\tstdev\t")
         output.append(stat.valueStdev)
-      });
+      })
+
       val totalTime = System.currentTimeMillis() - startTime
       run.storage.saveContent(outputPath, output.toString())
-      AlgorithmExitParams(AlgorithmInstance.STATUS_OK, true, Option(ExternalExitParams("", "OK", 0, "", totalTime, "")));
+      AlgorithmExitParams(AlgorithmInstance.STATUS_OK, true, Option(ExternalExitParams("", "OK", 0, "", totalTime, "")))
     } catch {
       case ex : Exception => {
         AlgorithmExitParams(AlgorithmInstance.STATUS_ERROR, false, None);

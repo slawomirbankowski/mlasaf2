@@ -1,6 +1,6 @@
 package com.mlasaf.tests.standalone
 
-import com.mlasaf.algorithms.local.PredictionRow
+import com.mlasaf.algorithms.local.{MutableDouble, PredictionRow}
 
 import scala.collection.mutable
 
@@ -36,8 +36,4 @@ object CsvParserTest {
 
     println("END ")
   }
-}
-
-class MutableDouble {
-  var value : Double = 0.0
 }

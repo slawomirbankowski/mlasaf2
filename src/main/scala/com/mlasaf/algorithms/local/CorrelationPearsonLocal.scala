@@ -7,7 +7,6 @@ package com.mlasaf.algorithms.local
 import com.mlasaf.base.AlgorithmInstance
 import com.mlasaf.domain.AlgorithmRun
 import com.mlasaf.structures.AlgorithmExitParams
-import com.mlasaf.tests.standalone.MutableDouble
 
 import scala.collection.mutable
 
@@ -48,4 +47,8 @@ class CorrelationPearsonLocal extends AlgorithmInstance {
   }
 
 
+}
+
+class MutableDouble {
+  var value : Double = 0.0
 }

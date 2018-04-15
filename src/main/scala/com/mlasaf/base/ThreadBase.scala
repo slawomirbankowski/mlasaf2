@@ -56,6 +56,7 @@ trait ThreadBase extends Runnable with StrictLogging {
     // pack with try ... catch to log all errors while onStop()
     onStop();
     isStopped = true;
+    isRunning = false;
     if (contextThreadDto != null) {
       parentContext.daoFactory.daos.executorContextThreadDao.updateField(contextThreadDto, ExecutorContextThreadDto.FIELD_isStopped, 1);
     }
