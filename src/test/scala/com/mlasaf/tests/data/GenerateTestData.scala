@@ -36,7 +36,6 @@ object GenerateTestData extends StrictLogging {
     var shapes = Array("Sinus", "Cosinus", "Parabola", "Square", "Line", "Rombs", "Hypersphere", "Hypercurve", "Hyperbola") //   Hyperbola  Parabola Sinus Line   Hypersphere  Square Sinus Cosinus
     shapes.foreach(shapeName  => {
       var basePath = "../test_data/data." + CustomUtils.yyyyMMDDHHmmss  + "."+  shapeName+ ".dim" + dimensionsCount + ".classes" + classesCount +  ".points" + totalPoints
-
         calculate(basePath, dimensionsCount, totalPoints, classesCount, testPercent, shapeName)
       })
   }

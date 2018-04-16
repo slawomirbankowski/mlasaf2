@@ -53,6 +53,7 @@ class LocalDiskStorage extends Storage {
         bos.write(rowStr);
         viewRowsCount = viewRowsCount + 1;
       }
+
       nextRow = downloader.getNextRow();
     }
     bos.close();
