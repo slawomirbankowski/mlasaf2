@@ -7,7 +7,7 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} %level %logger - %msg%n
+                %d{yyyy-MM-dd HH:mm:ss} / %r[ms] [%t] %level %logger:%line - %msg%n
             </Pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -20,7 +20,7 @@
         <file>${LOG_DIR}/log.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} %level %logger - %msg%n
+                %d{yyyy-MM-dd HH:mm:ss} / %r[ms] [%t] %level %logger:%line - %msg%n
             </Pattern>
         </encoder>
         <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->

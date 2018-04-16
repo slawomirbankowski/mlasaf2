@@ -32,6 +32,9 @@ object MlasafEntry extends StrictLogging {
 
   /** main entry point to run all services for MLASAF, initialization from command line arguments or from xml file */
   def main(args : Array[String]) = {
+    for (x <- (1 to 10)) {
+      logger.info("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ")
+    }
     logger.info("|||||||||||||| START MLASAF " + MLASAF_VERSION)
     logger.debug("|||||||||||||| JAVA Properties: \n" + System.getProperties.stringPropertyNames().toArray.map(p => "" + p + "='" + System.getProperties.getProperty(""+p) + "'" ).sorted.mkString("\n"))
     logger.info("|||||||||||||| MLASAF Parameters: " + args.mkString(" "))
