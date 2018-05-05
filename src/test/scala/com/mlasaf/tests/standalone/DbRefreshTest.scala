@@ -11,10 +11,10 @@ object DbRefreshTest extends StrictLogging {
 
   def main(args : Array[String]) : Unit = {
     logger.info("START NEW DB");
-    val jdbcString ="jdbc:mysql://localhost:3306/mlasaf03?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false" //  "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02" //
-    val jdbcUser = "root" // "root"
-    val jdbcPass = "rootpass" // "rootpass"
-    val jdbcDriver = System.getenv("MLASAF_DRIVER");
+    val jdbcString = "jdbc:h2:~/mlasaf04" // "jdbc:mysql://localhost:3306/mlasaf03?serverTimezone=UTC&useJDBCCompliantTimezoneShift=true&useSSL=false" //  "jdbc:sqlserver://localhost\\SQLEXPRESS;DatabaseName=mlasaf02" //
+    val jdbcUser = "sa" // "root" // "root"
+    val jdbcPass = "" // "rootpass" // "rootpass"
+    val jdbcDriver = "org.h2.Driver" //System.getenv("MLASAF_DRIVER");
     val changeLogFile = "./src/main/resources/db/1.0/v1.0.xml";
     val changeLogFilePath = new java.io.File(changeLogFile).getCanonicalPath;
     //val changeLogResourceFile = DbRefreshTest.getClass.getResource(changeLogFile).getPath;

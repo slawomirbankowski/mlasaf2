@@ -6,6 +6,7 @@ import java.awt.image.{BufferedImage, RenderedImage}
 import java.io.{BufferedWriter, FileWriter}
 
 import com.mlasaf.common.CustomUtils
+import com.mlasaf.rest.RestClient
 
 import scala.util.Random
 
@@ -43,6 +44,7 @@ object GenerateTestData extends StrictLogging {
   def calculate(basePath : String, dimensionsCount : Int, totalPoints : Int, classesCount : Int, testPercent : Double, shapeName : String) : Unit = {
     val classCalculator = Class.forName("com.mlasaf.tests.data.ClassCalculator" + shapeName).newInstance().asInstanceOf[ClassCalculator]
     // variables
+    var r = new RestClient("http://localhost:9200/testdata/" + shapeName)
     var pointPerDimension = Math.pow(totalPoints, 1.0/dimensionsCount)
     val minValue = -1.0
     val maxValue = 1.0
@@ -136,6 +138,8 @@ object GenerateTestData extends StrictLogging {
           }
         }
       })
+      val body = " { \"id\":" + totalPoinsCount + ", " + point.zipWithIndex.map(x => "\"x" + x._2 + "\":" + x._1 + "").mkString(" , ") + ", \"classNum\":" + classNum + " }"
+      r.sendRequest("POST", body, 1000)
       totalPoinsCount = totalPoinsCount + 1
       if (totalPoinsCount % 100000 == 0) {
         logger.info("Generating points: " + totalPoinsCount)

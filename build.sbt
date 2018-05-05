@@ -26,3 +26,12 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 libraryDependencies += "com.zenvia" % "logback-elasticsearch-appender" % "1.3"
+
+  libraryDependencies += "org.apache.spark" % "spark-core_2.11" % "2.2.0"
+  libraryDependencies += "org.apache.spark" % "spark-mllib_2.11" % "2.2.0"
+  libraryDependencies += "org.apache.spark" % "spark-sql_2.11" % "2.2.0"
+  libraryDependencies += "org.apache.spark" % "spark-hive_2.11" % "2.2.0"
+
+  libraryDependencies += "org.apache.commons" % "commons-csv" % "1.2"
+
+libraryDependencies += "org.apache.kafka" % "kafka-clients" % "1.1.0

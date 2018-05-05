@@ -40,7 +40,7 @@
     </appender>
 
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
-        <url>http://localhost:9200/logs/_bulk</url>
+        <url>http://localhost:9200/logs</url>
         <index>logs</index>
         <type>tester</type>
         <loggerName>es-logger</loggerName> <!-- optional -->
