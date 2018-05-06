@@ -28,6 +28,8 @@ trait Executor extends ThreadBase {
   def getName() : String = "EXECUTOR";
   /** to override - get name of Executor type */
   def getTypeName() : String;
+  /** create executor session or connector object - depends on executor type */
+  def createExecutorObject() : AnyRef;
   /** run for executor */
   def onRunBegin() = {
     val exeTypeId = parentContext.daoFactory.daos.executorTypeDao.getExecutorTypeFirstByName(getTypeName()).get.executorTypeId

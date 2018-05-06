@@ -26,6 +26,10 @@ class SasExecutor extends Executor {
     new ExternalExitParams("", ExecutorExternalStatus.STATUS_NOT_IMPLEMENTED, -1, "", 0L, "NOT_IMPLEMENTED");
 
   }
+  /** create executor session or connector object - depends on executor type */
+  def createExecutorObject() : AnyRef = {
+    null
+  }
 
 
 }

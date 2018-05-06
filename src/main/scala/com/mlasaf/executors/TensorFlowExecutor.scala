@@ -38,6 +38,10 @@ class TensorFlowExecutor extends Executor {
     val process = new ProcessRunner()
     process.initialize(params)
   }
+  /** create executor session or connector object - depends on executor type */
+  def createExecutorObject() : AnyRef = {
+    null
+  }
 
 
 }

@@ -39,6 +39,10 @@ class RExecutor extends Executor {
     // TODO: monitor for executed external job/process
     process.initialize(params);
   }
+  /** create executor session or connector object - depends on executor type */
+  def createExecutorObject() : AnyRef = {
+    null
+  }
 
 }
 
